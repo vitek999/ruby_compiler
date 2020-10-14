@@ -116,6 +116,11 @@ yield		{ printf("Found YIELD_KEYWORD\n"); }
 ">"         { printf("Found CLOSE_ANGLE_BRACKET\n"); }
 "@"         { printf("Found COMMERCIAL_AT\n"); }
 
+"."         { printf("Found DOT SYMBOL\n"); }
+","         { printf("Found COMMA SYMBOOL\n"); }
+":"         { printf("Found COLON SYMBOL\n"); }
+";"         { printf("Found SEMICOLON SYMBOL\n"); }
+
 0|[1-9]{DIGIT}*(_{DIGIT}+)*          { 
                                 remove_char_from_str(yytext,temp1,'_');
                                 num = atoi(temp1);
