@@ -13,7 +13,7 @@ DIGIT [0-9]
 HEX_DIGIT [0-9A-Fa-f]
 OCT_DIGIT [0-7]
 BIN_DIGIT [01]
-EXPONENT [eE][+-]?[1-9](_?[0-9])*
+EXPONENT [eE][+-]?[1-9]{DIGIT}*(_{DIGIT}+)*
 NUMBER_ALPHA_UNDERSCOPE [a-zA-Z0-9_]
 
 %x ML_COMMENT
@@ -121,31 +121,31 @@ yield		{ printf("Found YIELD_KEYWORD\n"); }
                                 num = atoi(temp1);
                                 printf("Found decimal number %d\n", num);
                              }
-0[dD][1-9](_?{DIGIT})*       {
+0[dD][1-9]{DIGIT}*(_{DIGIT}+)*        {
                                 remove_char_from_str(yytext+2,temp1,'_');
                                 num = atoi(temp1);
                                 printf("Found decimal number %d\n", num);              
                              }
 
-0[oO]?{OCT_DIGIT}(_?{OCT_DIGIT})*    {
+0[oO]?{OCT_DIGIT}+(_{OCT_DIGIT}+)*    {
                                         remove_char_from_str(yytext,temp1,'_');
                                         remove_char_from_str(temp1,temp2,'o');
                                         remove_char_from_str(temp2,temp1,'O');
                                         sscanf(temp1,"%o",&num);
                                         printf("Found octal number %d\n", num);
                                      }
-0[xX]{HEX_DIGIT}(_?{HEX_DIGIT})*    {
+0[xX]{HEX_DIGIT}+(_{HEX_DIGIT}+)*    {
                                         remove_char_from_str(yytext + 2,temp1,'_');
                                         sscanf(temp1,"%x",&num);
                                         printf("Found hex number %d\n", num);
                                     }
-0[bB]{BIN_DIGIT}(_?{BIN_DIGIT})*    {
+0[bB]{BIN_DIGIT}+(_{BIN_DIGIT}+)*   {
                                         remove_char_from_str(yytext + 2,temp1,'_');
                                         num = binstr_to_dec(temp1);
                                         printf("Found binary number %d\n", num); 
                                     }
 
-(0|[1-9](_?{DIGIT})*)(\.{DIGIT}(_?{DIGIT})*)?({EXPONENT})?  {
+(0|[1-9](_?{DIGIT})*)(\.{DIGIT}+(_{DIGIT}+)*)?({EXPONENT})?  {
                                                                  remove_char_from_str(yytext,temp1,'_');
                                                                  real_num = atof(temp1);
                                                                  printf("Found float number %f\n", real_num); 
