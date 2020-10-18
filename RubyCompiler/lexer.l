@@ -184,11 +184,16 @@ yield		{ printf("Found YIELD_KEYWORD\n"); }
                                 num = atoi(temp1);
                                 printf("Found decimal number %d\n", num);
                              }
+
+[1-9](_*{DIGIT}+)*_*   { printf("Found decimal number error1 %s\n", yytext); }
+
 0[dD][1-9]{DIGIT}*(_{DIGIT}+)*        {
                                 remove_char_from_str(yytext+2,temp1,'_');
                                 num = atoi(temp1);
                                 printf("Found decimal number %d\n", num);              
                              }
+
+0_*[dD]_*[1-9](_*{DIGIT}+)*_* { printf("Found decimal number error2 %s\n", yytext); }
 
 0[oO]?{OCT_DIGIT}+(_{OCT_DIGIT}+)*    {
                                         remove_char_from_str(yytext,temp1,'_');
@@ -197,16 +202,24 @@ yield		{ printf("Found YIELD_KEYWORD\n"); }
                                         sscanf(temp1,"%o",&num);
                                         printf("Found octal number %d\n", num);
                                      }
+
+0_*[oO]?_*{OCT_DIGIT}(_*{OCT_DIGIT}+)*_* { printf("Found oct number error3 %s\n", yytext); }
+
 0[xX]{HEX_DIGIT}+(_{HEX_DIGIT}+)*    {
                                         remove_char_from_str(yytext + 2,temp1,'_');
                                         sscanf(temp1,"%x",&num);
                                         printf("Found hex number %d\n", num);
                                     }
+
+0_*[xX]_*{HEX_DIGIT}(_*{HEX_DIGIT}+)*_* { printf("Found hex number error %s\n", yytext); }
+
 0[bB]{BIN_DIGIT}+(_{BIN_DIGIT}+)*   {
                                         remove_char_from_str(yytext + 2,temp1,'_');
                                         num = binstr_to_dec(temp1);
                                         printf("Found binary number %d\n", num); 
                                     }
+
+0_*[bB]_*{BIN_DIGIT}(_*{BIN_DIGIT}+)*_* { printf("Found bin number error5 %s\n", yytext); }
 
 (0|[1-9](_?{DIGIT})*)(\.{DIGIT}+(_{DIGIT}+)*)?({EXPONENT})?  {
                                                                  remove_char_from_str(yytext,temp1,'_');
