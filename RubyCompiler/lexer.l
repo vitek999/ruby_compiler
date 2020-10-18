@@ -28,6 +28,7 @@ NUMBER_ALPHA_UNDERSCOPE [a-zA-Z0-9_]
     char temp2[100];
     char comment[1000];
     char string[1000];
+    int nestingCount = 0;
 %}
 
 alias		{ printf("Found ALIAS_KEYWORD\n"); }
@@ -110,7 +111,16 @@ yield		{ printf("Found YIELD_KEYWORD\n"); }
 "("         { printf("Found OPEN_ROUND_BRACKET\n"); }
 ")"         { printf("Found CLOSE_ROUND_BRACKET\n"); }
 "{"         { printf("Found OPEN_CURLY_BRACKET\n"); }
-"}"         { printf("Found CLOSE_CURLY_BRACKET\n"); }
+"}"         {
+                if(nestingCount == 0) {
+                    printf("Found CLOSE_CURLY_BRACKET\n");
+                } else {
+                    nestingCount--;
+                    BEGIN(STRING);
+                    string[0] = 0;
+                    printf("Found ARITHMETIC_PLUS_OP\n");
+                }
+            }
 "["         { printf("Found OPEN_SQUARE_BRACKET\n"); }
 "]"         { printf("Found CLOSE_SQUARE_BRACKET\n"); }
 "<"         { printf("Found OPEN_ANGLE_BRACKET\n"); }
@@ -127,7 +137,14 @@ yield		{ printf("Found YIELD_KEYWORD\n"); }
                 BEGIN(STRING);    
             }
 
-<STRING>[^\\\"\n]+ { strcat(string, yytext); }
+<STRING>"#{"        { 
+                        printf("Found string %s\n", string);
+                        printf("Found ARITHMETIC_PLUS_OP\n");
+                        nestingCount++;
+                        BEGIN(INITIAL);
+                    }
+<STRING>[^\\\"\n#{}]+ { strcat(string, yytext); }
+<STRING>[#{}]      { strcat(string, yytext); }
 <STRING>\\n        { strcat(string, "\n"); }
 <STRING>\\a        { strcat(string, "\a"); }
 <STRING>\\b        { strcat(string, "\b"); }
@@ -152,7 +169,7 @@ yield		{ printf("Found YIELD_KEYWORD\n"); }
                                 temp1[1] = 0;
                                 strcat(string, temp1);
                             }
-<STRING>\\x[^0-9A-Fa-f\n"]*       { printf("ERROR: Invalid hex escape \n"); }
+<STRING>\\x[^0-9A-Fa-f\n"}]*       { printf("ERROR: Invalid hex escape \n"); }
 
 <STRING>\" { 
                 printf("Found string %s \n", string);

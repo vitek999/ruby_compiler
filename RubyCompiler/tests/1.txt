@@ -48,6 +48,8 @@ defined?
 &&
 ===
 ==
+{
+}
 
 # asdasd
 #
@@ -77,3 +79,8 @@ Some_class
 "\x"
 "\x123"
 "\xkk"
+"asd #{1 + 2} asd"
+"asd #{1 + "#{"a"}"} asd"
+"{"
+"#"
+"}"
