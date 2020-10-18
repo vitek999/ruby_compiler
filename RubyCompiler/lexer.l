@@ -27,6 +27,7 @@ NUMBER_ALPHA_UNDERSCOPE [a-zA-Z0-9_]
     char temp1[100];
     char temp2[100];
     char comment[1000];
+    char string[1000];
 %}
 
 alias		{ printf("Found ALIAS_KEYWORD\n"); }
@@ -120,6 +121,46 @@ yield		{ printf("Found YIELD_KEYWORD\n"); }
 ","         { printf("Found COMMA SYMBOOL\n"); }
 ":"         { printf("Found COLON SYMBOL\n"); }
 ";"         { printf("Found SEMICOLON SYMBOL\n"); }
+
+\"          { 
+                string[0] = 0; 
+                BEGIN(STRING);    
+            }
+
+<STRING>[^\\\"\n]+ { strcat(string, yytext); }
+<STRING>\\n        { strcat(string, "\n"); }
+<STRING>\\a        { strcat(string, "\a"); }
+<STRING>\\b        { strcat(string, "\b"); }
+<STRING>\\t        { strcat(string, "\t"); }
+<STRING>\\v        { strcat(string, "\v"); }
+<STRING>\\f        { strcat(string, "\f"); }
+<STRING>\\r        { strcat(string, "\r"); }
+<STRING>\\e        { strcat(string, "\e"); }
+<STRING>\\s        { strcat(string, " "); }
+<STRING>\\\\       { strcat(string, "\\"); }
+<STRING>\\\"       { strcat(string, "\""); }
+<STRING>\\{OCT_DIGIT}{1,3} { 
+                                sscanf(yytext + 1, "%o", &num);
+                                temp1[0] = (char) num;
+                                temp1[1] = 0;
+                                strcat(string, temp1);
+                            }
+
+<STRING>\\x{HEX_DIGIT}{1,2} { 
+                                sscanf(yytext + 2, "%x", &num);
+                                temp1[0] = (char) num;
+                                temp1[1] = 0;
+                                strcat(string, temp1);
+                            }
+<STRING>\\x[^0-9A-Fa-f\n"]*       { printf("ERROR: Invalid hex escape \n"); }
+
+<STRING>\" { 
+                printf("Found string %s \n", string);
+                BEGIN(INITIAL);
+            }
+<STRING>\n { printf("ERROR: expected\" \n");}
+<STRING><<EOF>> { printf("ERROR: expected\" \n"); }
+
 
 0|[1-9]{DIGIT}*(_{DIGIT}+)*          { 
                                 remove_char_from_str(yytext,temp1,'_');

@@ -67,3 +67,13 @@ some_var1
 @@soME_Var2
 
 Some_class
+
+"asd asd 123"
+"asd asd\" 123"
+"asd a\sd 123"
+"asd a\\sd 123"
+"asd a\123sd 123"
+"asd a\nsd 123"
+"\x"
+"\x123"
+"\xkk"
