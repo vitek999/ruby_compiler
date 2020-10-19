@@ -227,6 +227,10 @@ yield		{ printf("Found YIELD_KEYWORD\n"); }
                                                                  printf("Found float number %f\n", real_num); 
                                                             }
 
+([1-9]*_*\.+_*{DIGIT}+)+(_*{DIGIT}*)*     { printf("Found float number error1 %s\n", yytext); }
+
+([1-9]+{EXPONENT}+_+{DIGIT}+)+     { printf("Found float number error2 %s\n", yytext); }
+
 #.*             { printf("Found single-line comment: %s\n", yytext + 1); }
 
 ^=begin                         { 
