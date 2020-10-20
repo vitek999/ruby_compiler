@@ -178,7 +178,6 @@ yield		{ printf("Found YIELD_KEYWORD\n"); }
 <STRING>\n { printf("ERROR: expected\" \n");}
 <STRING><<EOF>> { printf("ERROR: expected\" \n"); }
 
-
 0|[1-9]{DIGIT}*(_{DIGIT}+)*          { 
                                 remove_char_from_str(yytext,temp1,'_');
                                 num = atoi(temp1);
@@ -203,7 +202,7 @@ yield		{ printf("Found YIELD_KEYWORD\n"); }
                                         printf("Found octal number %d\n", num);
                                      }
 
-0_*[oO]?_*{OCT_DIGIT}(_*{OCT_DIGIT}+)*_* { printf("Found oct number error3 %s\n", yytext); }
+0_*[oO]?_*{OCT_DIGIT}(_*{OCT_DIGIT}+)*_* { printf("Found oct number error %s\n", yytext); }
 
 0[xX]{HEX_DIGIT}+(_{HEX_DIGIT}+)*    {
                                         remove_char_from_str(yytext + 2,temp1,'_');
@@ -219,7 +218,9 @@ yield		{ printf("Found YIELD_KEYWORD\n"); }
                                         printf("Found binary number %d\n", num); 
                                     }
 
-0_*[bB]_*{BIN_DIGIT}(_*{BIN_DIGIT}+)*_* { printf("Found bin number error5 %s\n", yytext); }
+0_*[bB]_*{BIN_DIGIT}(_*{BIN_DIGIT}+)*_* { printf("Found bin number error %s\n", yytext); }
+
+
 
 (0|[1-9](_?{DIGIT})*)(\.{DIGIT}+(_{DIGIT}+)*)?({EXPONENT})?  {
                                                                  remove_char_from_str(yytext,temp1,'_');
@@ -229,7 +230,9 @@ yield		{ printf("Found YIELD_KEYWORD\n"); }
 
 ([1-9]*_*\.+_*{DIGIT}+)+(_*{DIGIT}*)*     { printf("Found float number error1 %s\n", yytext); }
 
-([1-9]+{EXPONENT}+_+{DIGIT}+)+     { printf("Found float number error2 %s\n", yytext); }
+([1-9]+((_|\.)*{DIGIT}*)*[Ee]+((_|\.)*{DIGIT}*)*)+     { printf("Found float number error2 %s\n", yytext); }
+
+
 
 #.*             { printf("Found single-line comment: %s\n", yytext + 1); }
 
