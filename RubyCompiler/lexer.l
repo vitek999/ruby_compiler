@@ -128,7 +128,7 @@ yield		{ printf("Found YIELD_KEYWORD\n"); }
 "@"         { printf("Found COMMERCIAL_AT\n"); }
 
 "."         { printf("Found DOT SYMBOL\n"); }
-","         { printf("Found COMMA SYMBOOL\n"); }
+","         { printf("Found COMMA SYMBOL\n"); }
 ":"         { printf("Found COLON SYMBOL\n"); }
 ";"         { printf("Found SEMICOLON SYMBOL\n"); }
 
@@ -228,7 +228,7 @@ yield		{ printf("Found YIELD_KEYWORD\n"); }
                                                                  printf("Found float number %f\n", real_num); 
                                                             }
 
-([1-9]*_*\.+_*{DIGIT}+)+(_*{DIGIT}*)*     { printf("Found float number error1 %s\n", yytext); }
+([1-9]*_*(\.|\.{3,})_*{DIGIT}+)+(_*{DIGIT}*)*     { printf("Found float number error1 %s\n", yytext); }
 
 ([1-9]+((_|\.)*{DIGIT}*)*[Ee]+((_|\.)*{DIGIT}*)*)+     { printf("Found float number error2 %s\n", yytext); }
 
