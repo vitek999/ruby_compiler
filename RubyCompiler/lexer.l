@@ -127,10 +127,13 @@ yield		{ printf("Found YIELD_KEYWORD\n"); }
 ">"         { printf("Found CLOSE_ANGLE_BRACKET\n"); }
 "@"         { printf("Found COMMERCIAL_AT\n"); }
 
-"."         { printf("Found DOT SYMBOL\n"); }
-","         { printf("Found COMMA SYMBOL\n"); }
-":"         { printf("Found COLON SYMBOL\n"); }
-";"         { printf("Found SEMICOLON SYMBOL\n"); }
+"?"         { printf("Found QUESTION_SYMBOL\n"); }
+
+"."         { printf("Found DOT_SYMBOL\n"); }
+","         { printf("Found COMMA_SYMBOL\n"); }
+":"         { printf("Found COLON_SYMBOL\n"); }
+"::"        { printf("Found DOUBLE_COLON_SYMBOL\n");}
+";"         { printf("Found SEMICOLON_SYMBOL\n"); }
 
 \"          { 
                 string[0] = 0; 
@@ -175,7 +178,6 @@ yield		{ printf("Found YIELD_KEYWORD\n"); }
                 printf("Found string %s \n", string);
                 BEGIN(INITIAL);
             }
-<STRING>\n { printf("ERROR: expected\" \n");}
 <STRING><<EOF>> { printf("ERROR: expected\" \n"); }
 
 0|[1-9]{DIGIT}*(_{DIGIT}+)*          { 
@@ -228,7 +230,7 @@ yield		{ printf("Found YIELD_KEYWORD\n"); }
                                                                  printf("Found float number %f\n", real_num); 
                                                             }
 
-([1-9]*_*(\.|\.{3,})_*{DIGIT}+)+(_*{DIGIT}*)*     { printf("Found float number error1 %s\n", yytext); }
+([1-9]*_*(\.|\.{4,})_*{DIGIT}+)+(_*{DIGIT}*)*     { printf("Found float number error1 %s\n", yytext); }
 
 ([1-9]+((_|\.)*{DIGIT}*)*[Ee]+((_|\.)*{DIGIT}*)*)+     { printf("Found float number error2 %s\n", yytext); }
 
