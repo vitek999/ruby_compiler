@@ -180,6 +180,37 @@ expr: INTEGER_NUMBER
 	| OPEN_SQUARE_BRACKET expr CLOSE_SQUARE_BRACKET 
     ;
 
+new_lines: NEW_LINE_SYMBOL
+    | new_lines NEW_LINE_SYMBOL
+    ;
+
+semicolons: SEMICOLON_SYMBOL
+    | semicolons SEMICOLON_SYMBOL
+    ;
+
+stmt_end: new_lines
+    | semicolons
+    ;
+
+stmt_ends: stmt_end
+    | stmt_ends stmt_end
+    ;
+
+stmt: expr stmt_ends
+    | stmt_block
+    ;
+
+stmt_list_not_empty: stmt
+    | stmt_list_not_empty stmt
+    ;
+
+stmt_list: /* empty */
+    | stmt_list_not_empty
+    ;
+
+stmt_block: BEGIN_KEYWORD stmt_list END_KEYWORD
+    ;
+
 %%
 
 void main(int argc, char **argv ){
