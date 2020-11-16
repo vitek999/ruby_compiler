@@ -112,10 +112,73 @@ extern FILE* yyin;
 %token CLASS_NAME
 %token CLASS_VAR_NAME
 
+%right LOGICAL_NOT_OP BIN_ONES_COMPLEMENT_OP UNARY_PLUS ARITHMETIC_POW_OP  
+%right UNARY_MINUS
+%left ARITHMETIC_MUL_OP ARITHMETIC_DIV_OP ARITHMETIC_MOD_OP
+%left ARITHMETIC_PLUS_OP ARITHMETIC_MINUS_OP
+%left BIN_LEFT_SHIFT_OP BIN_RIGHT_SHIFT_OP
+%left BIN_AND_OP
+%left BIN_OR_OP BIN_XOR_OP
+%left GREATER_OP LESS_OP GREATER_OR_EQL_OP LESS_OR_EQL_OP
+%nonassoc COMB_COMPRASION_OP EQL_OP CASE_EQL_OP NOT_EQL_OP
+%left LOGICAL_AND_OP
+%left LOGICAL_OR_OP
+%nonassoc INCLUSIVE_RANGE_OP EXCLUSIVE_RANGE_OP
+%right ASSIGN_OP MOD_ASSIGN_OP DIV_ASSIGN_OP SUB_ASSIGN_OP ADD_ASSIGN_OP MUL_ASSIGN_OP POW_ASSIGN_OP
+%nonassoc DEFINED_KEYWORD
+%right NOT_KEYWORD
+%left AND_KEYWORD OR_KEYWORD
+%nonassoc CLOSE_ROUND_BRACKET
+
 %%
 
-expr: ASSIGN_OP { puts("Found expr"); }
-;
+expr: INTEGER_NUMBER
+    | FLOAT_NUMBER
+    | STRING
+    | NIL_KEYWORD
+    | TRUE_KEYWORD
+    | FALSE_KEYWORD
+    | LOGICAL_NOT_OP expr
+    | BIN_ONES_COMPLEMENT_OP expr
+    | ARITHMETIC_PLUS_OP expr %prec UNARY_PLUS
+    | expr ARITHMETIC_POW_OP expr
+    | ARITHMETIC_MINUS_OP expr %prec UNARY_MINUS
+    | expr ARITHMETIC_MUL_OP expr
+    | expr ARITHMETIC_DIV_OP expr
+    | expr ARITHMETIC_MOD_OP expr
+    | expr ARITHMETIC_PLUS_OP expr
+    | expr ARITHMETIC_MINUS_OP expr
+    | expr BIN_LEFT_SHIFT_OP expr
+    | expr BIN_RIGHT_SHIFT_OP expr
+    | expr BIN_AND_OP expr
+    | expr BIN_OR_OP expr
+    | expr BIN_XOR_OP expr
+    | expr GREATER_OP expr
+    | expr LESS_OP expr
+    | expr GREATER_OR_EQL_OP expr
+    | expr LESS_OR_EQL_OP expr
+    | expr COMB_COMPRASION_OP expr
+    | expr EQL_OP expr
+    | expr CASE_EQL_OP expr
+    | expr NOT_EQL_OP expr
+    | expr LOGICAL_AND_OP expr
+    | expr LOGICAL_OR_OP expr
+    | expr INCLUSIVE_RANGE_OP expr
+    | expr EXCLUSIVE_RANGE_OP expr
+    | expr ASSIGN_OP expr
+    | expr MOD_ASSIGN_OP expr
+    | expr DIV_ASSIGN_OP expr
+    | expr SUB_ASSIGN_OP expr
+    | expr ADD_ASSIGN_OP expr
+    | expr MUL_ASSIGN_OP expr
+    | expr POW_ASSIGN_OP expr
+    | DEFINED_KEYWORD expr
+    | NOT_KEYWORD expr
+    | expr AND_KEYWORD expr 
+    | expr OR_KEYWORD expr 
+    | OPEN_ROUND_BRACKET expr CLOSE_ROUND_BRACKET 
+	| OPEN_SQUARE_BRACKET expr CLOSE_SQUARE_BRACKET 
+    ;
 
 %%
 

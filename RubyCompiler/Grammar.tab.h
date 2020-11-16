@@ -144,7 +144,9 @@ extern int yydebug;
     VAR_METHOD_NAME = 345,         /* VAR_METHOD_NAME  */
     INSTANCE_VAR_NAME = 346,       /* INSTANCE_VAR_NAME  */
     CLASS_NAME = 347,              /* CLASS_NAME  */
-    CLASS_VAR_NAME = 348           /* CLASS_VAR_NAME  */
+    CLASS_VAR_NAME = 348,          /* CLASS_VAR_NAME  */
+    UNARY_PLUS = 349,              /* UNARY_PLUS  */
+    UNARY_MINUS = 350              /* UNARY_MINUS  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
