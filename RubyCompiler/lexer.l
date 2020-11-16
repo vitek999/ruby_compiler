@@ -4,6 +4,7 @@
 
 %{
 	#include <stdio.h>
+    #include "Grammar.tab.h"
 
     void remove_char_from_str(const char * str, char * dest, char deleted_char);
     int binstr_to_dec(const char * str);
@@ -31,109 +32,109 @@ NUMBER_ALPHA_UNDERSCOPE [a-zA-Z0-9_]
     int nestingCount = 0;
 %}
 
-alias		{ printf("Found ALIAS_KEYWORD\n"); }
-and			{ printf("Found AND_KEYWORD\n"); }
-begin		{ printf("Found BEGIN_KEYWORD\n"); }
-break		{ printf("Found BREAK_KEYWORD\n"); }
-case		{ printf("Found CASE_KEYWORD\n"); }
-class		{ printf("Found CLASS_KEYWORD\n"); }
-def			{ printf("Found DEF_KEYWORD\n"); }
-"defined?"	{ printf("Found DEFINED_KEYWORD\n"); }
-do			{ printf("Found DO_KEYWORD\n"); }
-if			{ printf("Found IF_KEYWORD\n"); }
-else		{ printf("Found ELSE_KEYWORD\n"); }
-elsif		{ printf("Found ELSIF_KEYWORD\n"); }
-end			{ printf("Found END_KEYWORD\n"); }
-ensure		{ printf("Found ENSURE_KEYWORD\n"); }
-false		{ printf("Found FALSE_KEYWORD\n"); }
-for			{ printf("Found FOR_KEYWORD\n"); }
-in			{ printf("Found IN_KEYWORD\n"); }
-module		{ printf("Found MODULE_KEYWORD\n"); }
-next		{ printf("Found NEXT_KEYWORD\n"); }
-nil			{ printf("Found NIL_KEYWORD\n"); }
-not			{ printf("Found NOT_KEYWORD\n"); }
-or			{ printf("Found OR_KEYWORD\n"); }
-redo		{ printf("Found REDO_KEYWORD\n"); }
-rescue		{ printf("Found RESCUE_KEYWORD\n"); }
-retry		{ printf("Found RETRY_KEYWORD\n"); }
-return		{ printf("Found RETURN_KEYWORD\n"); }
-self		{ printf("Found SELF_KEYWORD\n"); }
-super		{ printf("Found SUPER_KEYWORD\n"); }
-then		{ printf("Found THEN_KEYWORD\n"); }
-true		{ printf("Found TRUE_KEYWORD\n"); }
-undef		{ printf("Found UNDEF_KEYWORD\n"); }
-unless		{ printf("Found UNLESS_KEYWORD\n"); }
-until		{ printf("Found UNTIL_KEYWORD\n"); }
-when		{ printf("Found WHEN_KEYWORD\n"); }
-while		{ printf("Found WHILE_KEYWORD\n"); }
-yield		{ printf("Found YIELD_KEYWORD\n"); }
+alias		{ return ALIAS_KEYWORD; }
+and			{ return AND_KEYWORD; }
+begin		{ return BEGIN_KEYWORD; }
+break		{ return BREAK_KEYWORD; }
+case		{ return CASE_KEYWORD; }
+class		{ return CLASS_KEYWORD; }
+def			{ return DEF_KEYWORD; }
+"defined?"	{ return DEFINED_KEYWORD; }
+do			{ return DO_KEYWORD; }
+if			{ return IF_KEYWORD; }
+else		{ return ELSE_KEYWORD; }
+elsif		{ return ELSIF_KEYWORD; }
+end			{ return END_KEYWORD; }
+ensure		{ return ENSURE_KEYWORD; }
+false		{ return FALSE_KEYWORD; }
+for			{ return FOR_KEYWORD; }
+in			{ return IN_KEYWORD; }
+module		{ return MODULE_KEYWORD; }
+next		{ return NEXT_KEYWORD; }
+nil			{ return NIL_KEYWORD; }
+not			{ return NOT_KEYWORD; }
+or			{ return OR_KEYWORD; }
+redo		{ return REDO_KEYWORD; }
+rescue		{ return RESCUE_KEYWORD; }
+retry		{ return RETRY_KEYWORD; }
+return		{ return RETURN_KEYWORD; }
+self		{ return SELF_KEYWORD; }
+super		{ return SUPER_KEYWORD; }
+then		{ return THEN_KEYWORD; }
+true		{ return TRUE_KEYWORD; }
+undef		{ return UNDEF_KEYWORD; }
+unless		{ return UNLESS_KEYWORD; }
+until		{ return UNTIL_KEYWORD; }
+when		{ return WHEN_KEYWORD; }
+while		{ return WHILE_KEYWORD; }
+yield		{ return YIELD_KEYWORD; }
 
-"+"         { printf("Found ARITHMETIC_PLUS_OP\n"); }   
-"-"         { printf("Found ARITHMETIC_MINUS_OP\n"); }
-"*"         { printf("Found ARITHMETIC_MUL_OP\n"); }
-"/"         { printf("Found ARITHMETIC_DIV_OP\n"); }
-"%"         { printf("Found ARITHMETIC_MOD_OP\n"); }
-"**"        { printf("Found ARITHMETIC_POW_OP\n"); }
+"+"         { return ARITHMETIC_PLUS_OP; }   
+"-"         { return ARITHMETIC_MINUS_OP; }
+"*"         { return ARITHMETIC_MUL_OP; }
+"/"         { return ARITHMETIC_DIV_OP; }
+"%"         { return ARITHMETIC_MOD_OP; }
+"**"        { return ARITHMETIC_POW_OP; }
 
-"=="        { printf("Found EQL_OP\n"); }
-"!="        { printf("Found NOT_EQL_OP\n"); }
-">"         { printf("Found GREATER_OP\n"); }
-"<"         { printf("Found LESS_OP\n"); }
-">="        { printf("Found GREATER_OR_EQL_OP\n"); }
-"<="        { printf("Found LESS_OR_EQL_OP\n"); }
-"<=>"       { printf("Found COMB_COMPRASION_OP\n"); }
-"==="       { printf("Found CASE_EQL_OP\n"); }
-"eql?"      { printf("Found RECEIVER_EQL_OP\n"); }
-"equal?"    { printf("Found OBJ_ID_EQL_OP\n"); }
+"=="        { return EQL_OP; }
+"!="        { return NOT_EQL_OP; }
+">"         { return GREATER_OP; }
+"<"         { return LESS_OP; }
+">="        { return GREATER_OR_EQL_OP; }
+"<="        { return LESS_OR_EQL_OP; }
+"<=>"       { return COMB_COMPRASION_OP; }
+"==="       { return CASE_EQL_OP; }
+"eql?"      { return RECEIVER_EQL_OP; }
+"equal?"    { return OBJ_ID_EQL_OP; }
 
-"="         { return yytext[0]; }
-"+="        { printf("Found ADD_ASSIGN_OP\n"); }
-"-="        { printf("Found SUB_ASSIGN_OP\n"); }
-"*="        { printf("Found MUL_ASSIGN_OP\n"); }
-"/="        { printf("Found DIV_ASSIGN_OP\n"); }
-"%="        { printf("Found MOD_ASSIGN_OP\n"); }
-"**="       { printf("Found POW_ASSIGN_OP\n"); }
+"="         { return ASSIGN_OP; }
+"+="        { return ADD_ASSIGN_OP; }
+"-="        { return SUB_ASSIGN_OP; }
+"*="        { return MUL_ASSIGN_OP; }
+"/="        { return DIV_ASSIGN_OP; }
+"%="        { return MOD_ASSIGN_OP; }
+"**="       { return POW_ASSIGN_OP; }
 
-"&"         { printf("Found BIN_AND_OP\n"); }
-"|"         { printf("Found BIN_OR_OP\n"); }
-"^"         { printf("Found BIN_XOR_OP\n"); }
-"~"         { printf("Found BIN_ONES_COMPLEMENT_OP\n"); }
-"<<"        { printf("Found BIN_LEFT_SHIFT_OP\n"); }
-">>"        { printf("Found BIN_RIGHT_SHIFT_OP\n"); }
+"&"         { return BIN_AND_OP; }
+"|"         { return BIN_OR_OP; }
+"^"         { return BIN_XOR_OP; }
+"~"         { return BIN_ONES_COMPLEMENT_OP; }
+"<<"        { return BIN_LEFT_SHIFT_OP; }
+">>"        { return BIN_RIGHT_SHIFT_OP; }
 
-"&&"        { printf("Found LOGICAL_AND_OP\n"); }
-"||"        { printf("Found LOGICAL_OR_OP\n"); }
-"!"         { printf("Found LOGICAL_NOT_OP\n"); }
+"&&"        { return LOGICAL_AND_OP; }
+"||"        { return LOGICAL_OR_OP; }
+"!"         { return LOGICAL_NOT_OP; }
 
-".."        { printf("Found INCLUSIVE_RANGE_OP\n"); }
-"..."       { printf("Found EXCLUSIVE_RANGE_OP\n"); }
+".."        { return INCLUSIVE_RANGE_OP; }
+"..."       { return EXCLUSIVE_RANGE_OP; }
 
-"("         { printf("Found OPEN_ROUND_BRACKET\n"); }
-")"         { printf("Found CLOSE_ROUND_BRACKET\n"); }
-"{"         { printf("Found OPEN_CURLY_BRACKET\n"); }
+"("         { return OPEN_ROUND_BRACKET; }
+")"         { return CLOSE_ROUND_BRACKET; }
+"{"         { return OPEN_CURLY_BRACKET; }
 "}"         {
                 if(nestingCount == 0) {
-                    printf("Found CLOSE_CURLY_BRACKET\n");
+                    return CLOSE_CURLY_BRACKET;
                 } else {
                     nestingCount--;
                     BEGIN(STRING);
                     string[0] = 0;
-                    printf("Found ARITHMETIC_PLUS_OP\n");
+                    return ARITHMETIC_PLUS_OP;
                 }
             }
-"["         { printf("Found OPEN_SQUARE_BRACKET\n"); }
-"]"         { printf("Found CLOSE_SQUARE_BRACKET\n"); }
+"["         { return OPEN_SQUARE_BRACKET; }
+"]"         { return CLOSE_SQUARE_BRACKET; }
 "<"         { printf("Found OPEN_ANGLE_BRACKET\n"); }
 ">"         { printf("Found CLOSE_ANGLE_BRACKET\n"); }
-"@"         { printf("Found COMMERCIAL_AT\n"); }
+"@"         { return COMMERCIAL_AT; }
 
-"?"         { printf("Found QUESTION_SYMBOL\n"); }
+"?"         { return QUESTION_SYMBOL; }
 
-"."         { printf("Found DOT_SYMBOL\n"); }
-","         { printf("Found COMMA_SYMBOL\n"); }
-":"         { printf("Found COLON_SYMBOL\n"); }
-"::"        { printf("Found DOUBLE_COLON_SYMBOL\n");}
-";"         { printf("Found SEMICOLON_SYMBOL\n"); }
+"."         { return DOT_SYMBOL; }
+","         { return COMMA_SYMBOL; }
+":"         { return COLON_SYMBOL; }
+"::"        { return DOUBLE_COLON_SYMBOL;}
+";"         { return SEMICOLON_SYMBOL; }
 
 \"          { 
                 string[0] = 0; 
@@ -183,7 +184,7 @@ yield		{ printf("Found YIELD_KEYWORD\n"); }
 0|[1-9]{DIGIT}*(_{DIGIT}+)*          { 
                                 remove_char_from_str(yytext,temp1,'_');
                                 num = atoi(temp1);
-                                printf("Found decimal number %d\n", num);
+                                return INTEGER_NUMBER;
                              }
 
 [1-9](_*{DIGIT}+)*_*   { printf("Found decimal number error1 %s\n", yytext); }
@@ -191,7 +192,7 @@ yield		{ printf("Found YIELD_KEYWORD\n"); }
 0[dD][1-9]{DIGIT}*(_{DIGIT}+)*        {
                                 remove_char_from_str(yytext+2,temp1,'_');
                                 num = atoi(temp1);
-                                printf("Found decimal number %d\n", num);              
+                                return INTEGER_NUMBER;              
                              }
 
 0_*[dD]_*[1-9](_*{DIGIT}+)*_* { printf("Found decimal number error2 %s\n", yytext); }
@@ -201,7 +202,7 @@ yield		{ printf("Found YIELD_KEYWORD\n"); }
                                         remove_char_from_str(temp1,temp2,'o');
                                         remove_char_from_str(temp2,temp1,'O');
                                         sscanf(temp1,"%o",&num);
-                                        printf("Found octal number %d\n", num);
+                                        return INTEGER_NUMBER;
                                      }
 
 0_*[oO]?_*{OCT_DIGIT}(_*{OCT_DIGIT}+)*_* { printf("Found oct number error %s\n", yytext); }
@@ -209,7 +210,7 @@ yield		{ printf("Found YIELD_KEYWORD\n"); }
 0[xX]{HEX_DIGIT}+(_{HEX_DIGIT}+)*    {
                                         remove_char_from_str(yytext + 2,temp1,'_');
                                         sscanf(temp1,"%x",&num);
-                                        printf("Found hex number %d\n", num);
+                                        return INTEGER_NUMBER;
                                     }
 
 0_*[xX]_*{HEX_DIGIT}(_*{HEX_DIGIT}+)*_* { printf("Found hex number error %s\n", yytext); }
@@ -217,7 +218,7 @@ yield		{ printf("Found YIELD_KEYWORD\n"); }
 0[bB]{BIN_DIGIT}+(_{BIN_DIGIT}+)*   {
                                         remove_char_from_str(yytext + 2,temp1,'_');
                                         num = binstr_to_dec(temp1);
-                                        printf("Found binary number %d\n", num); 
+                                        return INTEGER_NUMBER; 
                                     }
 
 0_*[bB]_*{BIN_DIGIT}(_*{BIN_DIGIT}+)*_* { printf("Found bin number error %s\n", yytext); }
@@ -227,7 +228,7 @@ yield		{ printf("Found YIELD_KEYWORD\n"); }
 (0|[1-9](_?{DIGIT})*)(\.{DIGIT}+(_{DIGIT}+)*)?({EXPONENT})?  {
                                                                  remove_char_from_str(yytext,temp1,'_');
                                                                  real_num = atof(temp1);
-                                                                 printf("Found float number %f\n", real_num); 
+                                                                 return FLOAT_NUMBER; 
                                                             }
 
 ([1-9]*_*(\.|\.{4,})_*{DIGIT}+)+(_*{DIGIT}*)*     { printf("Found float number error1 %s\n", yytext); }
@@ -255,20 +256,20 @@ yield		{ printf("Found YIELD_KEYWORD\n"); }
                                 }
 
 [a-z_]{NUMBER_ALPHA_UNDERSCOPE}*             {
-                                                printf("Found local variable or method name %s\n", yytext);
+                                                return VAR_METHOD_NAME;
                                              }
 \@[a-z_]{NUMBER_ALPHA_UNDERSCOPE}*                      {
-                                                             printf("Found instance variable %s\n", yytext);
+                                                             return INSTANCE_VAR_NAME;
                                                         }
 \@\@[a-z_]{NUMBER_ALPHA_UNDERSCOPE}*         {
-                                                 printf("Found class variable %s\n", yytext);
+                                                 return CLASS_VAR_NAME;
                                              }
 
 [A-Z]{NUMBER_ALPHA_UNDERSCOPE}*            {
-                                                printf("Found class name %s\n", yytext);
+                                                return CLASS_NAME;
                                            }
 
-\n      { //printf("Found new line\n"); 
+\n      { return NEW_LINE_SYMBOL;
         }
 %% 
 
