@@ -23,5 +23,18 @@
     <ClCompile Include="lexer.flex.c">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="Grammar.tab.c">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Bison Include="Grammar.y">
+      <Filter>Исходные файлы</Filter>
+    </Bison>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Grammar.tab.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

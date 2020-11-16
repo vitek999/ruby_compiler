@@ -86,7 +86,7 @@ yield		{ printf("Found YIELD_KEYWORD\n"); }
 "eql?"      { printf("Found RECEIVER_EQL_OP\n"); }
 "equal?"    { printf("Found OBJ_ID_EQL_OP\n"); }
 
-"="         { printf("Found ASSIGN_OP\n"); }
+"="         { return yytext[0]; }
 "+="        { printf("Found ADD_ASSIGN_OP\n"); }
 "-="        { printf("Found SUB_ASSIGN_OP\n"); }
 "*="        { printf("Found MUL_ASSIGN_OP\n"); }
@@ -296,9 +296,3 @@ int binstr_to_dec(const char * str) {
     return (int) r;
 }
 
-void main(int argc, char **argv ){
-	yyin = fopen(argv[1], "r" );
-
-    yylex();
-    return;
-}
