@@ -178,6 +178,12 @@ expr: INTEGER_NUMBER
     | expr OR_KEYWORD expr 
     | OPEN_ROUND_BRACKET expr CLOSE_ROUND_BRACKET 
 	| OPEN_SQUARE_BRACKET expr CLOSE_SQUARE_BRACKET 
+    | id
+    | method_call_stmt
+    ;
+
+id: VAR_METHOD_NAME
+    | INSTANCE_VAR_NAME
     ;
 
 new_lines: NEW_LINE_SYMBOL
@@ -198,6 +204,13 @@ stmt_ends: stmt_end
 
 stmt: expr stmt_ends
     | stmt_block
+    | if_stmt
+    | for_stmt
+    | while_stmt
+    | while_modifier_stmt /* maybe binary opertaor with N/A association */
+    | until_stmt
+    | until_modifier_stmt /* maybe binary opertaor with N/A association */
+    | def_method_stmt
     ;
 
 stmt_list_not_empty: stmt
@@ -210,6 +223,69 @@ stmt_list: /* empty */
 
 stmt_block: BEGIN_KEYWORD stmt_list END_KEYWORD
     ;
+
+if_start_stmt: IF_KEYWORD expr stmt_ends stmt_list
+    | IF_KEYWORD expr THEN_KEYWORD stmt_list
+    ;
+
+elsif_stmt: ELSIF_KEYWORD expr stmt_ends stmt_list
+    | ELSIF_KEYWORD expr THEN_KEYWORD stmt_list
+    ;
+
+elsif_stmt_list: elsif_stmt
+    | elsif_stmt_list stmt_ends elsif_stmt
+    ;
+
+if_stmt: if_start_stmt END_KEYWORD
+    | if_start_stmt ELSE_KEYWORD stmt_list END_KEYWORD 
+    | if_start_stmt elsif_stmt_list END_KEYWORD
+    | if_start_stmt elsif_stmt_list ELSE_KEYWORD stmt_list END_KEYWORD
+    ;
+
+for_stmt: FOR_KEYWORD id IN_KEYWORD expr stmt_ends stmt_list END_KEYWORD
+	| FOR_KEYWORD id IN_KEYWORD expr DO_KEYWORD stmt_list END_KEYWORD
+	;
+
+while_stmt: WHILE_KEYWORD expr stmt_ends stmt_list END_KEYWORD
+	| WHILE_KEYWORD expr DO_KEYWORD stmt_list END_KEYWORD
+	;
+
+while_modifier_stmt: stmt WHILE_KEYWORD expr
+	;
+
+until_stmt: UNTIL_KEYWORD expr stmt_ends stmt_list END_KEYWORD
+	| UNTIL_KEYWORD expr DO_KEYWORD stmt_list END_KEYWORD
+	;
+
+until_modifier_stmt: stmt UNTIL_KEYWORD expr
+	;
+
+method_param: VAR_METHOD_NAME
+	| VAR_METHOD_NAME ASSIGN_OP expr
+	;
+
+method_params_list: /* empty */
+	| method_params_list_not_empty
+	;
+
+method_params_list_not_empty: method_param
+	| method_params_list_not_empty COMMA_SYMBOL method_param
+	;
+
+def_method_stmt: DEF_KEYWORD VAR_METHOD_NAME stmt_ends stmt_list END_KEYWORD  
+    | DEF_KEYWORD VAR_METHOD_NAME OPEN_ROUND_BRACKET method_params_list CLOSE_ROUND_BRACKET stmt_list END_KEYWORD
+    ;
+
+method_call_param_list: /* empty */
+	| method_call_param_list_not_empty
+	;
+
+method_call_param_list_not_empty: expr
+	| method_call_param_list_not_empty COMMA_SYMBOL expr
+	;
+
+method_call_stmt: VAR_METHOD_NAME OPEN_ROUND_BRACKET method_call_param_list CLOSE_ROUND_BRACKET
+	; /* Есть еще вариант без скобочек, не знаю, есть ли смысл его рассматривать */
 
 %%
 
