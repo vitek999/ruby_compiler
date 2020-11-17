@@ -1,3 +1,5 @@
+%define parse.error verbose
+
 %{
 #include <stdio.h>
 void yyerror(const char* message) {
@@ -112,78 +114,78 @@ extern FILE* yyin;
 %token CLASS_NAME
 %token CLASS_VAR_NAME
 
-%right LOGICAL_NOT_OP BIN_ONES_COMPLEMENT_OP UNARY_PLUS ARITHMETIC_POW_OP  
-%right UNARY_MINUS
-%left ARITHMETIC_MUL_OP ARITHMETIC_DIV_OP ARITHMETIC_MOD_OP
-%left ARITHMETIC_PLUS_OP ARITHMETIC_MINUS_OP
-%left BIN_LEFT_SHIFT_OP BIN_RIGHT_SHIFT_OP
-%left BIN_AND_OP
-%left BIN_OR_OP BIN_XOR_OP
-%left GREATER_OP LESS_OP GREATER_OR_EQL_OP LESS_OR_EQL_OP
-%nonassoc COMB_COMPRASION_OP EQL_OP CASE_EQL_OP NOT_EQL_OP
-%left LOGICAL_AND_OP
-%left LOGICAL_OR_OP
-%nonassoc INCLUSIVE_RANGE_OP EXCLUSIVE_RANGE_OP
-%right ASSIGN_OP MOD_ASSIGN_OP DIV_ASSIGN_OP SUB_ASSIGN_OP ADD_ASSIGN_OP MUL_ASSIGN_OP POW_ASSIGN_OP
-%nonassoc DEFINED_KEYWORD
-%right NOT_KEYWORD
+%start program
+
 %left AND_KEYWORD OR_KEYWORD
+%right NOT_KEYWORD
+%nonassoc DEFINED_KEYWORD
+%right ASSIGN_OP MOD_ASSIGN_OP DIV_ASSIGN_OP SUB_ASSIGN_OP ADD_ASSIGN_OP MUL_ASSIGN_OP POW_ASSIGN_OP
+%nonassoc INCLUSIVE_RANGE_OP EXCLUSIVE_RANGE_OP
+%left LOGICAL_OR_OP
+%left LOGICAL_AND_OP
+%nonassoc COMB_COMPRASION_OP EQL_OP CASE_EQL_OP NOT_EQL_OP
+%left GREATER_OP LESS_OP GREATER_OR_EQL_OP LESS_OR_EQL_OP
+%left BIN_OR_OP BIN_XOR_OP
+%left BIN_AND_OP
+%left BIN_LEFT_SHIFT_OP BIN_RIGHT_SHIFT_OP
+%left ARITHMETIC_PLUS_OP ARITHMETIC_MINUS_OP
+%left ARITHMETIC_MUL_OP ARITHMETIC_DIV_OP ARITHMETIC_MOD_OP
+%right UNARY_MINUS
+%right LOGICAL_NOT_OP BIN_ONES_COMPLEMENT_OP UNARY_PLUS ARITHMETIC_POW_OP  
 %nonassoc CLOSE_ROUND_BRACKET
 
 %%
+program: stmt_list  { puts("program"); }
 
-expr: INTEGER_NUMBER
-    | FLOAT_NUMBER
-    | STRING
-    | NIL_KEYWORD
-    | TRUE_KEYWORD
-    | FALSE_KEYWORD
-    | LOGICAL_NOT_OP expr
-    | BIN_ONES_COMPLEMENT_OP expr
-    | ARITHMETIC_PLUS_OP expr %prec UNARY_PLUS
-    | expr ARITHMETIC_POW_OP expr
-    | ARITHMETIC_MINUS_OP expr %prec UNARY_MINUS
-    | expr ARITHMETIC_MUL_OP expr
-    | expr ARITHMETIC_DIV_OP expr
-    | expr ARITHMETIC_MOD_OP expr
-    | expr ARITHMETIC_PLUS_OP expr
-    | expr ARITHMETIC_MINUS_OP expr
-    | expr BIN_LEFT_SHIFT_OP expr
-    | expr BIN_RIGHT_SHIFT_OP expr
-    | expr BIN_AND_OP expr
-    | expr BIN_OR_OP expr
-    | expr BIN_XOR_OP expr
-    | expr GREATER_OP expr
-    | expr LESS_OP expr
-    | expr GREATER_OR_EQL_OP expr
-    | expr LESS_OR_EQL_OP expr
-    | expr COMB_COMPRASION_OP expr
-    | expr EQL_OP expr
-    | expr CASE_EQL_OP expr
-    | expr NOT_EQL_OP expr
-    | expr LOGICAL_AND_OP expr
-    | expr LOGICAL_OR_OP expr
-    | expr INCLUSIVE_RANGE_OP expr
-    | expr EXCLUSIVE_RANGE_OP expr
-    | expr ASSIGN_OP expr
-    | expr MOD_ASSIGN_OP expr
-    | expr DIV_ASSIGN_OP expr
-    | expr SUB_ASSIGN_OP expr
-    | expr ADD_ASSIGN_OP expr
-    | expr MUL_ASSIGN_OP expr
-    | expr POW_ASSIGN_OP expr
-    | DEFINED_KEYWORD expr
-    | NOT_KEYWORD expr
-    | expr AND_KEYWORD expr 
-    | expr OR_KEYWORD expr 
-    | OPEN_ROUND_BRACKET expr CLOSE_ROUND_BRACKET 
-	| OPEN_SQUARE_BRACKET expr CLOSE_SQUARE_BRACKET 
-    | id
-    | method_call_stmt
-    ;
-
-id: VAR_METHOD_NAME
-    | INSTANCE_VAR_NAME
+expr: INTEGER_NUMBER { puts("integer"); }
+    | FLOAT_NUMBER   { puts("float"); }
+    | STRING         { puts("string"); }
+    | NIL_KEYWORD    { puts("nil"); }
+    | TRUE_KEYWORD   { puts("true"); }
+    | FALSE_KEYWORD  { puts("false"); }
+    | LOGICAL_NOT_OP expr { puts("LOGICAL_NOT_OP"); }
+    | BIN_ONES_COMPLEMENT_OP expr { puts("BIN_ONES_COMPLEMENT_OP"); }
+    | ARITHMETIC_PLUS_OP expr %prec UNARY_PLUS { puts("unary plus"); }
+    | expr ARITHMETIC_POW_OP expr { puts("pow"); }
+    | ARITHMETIC_MINUS_OP expr %prec UNARY_MINUS  { puts("unary minus"); }
+    | expr ARITHMETIC_MUL_OP expr  { puts("mul"); }
+    | expr ARITHMETIC_DIV_OP expr { puts("div"); }
+    | expr ARITHMETIC_MOD_OP expr  { puts("mod"); }
+    | expr ARITHMETIC_PLUS_OP expr { puts("plus"); }
+    | expr ARITHMETIC_MINUS_OP expr { puts("minus"); }
+    | expr BIN_LEFT_SHIFT_OP expr  { puts("left shift"); }
+    | expr BIN_RIGHT_SHIFT_OP expr { puts("right shift"); }
+    | expr BIN_AND_OP expr { puts("bin and"); }
+    | expr BIN_OR_OP expr   { puts("bin or"); }
+    | expr BIN_XOR_OP expr  { puts("bin xor"); }
+    | expr GREATER_OP expr  { puts(" > "); }
+    | expr LESS_OP expr      { puts(" < "); }
+    | expr GREATER_OR_EQL_OP expr  { puts(" >= "); }
+    | expr LESS_OR_EQL_OP expr      { puts(" <= "); }
+    | expr COMB_COMPRASION_OP expr   { puts(" COMB_COMPRASION_OP "); }
+    | expr EQL_OP expr          { puts(" EQL_OP "); }
+    | expr CASE_EQL_OP expr     { puts(" CASE_EQL_OP "); }
+    | expr NOT_EQL_OP expr      { puts("NOT_EQL_OP"); }
+    | expr LOGICAL_AND_OP expr  { puts("LOGICAL_AND_OP"); }
+    | expr LOGICAL_OR_OP expr   { puts("LOGICAL_OR_OP"); }
+    | expr INCLUSIVE_RANGE_OP expr  { puts("INCLUSIVE_RANGE_OP"); }
+    | expr EXCLUSIVE_RANGE_OP expr  { puts("EXCLUSIVE_RANGE_OP"); }
+    | expr ASSIGN_OP expr           { puts("assign"); }
+    | expr MOD_ASSIGN_OP expr               { puts("MOD_ASSIGN_OP"); }
+    | expr DIV_ASSIGN_OP expr       { puts("DIV_ASSIGN_OP"); }
+    | expr SUB_ASSIGN_OP expr        { puts("SUB_ASSIGN_OP"); }
+    | expr ADD_ASSIGN_OP expr         { puts("SUB_ASSIGN_OP"); }
+    | expr MUL_ASSIGN_OP expr           { puts("MUL_ASSIGN_OP"); }
+    | expr POW_ASSIGN_OP expr       { puts("POW_ASSIGN_OP"); }
+    | DEFINED_KEYWORD expr          { puts("DEFINED_KEYWORD"); }
+    | NOT_KEYWORD expr               { puts("NOT_KEYWORD"); }
+    | expr AND_KEYWORD expr         { puts("AND_KEYWORD"); }
+    | expr OR_KEYWORD expr          { puts("OR_KEYWORD"); }
+    | OPEN_ROUND_BRACKET expr CLOSE_ROUND_BRACKET    { puts(" expr in round brackets "); }
+	| OPEN_SQUARE_BRACKET expr CLOSE_SQUARE_BRACKET     { puts(" expr in square brackets "); }
+    | method_call_stmt                       { puts("method call"); }
+    | VAR_METHOD_NAME  { puts("var"); }     
+    | INSTANCE_VAR_NAME     { puts("instance var"); }
     ;
 
 new_lines: NEW_LINE_SYMBOL
@@ -202,62 +204,81 @@ stmt_ends: stmt_end
     | stmt_ends stmt_end
     ;
 
-stmt: expr stmt_ends
-    | stmt_block
-    | if_stmt
-    | for_stmt
-    | while_stmt
-    | while_modifier_stmt /* maybe binary opertaor with N/A association */
-    | until_stmt
-    | until_modifier_stmt /* maybe binary opertaor with N/A association */
-    | def_method_stmt
+stmt: expr stmt_ends { puts("stmt"); }
+    | stmt_block    { puts("stmt block"); }
+    | stmt_block stmt_ends
+    | if_stmt       { puts("if stmt"); }
+    | if_stmt stmt_ends    { puts("if stmt"); }
+    | for_stmt       { puts("for stmt"); }
+    | for_stmt stmt_ends
+    | while_stmt         { puts("while stmt"); }
+    | while_stmt stmt_ends       { puts("while stmt"); }
+    | while_modifier_stmt /* maybe binary opertaor with N/A association */ { puts("while modifer stmt"); }
+    | while_modifier_stmt stmt_ends /* maybe binary opertaor with N/A association */ { puts("while modifer stmt"); }
+    | until_stmt    { puts("until stmt"); }
+    | until_stmt stmt_ends   { puts("until stmt"); }
+    | until_modifier_stmt /* maybe binary opertaor with N/A association */ { puts("until modifer stmt"); }
+    | until_modifier_stmt stmt_ends /* maybe binary opertaor with N/A association */ { puts("until modifer stmt"); }
+    | def_method_stmt   { puts("def method"); }
+    | def_method_stmt stmt_ends { puts("def method"); }
     ;
 
-stmt_list_not_empty: stmt
-    | stmt_list_not_empty stmt
+stmt_list_not_empty: stmt  { puts("list from one stmt"); }
+    | stmt_list_not_empty stmt { puts("add stmt to list"); }
     ;
 
-stmt_list: /* empty */
-    | stmt_list_not_empty
+stmt_list: /* empty */ { puts("empty stmt list"); }
+    | stmt_list_not_empty  { puts("stmt list"); }
     ;
 
-stmt_block: BEGIN_KEYWORD stmt_list END_KEYWORD
+stmt_block: BEGIN_KEYWORD stmt_list END_KEYWORD  { puts("begin without stmt ends"); }
+    | BEGIN_KEYWORD stmt_ends stmt_list END_KEYWORD { puts("begin with stmt ends"); }
     ;
 
-if_start_stmt: IF_KEYWORD expr stmt_ends stmt_list
-    | IF_KEYWORD expr THEN_KEYWORD stmt_list
+if_start_stmt: IF_KEYWORD expr stmt_ends stmt_list { puts("if without then"); }
+    | IF_KEYWORD expr THEN_KEYWORD stmt_list { puts("if with then"); }
+    | IF_KEYWORD expr THEN_KEYWORD stmt_ends stmt_list { puts("if with then"); }
     ;
 
-elsif_stmt: ELSIF_KEYWORD expr stmt_ends stmt_list
-    | ELSIF_KEYWORD expr THEN_KEYWORD stmt_list
+elsif_stmt: ELSIF_KEYWORD expr stmt_ends stmt_list { puts("elsif without then");  } 
+    | ELSIF_KEYWORD expr THEN_KEYWORD stmt_list { puts("elsif with then");  } 
+    | ELSIF_KEYWORD expr THEN_KEYWORD stmt_ends stmt_list { puts("elsif with then");  } 
     ;
 
-elsif_stmt_list: elsif_stmt
-    | elsif_stmt_list stmt_ends elsif_stmt
+elsif_stmt_list: elsif_stmt 
+    | elsif_stmt_list elsif_stmt
     ;
 
 if_stmt: if_start_stmt END_KEYWORD
     | if_start_stmt ELSE_KEYWORD stmt_list END_KEYWORD 
+    | if_start_stmt ELSE_KEYWORD stmt_ends stmt_list END_KEYWORD 
     | if_start_stmt elsif_stmt_list END_KEYWORD
     | if_start_stmt elsif_stmt_list ELSE_KEYWORD stmt_list END_KEYWORD
+    | if_start_stmt elsif_stmt_list ELSE_KEYWORD stmt_ends stmt_list END_KEYWORD
     ;
 
-for_stmt: FOR_KEYWORD id IN_KEYWORD expr stmt_ends stmt_list END_KEYWORD
-	| FOR_KEYWORD id IN_KEYWORD expr DO_KEYWORD stmt_list END_KEYWORD
+for_stmt: FOR_KEYWORD VAR_METHOD_NAME IN_KEYWORD expr stmt_ends stmt_list END_KEYWORD 
+    | FOR_KEYWORD INSTANCE_VAR_NAME IN_KEYWORD expr stmt_ends stmt_list END_KEYWORD
+	| FOR_KEYWORD VAR_METHOD_NAME IN_KEYWORD expr DO_KEYWORD stmt_list END_KEYWORD
+    | FOR_KEYWORD VAR_METHOD_NAME IN_KEYWORD expr DO_KEYWORD stmt_ends stmt_list END_KEYWORD
+    | FOR_KEYWORD INSTANCE_VAR_NAME IN_KEYWORD expr DO_KEYWORD stmt_list END_KEYWORD
+    | FOR_KEYWORD INSTANCE_VAR_NAME IN_KEYWORD expr DO_KEYWORD stmt_ends stmt_list END_KEYWORD
 	;
 
 while_stmt: WHILE_KEYWORD expr stmt_ends stmt_list END_KEYWORD
 	| WHILE_KEYWORD expr DO_KEYWORD stmt_list END_KEYWORD
+    | WHILE_KEYWORD expr DO_KEYWORD stmt_ends stmt_list END_KEYWORD
 	;
 
-while_modifier_stmt: stmt WHILE_KEYWORD expr
+while_modifier_stmt: expr WHILE_KEYWORD expr
 	;
 
 until_stmt: UNTIL_KEYWORD expr stmt_ends stmt_list END_KEYWORD
 	| UNTIL_KEYWORD expr DO_KEYWORD stmt_list END_KEYWORD
+    | UNTIL_KEYWORD expr DO_KEYWORD stmt_ends stmt_list END_KEYWORD
 	;
 
-until_modifier_stmt: stmt UNTIL_KEYWORD expr
+until_modifier_stmt: expr UNTIL_KEYWORD expr
 	;
 
 method_param: VAR_METHOD_NAME

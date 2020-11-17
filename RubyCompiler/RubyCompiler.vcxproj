@@ -154,6 +154,7 @@
     <Bison Include="Grammar.y">
       <OutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(Filename).tab.c</OutputFile>
       <Debug Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</Debug>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">--verbose %(AdditionalOptions)</AdditionalOptions>
     </Bison>
   </ItemGroup>
   <ItemGroup>

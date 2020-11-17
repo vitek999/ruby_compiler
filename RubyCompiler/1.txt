@@ -1,2 +1,11 @@
-=
-+
+def main
+print(1)
+end
+def another
+print(1)
+end
+if true then
+main()
+else
+another()
+end
