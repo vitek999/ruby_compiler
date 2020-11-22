@@ -124,8 +124,6 @@ yield		{ return YIELD_KEYWORD; }
             }
 "["         { return OPEN_SQUARE_BRACKET; }
 "]"         { return CLOSE_SQUARE_BRACKET; }
-"<"         { printf("Found OPEN_ANGLE_BRACKET\n"); }
-">"         { printf("Found CLOSE_ANGLE_BRACKET\n"); }
 "@"         { return COMMERCIAL_AT; }
 
 "?"         { return QUESTION_SYMBOL; }

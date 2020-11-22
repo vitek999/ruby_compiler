@@ -51,5 +51,21 @@ struct expr_struct {
 	int int_val; /* For integer and boolean values */
 	float float_val;
 	struct expr_struct * left;
-	struct expr_struct* right;
+	struct expr_struct * right;
+};
+
+enum stmt_type {
+	expr_stmt_t
+};
+
+struct stmt_struct {
+	enum stmt_type type;
+	struct expr_struct * expr_f;
+	struct stmt_struct * next;
+};
+
+struct stmt_list_struct
+{
+	struct stmt_struct * first;
+	struct stmt_struct * last;
 };

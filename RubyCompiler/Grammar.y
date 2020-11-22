@@ -16,6 +16,8 @@ struct expr_struct * create_const_integer_expr(enum expr_type type, int val);
 struct expr_struct * create_const_float_expr(float val);
 struct expr_struct * create_const_string_expr(enum expr_type type, char * val);
 struct expr_struct * create_op_expr(enum expr_type type, struct expr_struct * left, struct expr_struct * right);
+struct stmt_list_struct * create_stmt_list(struct stmt_struct * val);
+struct stmt_list_struct * add_to_stmt_list(struct stmt_list_struct * list, struct stmt_struct * val);
 
 %}
 
@@ -28,9 +30,13 @@ struct expr_struct * create_op_expr(enum expr_type type, struct expr_struct * le
     char * class_name_un;
     char * class_var_name_un;
     struct expr_struct * expr_un; 
+    struct stmt_struct * stmt_un;
+    struct stmt_list_struct * stmt_list_un;
 }
 
 %type <expr_un> expr
+%type <stmt_un> stmt
+%type <stmt_list_un> stmt_list
 
 %token ALIAS_KEYWORD
 %token AND_KEYWORD
@@ -136,9 +142,10 @@ struct expr_struct * create_op_expr(enum expr_type type, struct expr_struct * le
 
 %start program
 
+%left UNTIL_KEYWORD WHILE_KEYWORD
 %left AND_KEYWORD OR_KEYWORD
 %right NOT_KEYWORD
-%nonassoc DEFINED_KEYWORD
+%left DEFINED_KEYWORD
 %right ASSIGN_OP MOD_ASSIGN_OP DIV_ASSIGN_OP SUB_ASSIGN_OP ADD_ASSIGN_OP MUL_ASSIGN_OP POW_ASSIGN_OP
 %nonassoc INCLUSIVE_RANGE_OP EXCLUSIVE_RANGE_OP
 %left LOGICAL_OR_OP
@@ -152,7 +159,7 @@ struct expr_struct * create_op_expr(enum expr_type type, struct expr_struct * le
 %left ARITHMETIC_MUL_OP ARITHMETIC_DIV_OP ARITHMETIC_MOD_OP
 %right UNARY_MINUS
 %right LOGICAL_NOT_OP BIN_ONES_COMPLEMENT_OP UNARY_PLUS ARITHMETIC_POW_OP  
-%nonassoc CLOSE_ROUND_BRACKET
+%nonassoc OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET
 
 %%
 program: stmt_list  { puts("program"); }
@@ -197,31 +204,23 @@ expr: INTEGER_NUMBER { $$=create_const_integer_expr(Integer, $1); /* puts("integ
     | expr ADD_ASSIGN_OP expr { $$=create_op_expr(add_assign, $1, $3); /* puts("SUB_ASSIGN_OP"); */ }
     | expr MUL_ASSIGN_OP expr { $$=create_op_expr(mul_assign, $1, $3); /* puts("MUL_ASSIGN_OP"); */ }
     | expr POW_ASSIGN_OP expr { $$=create_op_expr(pow_assign, $1, $3); /* puts("POW_ASSIGN_OP"); */ }
+    | expr UNTIL_KEYWORD expr {}  
+    | expr WHILE_KEYWORD expr {}  
     | DEFINED_KEYWORD expr { $$=create_op_expr(defined, $2, 0); /* puts("DEFINED_KEYWORD"); */ }
     | NOT_KEYWORD expr { $$=create_op_expr(not_keyword, $2, 0); /* puts("NOT_KEYWORD");  */ }
     | expr AND_KEYWORD expr { $$=create_op_expr(and_keyword, $1, $3); /* puts("AND_KEYWORD"); */ }
     | expr OR_KEYWORD expr { $$=create_op_expr(or_keyword, $1, $3); /* puts("OR_KEYWORD"); */ }
-    | OPEN_ROUND_BRACKET expr CLOSE_ROUND_BRACKET { $$=$2 /* puts(" expr in round brackets "); */ }
+    | OPEN_ROUND_BRACKET expr CLOSE_ROUND_BRACKET { $$=$2; /* puts(" expr in round brackets "); */ }
 	| OPEN_SQUARE_BRACKET expr CLOSE_SQUARE_BRACKET { puts(" expr in square brackets "); }
-    | method_call_stmt { puts("method call"); /*!!!! ВОПРОС !!!!*/ }
+    | VAR_METHOD_NAME OPEN_ROUND_BRACKET method_call_param_list CLOSE_ROUND_BRACKET { puts("method call"); /*!!!! ВОПРОС !!!!*/ }
     | VAR_METHOD_NAME { $$=create_const_string_expr(var_or_method, $1); /* puts("var"); */ }     
     | INSTANCE_VAR_NAME { $$=create_const_string_expr(instance_var, $1); /* puts("instance var"); */ }
     ;
 
-new_lines: NEW_LINE_SYMBOL
-    | new_lines NEW_LINE_SYMBOL
-    ;
-
-semicolons: SEMICOLON_SYMBOL
-    | semicolons SEMICOLON_SYMBOL
-    ;
-
-stmt_end: new_lines
-    | semicolons
-    ;
-
-stmt_ends: stmt_end
-    | stmt_ends stmt_end
+stmt_ends: SEMICOLON_SYMBOL
+    | NEW_LINE_SYMBOL
+    | SEMICOLON_SYMBOL stmt_ends
+    | NEW_LINE_SYMBOL stmt_ends
     ;
 
 stmt: expr stmt_ends { puts("stmt"); }
@@ -233,12 +232,8 @@ stmt: expr stmt_ends { puts("stmt"); }
     | for_stmt stmt_ends
     | while_stmt         { puts("while stmt"); }
     | while_stmt stmt_ends       { puts("while stmt"); }
-    | while_modifier_stmt /* maybe binary opertaor with N/A association */ { puts("while modifer stmt"); }
-    | while_modifier_stmt stmt_ends /* maybe binary opertaor with N/A association */ { puts("while modifer stmt"); }
     | until_stmt    { puts("until stmt"); }
     | until_stmt stmt_ends   { puts("until stmt"); }
-    | until_modifier_stmt /* maybe binary opertaor with N/A association */ { puts("until modifer stmt"); }
-    | until_modifier_stmt stmt_ends /* maybe binary opertaor with N/A association */ { puts("until modifer stmt"); }
     | def_method_stmt   { puts("def method"); }
     | def_method_stmt stmt_ends { puts("def method"); }
     ;
@@ -290,15 +285,9 @@ while_stmt: WHILE_KEYWORD expr stmt_ends stmt_list END_KEYWORD
     | WHILE_KEYWORD expr DO_KEYWORD stmt_ends stmt_list END_KEYWORD
 	;
 
-while_modifier_stmt: expr WHILE_KEYWORD expr
-	;
-
 until_stmt: UNTIL_KEYWORD expr stmt_ends stmt_list END_KEYWORD
 	| UNTIL_KEYWORD expr DO_KEYWORD stmt_list END_KEYWORD
     | UNTIL_KEYWORD expr DO_KEYWORD stmt_ends stmt_list END_KEYWORD
-	;
-
-until_modifier_stmt: expr UNTIL_KEYWORD expr
 	;
 
 method_param: VAR_METHOD_NAME
@@ -324,9 +313,6 @@ method_call_param_list: /* empty */
 method_call_param_list_not_empty: expr
 	| method_call_param_list_not_empty COMMA_SYMBOL expr
 	;
-
-method_call_stmt: VAR_METHOD_NAME OPEN_ROUND_BRACKET method_call_param_list CLOSE_ROUND_BRACKET
-	; /* Есть еще вариант без скобочек, не знаю, есть ли смысл его рассматривать */
 
 %%
 
@@ -356,6 +342,19 @@ struct expr_struct * create_op_expr(enum expr_type type, struct expr_struct * le
     result->type = type;
     result->left = left;
     result->right = right;
+}
+
+struct stmt_list_struct * create_stmt_list(struct stmt_struct * val) {
+    struct stmt_list_struct * res = (struct stmt_list_struct *) malloc(sizeof(struct stmt_list_struct));
+    res->first = val;
+    res->last = val;
+    return res;
+}
+
+struct stmt_list_struct * add_to_stmt_list(struct stmt_list_struct * list, struct stmt_struct * val) {
+    list->last->next = val;
+    list->last = val;
+    return list;
 }
 
 void main(int argc, char **argv ){

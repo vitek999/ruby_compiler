@@ -374,8 +374,8 @@ static void yynoreturn yy_fatal_error ( const char* msg  );
 	(yy_hold_char) = *yy_cp; \
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
-#define YY_NUM_RULES 127
-#define YY_END_OF_BUFFER 128
+#define YY_NUM_RULES 125
+#define YY_END_OF_BUFFER 126
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -385,44 +385,44 @@ struct yy_trans_info
 	};
 static const flex_int16_t yy_accept[351] =
     {   0,
-        0,    0,  121,  121,    0,    0,  128,  127,  126,   68,
-       86,  118,   41,   60,   71,   72,   39,   37,   82,   38,
-       81,   40,  105,  105,   83,   85,   46,   53,   45,   80,
-       79,  125,   75,   76,   62,  122,  122,  122,  122,  122,
-      122,  122,  122,  122,  122,  122,  122,  122,  122,  122,
-      122,  122,  122,   73,   61,   74,   63,   53,  121,  121,
-       88,  104,   89,  127,   89,   44,  118,   58,   66,   42,
-       56,   54,   55,   69,  116,    0,   57,    0,  109,    0,
-        0,    0,    0,    0,    0,    0,  105,  105,  117,  106,
-       84,   64,   48,   43,   47,   65,    0,  123,  125,    0,
+        0,    0,  119,  119,    0,    0,  126,  125,  124,   68,
+       84,  116,   41,   60,   71,   72,   39,   37,   80,   38,
+       79,   40,  103,  103,   81,   83,   46,   53,   45,   78,
+       77,  123,   75,   76,   62,  120,  120,  120,  120,  120,
+      120,  120,  120,  120,  120,  120,  120,  120,  120,  120,
+      120,  120,  120,   73,   61,   74,   63,   53,  119,  119,
+       86,  102,   87,  125,   87,   44,  116,   58,   66,   42,
+       56,   54,   55,   69,  114,    0,   57,    0,  107,    0,
+        0,    0,    0,    0,    0,    0,  103,  103,  115,  104,
+       82,   64,   48,   43,   47,   65,    0,  121,  123,    0,
 
-      122,  122,  122,  122,  122,  122,  122,  122,  122,    9,
-      122,  122,  122,  122,  122,   10,   17,  122,  122,  122,
-      122,   22,  122,  122,  122,  122,  122,  122,  122,  122,
-       67,    0,  121,  121,   88,   87,  100,  101,   99,   91,
-       92,   97,   95,   90,   96,   98,   93,   94,  103,   59,
-       70,  116,  116,  116,  115,  109,  110,  113,    0,  107,
-        0,    0,  115,    0,  111,    0,  110,    0,    0,    0,
-        0,    0,  115,  117,    0,    0,  106,  117,  117,  115,
-        0,  105,  106,   49,   50,  124,  123,    0,  122,    2,
-      122,  122,  122,  122,    7,  122,   13,  122,  122,  122,
+      120,  120,  120,  120,  120,  120,  120,  120,  120,    9,
+      120,  120,  120,  120,  120,   10,   17,  120,  120,  120,
+      120,   22,  120,  120,  120,  120,  120,  120,  120,  120,
+       67,    0,  119,  119,   86,   85,   98,   99,   97,   89,
+       90,   95,   93,   88,   94,   96,   91,   92,  101,   59,
+       70,  114,  114,  114,  113,  107,  108,  111,    0,  105,
+        0,    0,  113,    0,  109,    0,  108,    0,    0,    0,
+        0,    0,  113,  115,    0,    0,  104,  115,  115,  113,
+        0,  103,  104,   49,   50,  122,  121,    0,  120,    2,
+      120,  120,  120,  120,    7,  120,   13,  120,  120,  120,
 
-      122,   16,  122,  122,   20,   21,  122,  122,  122,  122,
-      122,  122,  122,  122,  122,  122,  122,  122,  122,    0,
-      121,  101,  103,  102,    0,  116,    0,  109,  110,  113,
-      114,  114,  107,  108,  108,  115,    0,  111,  112,  112,
-      110,    0,    0,    0,  115,  115,  116,  117,  116,  115,
-      106,  117,  115,  115,  117,  106,  124,    0,  122,  122,
-      122,    5,  122,  122,   11,  122,  122,   51,  122,  122,
-      122,   19,   23,  122,  122,  122,   27,  122,   29,   30,
-      122,  122,  122,   34,  122,  122,    0,  120,  101,  102,
-        0,  116,  115,  113,  114,  114,  107,  108,  108,  115,
+      120,   16,  120,  120,   20,   21,  120,  120,  120,  120,
+      120,  120,  120,  120,  120,  120,  120,  120,  120,    0,
+      119,   99,  101,  100,    0,  114,    0,  107,  108,  111,
+      112,  112,  105,  106,  106,  113,    0,  109,  110,  110,
+      108,    0,    0,    0,  113,  113,  114,  115,  114,  113,
+      104,  115,  113,  113,  115,  104,  122,    0,  120,  120,
+      120,    5,  120,  120,   11,  120,  120,   51,  120,  120,
+      120,   19,   23,  120,  120,  120,   27,  120,   29,   30,
+      120,  120,  120,   34,  120,  120,    0,  118,   99,  100,
+        0,  114,  113,  111,  112,  112,  105,  106,  106,  113,
 
-      111,  112,  112,    0,  115,  116,  117,  117,  116,  116,
-        0,  115,  115,    1,    3,    4,    6,  122,   12,  122,
-      122,   15,  122,  122,   25,  122,   28,   31,  122,   33,
-       35,   36,    0,  120,    0,  116,  116,  115,  122,   14,
-       52,   18,   24,   26,   32,  119,  116,  122,    8,    0
+      109,  110,  110,    0,  113,  114,  115,  115,  114,  114,
+        0,  113,  113,    1,    3,    4,    6,  120,   12,  120,
+      120,   15,  120,  120,   25,  120,   28,   31,  120,   33,
+       35,   36,    0,  118,    0,  114,  114,  113,  120,   14,
+       52,   18,   24,   26,   32,  117,  114,  120,    8,    0
     } ;
 
 static const YY_CHAR yy_ec[256] =
@@ -865,7 +865,7 @@ static const flex_int16_t yy_chk[1365] =
     } ;
 
 /* Table of booleans, true if rule could match eol. */
-static const flex_int32_t yy_rule_can_match_eol[128] =
+static const flex_int32_t yy_rule_can_match_eol[126] =
     {   0,
 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
@@ -873,7 +873,7 @@ static const flex_int32_t yy_rule_can_match_eol[128] =
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-    0, 0, 0, 0, 0, 0, 1, 0,     };
+    0, 0, 0, 0, 1, 0,     };
 
 static yy_state_type yy_last_accepting_state;
 static char *yy_last_accepting_cpos;
@@ -1587,59 +1587,49 @@ YY_RULE_SETUP
 case 77:
 YY_RULE_SETUP
 #line 128 "lexer.l"
-{ printf("Found OPEN_ANGLE_BRACKET\n"); }
+{ return COMMERCIAL_AT; }
 	YY_BREAK
 case 78:
 YY_RULE_SETUP
-#line 129 "lexer.l"
-{ printf("Found CLOSE_ANGLE_BRACKET\n"); }
+#line 130 "lexer.l"
+{ return QUESTION_SYMBOL; }
 	YY_BREAK
 case 79:
 YY_RULE_SETUP
-#line 130 "lexer.l"
-{ return COMMERCIAL_AT; }
+#line 132 "lexer.l"
+{ return DOT_SYMBOL; }
 	YY_BREAK
 case 80:
 YY_RULE_SETUP
-#line 132 "lexer.l"
-{ return QUESTION_SYMBOL; }
+#line 133 "lexer.l"
+{ return COMMA_SYMBOL; }
 	YY_BREAK
 case 81:
 YY_RULE_SETUP
 #line 134 "lexer.l"
-{ return DOT_SYMBOL; }
+{ return COLON_SYMBOL; }
 	YY_BREAK
 case 82:
 YY_RULE_SETUP
 #line 135 "lexer.l"
-{ return COMMA_SYMBOL; }
+{ return DOUBLE_COLON_SYMBOL;}
 	YY_BREAK
 case 83:
 YY_RULE_SETUP
 #line 136 "lexer.l"
-{ return COLON_SYMBOL; }
+{ return SEMICOLON_SYMBOL; }
 	YY_BREAK
 case 84:
 YY_RULE_SETUP
-#line 137 "lexer.l"
-{ return DOUBLE_COLON_SYMBOL;}
-	YY_BREAK
-case 85:
-YY_RULE_SETUP
 #line 138 "lexer.l"
-{ return SEMICOLON_SYMBOL; }
-	YY_BREAK
-case 86:
-YY_RULE_SETUP
-#line 140 "lexer.l"
 { 
                 string[0] = 0; 
                 BEGIN(STRING);    
             }
 	YY_BREAK
-case 87:
+case 85:
 YY_RULE_SETUP
-#line 145 "lexer.l"
+#line 143 "lexer.l"
 { 
                         printf("Found string %s\n", string);
                         printf("Found ARITHMETIC_PLUS_OP\n");
@@ -1647,74 +1637,74 @@ YY_RULE_SETUP
                         BEGIN(INITIAL);
                     }
 	YY_BREAK
+case 86:
+YY_RULE_SETUP
+#line 149 "lexer.l"
+{ strcat(string, yytext); }
+	YY_BREAK
+case 87:
+YY_RULE_SETUP
+#line 150 "lexer.l"
+{ strcat(string, yytext); }
+	YY_BREAK
 case 88:
 YY_RULE_SETUP
 #line 151 "lexer.l"
-{ strcat(string, yytext); }
+{ strcat(string, "\n"); }
 	YY_BREAK
 case 89:
 YY_RULE_SETUP
 #line 152 "lexer.l"
-{ strcat(string, yytext); }
+{ strcat(string, "\a"); }
 	YY_BREAK
 case 90:
 YY_RULE_SETUP
 #line 153 "lexer.l"
-{ strcat(string, "\n"); }
+{ strcat(string, "\b"); }
 	YY_BREAK
 case 91:
 YY_RULE_SETUP
 #line 154 "lexer.l"
-{ strcat(string, "\a"); }
+{ strcat(string, "\t"); }
 	YY_BREAK
 case 92:
 YY_RULE_SETUP
 #line 155 "lexer.l"
-{ strcat(string, "\b"); }
+{ strcat(string, "\v"); }
 	YY_BREAK
 case 93:
 YY_RULE_SETUP
 #line 156 "lexer.l"
-{ strcat(string, "\t"); }
+{ strcat(string, "\f"); }
 	YY_BREAK
 case 94:
 YY_RULE_SETUP
 #line 157 "lexer.l"
-{ strcat(string, "\v"); }
+{ strcat(string, "\r"); }
 	YY_BREAK
 case 95:
 YY_RULE_SETUP
 #line 158 "lexer.l"
-{ strcat(string, "\f"); }
+{ strcat(string, "\e"); }
 	YY_BREAK
 case 96:
 YY_RULE_SETUP
 #line 159 "lexer.l"
-{ strcat(string, "\r"); }
+{ strcat(string, " "); }
 	YY_BREAK
 case 97:
 YY_RULE_SETUP
 #line 160 "lexer.l"
-{ strcat(string, "\e"); }
+{ strcat(string, "\\"); }
 	YY_BREAK
 case 98:
 YY_RULE_SETUP
 #line 161 "lexer.l"
-{ strcat(string, " "); }
+{ strcat(string, "\""); }
 	YY_BREAK
 case 99:
 YY_RULE_SETUP
 #line 162 "lexer.l"
-{ strcat(string, "\\"); }
-	YY_BREAK
-case 100:
-YY_RULE_SETUP
-#line 163 "lexer.l"
-{ strcat(string, "\""); }
-	YY_BREAK
-case 101:
-YY_RULE_SETUP
-#line 164 "lexer.l"
 { 
                                 sscanf(yytext + 1, "%o", &num);
                                 temp1[0] = (char) num;
@@ -1722,9 +1712,9 @@ YY_RULE_SETUP
                                 strcat(string, temp1);
                             }
 	YY_BREAK
-case 102:
+case 100:
 YY_RULE_SETUP
-#line 171 "lexer.l"
+#line 169 "lexer.l"
 { 
                                 sscanf(yytext + 2, "%x", &num);
                                 temp1[0] = (char) num;
@@ -1732,54 +1722,54 @@ YY_RULE_SETUP
                                 strcat(string, temp1);
                             }
 	YY_BREAK
-case 103:
+case 101:
 YY_RULE_SETUP
-#line 177 "lexer.l"
+#line 175 "lexer.l"
 { printf("ERROR: Invalid hex escape \n"); }
 	YY_BREAK
-case 104:
+case 102:
 YY_RULE_SETUP
-#line 179 "lexer.l"
+#line 177 "lexer.l"
 { 
                 printf("Found string %s \n", string);
                 BEGIN(INITIAL);
             }
 	YY_BREAK
 case YY_STATE_EOF(STRING):
-#line 183 "lexer.l"
+#line 181 "lexer.l"
 { printf("ERROR: expected\" \n"); }
 	YY_BREAK
-case 105:
+case 103:
 YY_RULE_SETUP
-#line 185 "lexer.l"
+#line 183 "lexer.l"
 { 
                                 remove_char_from_str(yytext,temp1,'_');
                                 num = atoi(temp1);
                                 return INTEGER_NUMBER;
                              }
 	YY_BREAK
-case 106:
+case 104:
 YY_RULE_SETUP
-#line 191 "lexer.l"
+#line 189 "lexer.l"
 { printf("Found decimal number error1 %s\n", yytext); }
 	YY_BREAK
-case 107:
+case 105:
 YY_RULE_SETUP
-#line 193 "lexer.l"
+#line 191 "lexer.l"
 {
                                 remove_char_from_str(yytext+2,temp1,'_');
                                 num = atoi(temp1);
                                 return INTEGER_NUMBER;              
                              }
 	YY_BREAK
-case 108:
+case 106:
 YY_RULE_SETUP
-#line 199 "lexer.l"
+#line 197 "lexer.l"
 { printf("Found decimal number error2 %s\n", yytext); }
 	YY_BREAK
-case 109:
+case 107:
 YY_RULE_SETUP
-#line 201 "lexer.l"
+#line 199 "lexer.l"
 {
                                         remove_char_from_str(yytext,temp1,'_');
                                         remove_char_from_str(temp1,temp2,'o');
@@ -1788,129 +1778,129 @@ YY_RULE_SETUP
                                         return INTEGER_NUMBER;
                                      }
 	YY_BREAK
-case 110:
+case 108:
 YY_RULE_SETUP
-#line 209 "lexer.l"
+#line 207 "lexer.l"
 { printf("Found oct number error %s\n", yytext); }
 	YY_BREAK
-case 111:
+case 109:
 YY_RULE_SETUP
-#line 211 "lexer.l"
+#line 209 "lexer.l"
 {
                                         remove_char_from_str(yytext + 2,temp1,'_');
                                         sscanf(temp1,"%x",&num);
                                         return INTEGER_NUMBER;
                                     }
 	YY_BREAK
-case 112:
+case 110:
 YY_RULE_SETUP
-#line 217 "lexer.l"
+#line 215 "lexer.l"
 { printf("Found hex number error %s\n", yytext); }
 	YY_BREAK
-case 113:
+case 111:
 YY_RULE_SETUP
-#line 219 "lexer.l"
+#line 217 "lexer.l"
 {
                                         remove_char_from_str(yytext + 2,temp1,'_');
                                         num = binstr_to_dec(temp1);
                                         return INTEGER_NUMBER; 
                                     }
 	YY_BREAK
-case 114:
+case 112:
 YY_RULE_SETUP
-#line 225 "lexer.l"
+#line 223 "lexer.l"
 { printf("Found bin number error %s\n", yytext); }
 	YY_BREAK
-case 115:
+case 113:
 YY_RULE_SETUP
-#line 229 "lexer.l"
+#line 227 "lexer.l"
 {
                                                                  remove_char_from_str(yytext,temp1,'_');
                                                                  real_num = atof(temp1);
                                                                  return FLOAT_NUMBER; 
                                                             }
 	YY_BREAK
-case 116:
+case 114:
+YY_RULE_SETUP
+#line 233 "lexer.l"
+{ printf("Found float number error1 %s\n", yytext); }
+	YY_BREAK
+case 115:
 YY_RULE_SETUP
 #line 235 "lexer.l"
-{ printf("Found float number error1 %s\n", yytext); }
+{ printf("Found float number error2 %s\n", yytext); }
+	YY_BREAK
+case 116:
+YY_RULE_SETUP
+#line 239 "lexer.l"
+{ printf("Found single-line comment: %s\n", yytext + 1); }
 	YY_BREAK
 case 117:
 YY_RULE_SETUP
-#line 237 "lexer.l"
-{ printf("Found float number error2 %s\n", yytext); }
-	YY_BREAK
-case 118:
-YY_RULE_SETUP
 #line 241 "lexer.l"
-{ printf("Found single-line comment: %s\n", yytext + 1); }
-	YY_BREAK
-case 119:
-YY_RULE_SETUP
-#line 243 "lexer.l"
 { 
                                     // printf("Foun start ml-comment");
                                     comment[0] = 0; 
                                     BEGIN(ML_COMMENT);
                                 }
 	YY_BREAK
-case 120:
+case 118:
 YY_RULE_SETUP
-#line 249 "lexer.l"
+#line 247 "lexer.l"
 {
                                     strcat(comment, yytext + 5);
                                     printf("Found multi-line comment: %s\n", comment);
                                     BEGIN(INITIAL);
                                 }
 	YY_BREAK
-case 121:
+case 119:
 YY_RULE_SETUP
-#line 255 "lexer.l"
+#line 253 "lexer.l"
 { 
                                     strcat(comment, yytext); 
                                 }
 	YY_BREAK
-case 122:
+case 120:
 YY_RULE_SETUP
-#line 259 "lexer.l"
+#line 257 "lexer.l"
 {
                                                 return VAR_METHOD_NAME;
                                              }
 	YY_BREAK
-case 123:
+case 121:
 YY_RULE_SETUP
-#line 262 "lexer.l"
+#line 260 "lexer.l"
 {
                                                              return INSTANCE_VAR_NAME;
                                                         }
 	YY_BREAK
-case 124:
+case 122:
 YY_RULE_SETUP
-#line 265 "lexer.l"
+#line 263 "lexer.l"
 {
                                                  return CLASS_VAR_NAME;
                                              }
 	YY_BREAK
-case 125:
+case 123:
 YY_RULE_SETUP
-#line 269 "lexer.l"
+#line 267 "lexer.l"
 {
                                                 return CLASS_NAME;
                                            }
 	YY_BREAK
-case 126:
-/* rule 126 can match eol */
+case 124:
+/* rule 124 can match eol */
 YY_RULE_SETUP
-#line 273 "lexer.l"
+#line 271 "lexer.l"
 { return NEW_LINE_SYMBOL;
         }
 	YY_BREAK
-case 127:
+case 125:
 YY_RULE_SETUP
-#line 275 "lexer.l"
+#line 273 "lexer.l"
 ECHO;
 	YY_BREAK
-#line 1913 "lexer.flex.c"
+#line 1903 "lexer.flex.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(ML_COMMENT):
 	yyterminate();
@@ -2931,7 +2921,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 275 "lexer.l"
+#line 273 "lexer.l"
 
 
 void remove_char_from_str(const char * str, char * dest, char deleted_char) {
