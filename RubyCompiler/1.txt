@@ -2,7 +2,7 @@ print(1,2)
 def a
  print(1)
 end
-def c(a)
+def c(a, second_param)
  a / 2
 end
 def d(a = 3)

@@ -526,11 +526,10 @@ struct method_param_list * create_method_param_list(struct method_param_struct *
 }
 
 struct method_param_list * add_to_method_param_list(struct method_param_list * list, struct method_param_struct * val) {
-    struct method_param_list * result = (struct method_param_list *) malloc(sizeof(struct method_param_list));
-    result->last->next = val;
-    result->last = val;
+    list->last->next = val;
+    list->last = val;
     val->next = 0;
-    return result;
+    return list;
 }
 
 struct stmt_struct * create_def_method_stmt(char* name, struct method_param_list* params, struct stmt_list_struct* body) {

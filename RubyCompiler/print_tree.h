@@ -83,12 +83,27 @@ void PrintBranch(struct if_part_stmt_struct* branch, FILE* file) {
 
 void PrintDefMethod(struct def_method_stmt_struct* method, FILE* file) {
 	fprintf(file, "Id%p [label=\"def_method\"]\n", method);
+	fprintf(file, "IdName%p [label=\"name\"]\n", method);
+	fprintf(file, "IdNameVal%p [label=\"%s\"]\n", method, method->name);
+	fprintf(file, "Id%p->IdName%p\n", method, method);
+	fprintf(file, "IdName%p->IdNameVal%p\n", method, method);
 	if (method->params != 0) {
 		fprintf(file, "Id%p [label=\"params\"]\n", method->params);
 		struct method_param_struct* current = method->params->first;
 		while (current != 0) {
 			fprintf(file, "Id%p [label=\"param\"]\n", current);
 			fprintf(file, "Id%p->Id%p\n", method->params, current);
+			fprintf(file, "IdName%p [label=\"name\"]\n", current);
+			fprintf(file, "Id%p->IdName%p\n", current, current);
+			fprintf(file, "IdNameVal%p [label=\"%s\"]\n", current, current->name);
+			fprintf(file, "IdName%p->IdNameVal%p\n", current, current);
+
+			if (current->default_value != 0) {
+				fprintf(file, "IdDefault%p [label=\"default_value\"]\n", current);
+				fprintf(file, "Id%p->IdDefault%p\n", current, current);
+				PrintExpr(current->default_value, file);
+				fprintf(file, "IdDefault%p->Id%p\n", current, current->default_value);
+			}
 			current = current->next;
 		}
 		fprintf(file, "Id%p->Id%p\n", method, method->params);
