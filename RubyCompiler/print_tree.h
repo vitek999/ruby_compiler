@@ -177,6 +177,8 @@ void PrintExpr(struct expr_struct* expr, FILE* file) {
 	switch (expr->type) {
 	case Integer:
 		fprintf(file, "Id%p [label=\"INT\"]\n", expr);
+		fprintf(file, "IdVal%p [label=\"%d\"]\n", expr, expr->int_val);
+		fprintf(file, "Id%p->IdVal%p\n", expr, expr);
 		break;
 	case Float:
 		fprintf(file, "Id%p [label=\"FLOAT\"]\n", expr);
@@ -186,6 +188,13 @@ void PrintExpr(struct expr_struct* expr, FILE* file) {
 		break;
 	case Boolean:
 		fprintf(file, "Id%p [label=\"BOOLEAN\"]\n", expr);
+		if (expr->int_val == 0) {
+			fprintf(file, "IdVal%p [label=\"false\"]\n", expr);
+		}
+		else {
+			fprintf(file, "IdVal%p [label=\"true\"]\n", expr);
+		}
+		fprintf(file, "Id%p->IdVal%p\n", expr, expr);
 		break;
 	case logical_not:
 		fprintf(file, "Id%p [label=\"!\"]\n", expr);
@@ -443,6 +452,8 @@ void PrintExpr(struct expr_struct* expr, FILE* file) {
 		break;
 	case var_or_method:
 		fprintf(file, "Id%p [label=\"var or method\"]\n", expr);
+		fprintf(file, "IdVal%p [label=\"%s\"]\n", expr, expr->str_val);
+		fprintf(file, "Id%p->IdVal%p\n", expr, expr);
 		break;
 	case instance_var:
 		fprintf(file, "Id%p [label=\"instance var\"]\n", expr);
@@ -466,7 +477,8 @@ void PrintExpr(struct expr_struct* expr, FILE* file) {
 		fprintf(file,"Id%p [label=\"method_call\"]\n", expr);
 		fprintf(file, "IdMethodName%p [label=\"name\"]\n", expr);
 		fprintf(file, "Id%p->IdMethodName%p\n", expr, expr);
-
+		fprintf(file, "IdMethodNameVal%p [label=\"%s\"]\n", expr, expr->str_val);
+		fprintf(file, "IdMethodName%p->IdMethodNameVal%p\n", expr, expr);
 		if (expr->list != 0) {
 			fprintf(file, "Id%p [label=\"params\"]\n", expr->list);
 			fprintf(file, "Id%p->Id%p\n", expr, expr->list);

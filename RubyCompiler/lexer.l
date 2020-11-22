@@ -181,7 +181,7 @@ yield		{ return YIELD_KEYWORD; }
 
 0|[1-9]{DIGIT}*(_{DIGIT}+)*          { 
                                 remove_char_from_str(yytext,temp1,'_');
-                                num = atoi(temp1);
+                                yylval.int_un = atoi(temp1);
                                 return INTEGER_NUMBER;
                              }
 
@@ -189,7 +189,7 @@ yield		{ return YIELD_KEYWORD; }
 
 0[dD][1-9]{DIGIT}*(_{DIGIT}+)*        {
                                 remove_char_from_str(yytext+2,temp1,'_');
-                                num = atoi(temp1);
+                                yylval.int_un = atoi(temp1);
                                 return INTEGER_NUMBER;              
                              }
 
@@ -200,6 +200,7 @@ yield		{ return YIELD_KEYWORD; }
                                         remove_char_from_str(temp1,temp2,'o');
                                         remove_char_from_str(temp2,temp1,'O');
                                         sscanf(temp1,"%o",&num);
+                                        yylval.int_un = num;
                                         return INTEGER_NUMBER;
                                      }
 
@@ -208,6 +209,7 @@ yield		{ return YIELD_KEYWORD; }
 0[xX]{HEX_DIGIT}+(_{HEX_DIGIT}+)*    {
                                         remove_char_from_str(yytext + 2,temp1,'_');
                                         sscanf(temp1,"%x",&num);
+                                        yylval.int_un = num;
                                         return INTEGER_NUMBER;
                                     }
 
@@ -216,6 +218,7 @@ yield		{ return YIELD_KEYWORD; }
 0[bB]{BIN_DIGIT}+(_{BIN_DIGIT}+)*   {
                                         remove_char_from_str(yytext + 2,temp1,'_');
                                         num = binstr_to_dec(temp1);
+                                        yylval.int_un = num;
                                         return INTEGER_NUMBER; 
                                     }
 
@@ -254,6 +257,8 @@ yield		{ return YIELD_KEYWORD; }
                                 }
 
 [a-z_]{NUMBER_ALPHA_UNDERSCOPE}*             {
+                                                yylval.string_un=(char *)malloc(strlen(yytext)+1);
+                                                strcpy(yylval.string_un, yytext); 
                                                 return VAR_METHOD_NAME;
                                              }
 \@[a-z_]{NUMBER_ALPHA_UNDERSCOPE}*                      {
