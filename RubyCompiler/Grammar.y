@@ -223,6 +223,10 @@ stmt_ends: SEMICOLON_SYMBOL
     | NEW_LINE_SYMBOL stmt_ends
     ;
 
+stmt_ends_op: /* empty */
+    | stmt_ends
+    ;
+
 stmt: expr stmt_ends { puts("stmt"); }
     | stmt_block    { puts("stmt block"); }
     | stmt_block stmt_ends
@@ -246,18 +250,15 @@ stmt_list: /* empty */ { puts("empty stmt list"); }
     | stmt_list_not_empty  { puts("stmt list"); }
     ;
 
-stmt_block: BEGIN_KEYWORD stmt_list END_KEYWORD  { puts("begin without stmt ends"); }
-    | BEGIN_KEYWORD stmt_ends stmt_list END_KEYWORD { puts("begin with stmt ends"); }
+stmt_block: BEGIN_KEYWORD stmt_ends_op stmt_list END_KEYWORD  { puts("begin without stmt ends"); }
     ;
 
 if_start_stmt: IF_KEYWORD expr stmt_ends stmt_list { puts("if without then"); }
-    | IF_KEYWORD expr THEN_KEYWORD stmt_list { puts("if with then"); }
-    | IF_KEYWORD expr THEN_KEYWORD stmt_ends stmt_list { puts("if with then"); }
+    | IF_KEYWORD expr THEN_KEYWORD stmt_ends_op stmt_list { puts("if with then"); }
     ;
 
 elsif_stmt: ELSIF_KEYWORD expr stmt_ends stmt_list { puts("elsif without then");  } 
-    | ELSIF_KEYWORD expr THEN_KEYWORD stmt_list { puts("elsif with then");  } 
-    | ELSIF_KEYWORD expr THEN_KEYWORD stmt_ends stmt_list { puts("elsif with then");  } 
+    | ELSIF_KEYWORD expr THEN_KEYWORD stmt_ends_op stmt_list { puts("elsif with then");  } 
     ;
 
 elsif_stmt_list: elsif_stmt 
@@ -265,29 +266,23 @@ elsif_stmt_list: elsif_stmt
     ;
 
 if_stmt: if_start_stmt END_KEYWORD
-    | if_start_stmt ELSE_KEYWORD stmt_list END_KEYWORD 
-    | if_start_stmt ELSE_KEYWORD stmt_ends stmt_list END_KEYWORD 
+    | if_start_stmt ELSE_KEYWORD stmt_ends_op stmt_list END_KEYWORD 
     | if_start_stmt elsif_stmt_list END_KEYWORD
-    | if_start_stmt elsif_stmt_list ELSE_KEYWORD stmt_list END_KEYWORD
-    | if_start_stmt elsif_stmt_list ELSE_KEYWORD stmt_ends stmt_list END_KEYWORD
+    | if_start_stmt elsif_stmt_list ELSE_KEYWORD stmt_ends_op stmt_list END_KEYWORD
     ;
 
 for_stmt: FOR_KEYWORD VAR_METHOD_NAME IN_KEYWORD expr stmt_ends stmt_list END_KEYWORD 
     | FOR_KEYWORD INSTANCE_VAR_NAME IN_KEYWORD expr stmt_ends stmt_list END_KEYWORD
-	| FOR_KEYWORD VAR_METHOD_NAME IN_KEYWORD expr DO_KEYWORD stmt_list END_KEYWORD
-    | FOR_KEYWORD VAR_METHOD_NAME IN_KEYWORD expr DO_KEYWORD stmt_ends stmt_list END_KEYWORD
-    | FOR_KEYWORD INSTANCE_VAR_NAME IN_KEYWORD expr DO_KEYWORD stmt_list END_KEYWORD
-    | FOR_KEYWORD INSTANCE_VAR_NAME IN_KEYWORD expr DO_KEYWORD stmt_ends stmt_list END_KEYWORD
+	| FOR_KEYWORD VAR_METHOD_NAME IN_KEYWORD expr DO_KEYWORD stmt_ends_op stmt_list END_KEYWORD
+    | FOR_KEYWORD INSTANCE_VAR_NAME IN_KEYWORD expr DO_KEYWORD stmt_ends_op stmt_list END_KEYWORD
 	;
 
 while_stmt: WHILE_KEYWORD expr stmt_ends stmt_list END_KEYWORD
-	| WHILE_KEYWORD expr DO_KEYWORD stmt_list END_KEYWORD
-    | WHILE_KEYWORD expr DO_KEYWORD stmt_ends stmt_list END_KEYWORD
+	| WHILE_KEYWORD expr DO_KEYWORD stmt_ends_op stmt_list END_KEYWORD
 	;
 
 until_stmt: UNTIL_KEYWORD expr stmt_ends stmt_list END_KEYWORD
-	| UNTIL_KEYWORD expr DO_KEYWORD stmt_list END_KEYWORD
-    | UNTIL_KEYWORD expr DO_KEYWORD stmt_ends stmt_list END_KEYWORD
+	| UNTIL_KEYWORD expr DO_KEYWORD stmt_ends_op stmt_list END_KEYWORD
 	;
 
 method_param: VAR_METHOD_NAME
