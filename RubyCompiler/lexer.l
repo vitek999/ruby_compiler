@@ -262,6 +262,8 @@ yield		{ return YIELD_KEYWORD; }
                                                 return VAR_METHOD_NAME;
                                              }
 \@[a-z_]{NUMBER_ALPHA_UNDERSCOPE}*                      {
+                                                             yylval.string_un=(char *)malloc(strlen(yytext)+1);
+                                                             strcpy(yylval.string_un, yytext); 
                                                              return INSTANCE_VAR_NAME;
                                                         }
 \@\@[a-z_]{NUMBER_ALPHA_UNDERSCOPE}*         {

@@ -167,8 +167,9 @@ void PrintUntil(struct until_stmt_struct* until_s, FILE* file) {
 void PrintFor(struct for_stmt_struct* for_s, FILE* file) {
 	fprintf(file, "Id%p [label=\"for\"]\n", for_s);
 	fprintf(file, "IdIters%p [label=\"iterable var\"]\n", for_s);
+	fprintf(file, "IdItersName%p [label=\"%s\"]\n", for_s, for_s->iterable_var);
 	fprintf(file, "Id%p->IdIters%p\n", for_s, for_s);
-	/*TODO: print varname*/
+	fprintf(file, "IdIters%p->IdItersName%p\n", for_s, for_s);
 	fprintf(file, "IdCondition%p [label=\"condition\"]\n", for_s);
 	fprintf(file, "Id%p->IdCondition%p\n", for_s, for_s);
 	PrintExpr(for_s->condition, file);
