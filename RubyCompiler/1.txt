@@ -1,11 +1,4 @@
-def main
-print(1)
-end
-def another
-print(1)
-end
-if true then
-main()
-else
-another()
+for a in 1..2 do
+v = 2
+c = 2
 end

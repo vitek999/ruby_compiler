@@ -84,11 +84,13 @@ struct expr_struct * create_const_integer_expr(enum expr_type type, int val);
 struct expr_struct * create_const_float_expr(float val);
 struct expr_struct * create_const_string_expr(enum expr_type type, char * val);
 struct expr_struct * create_op_expr(enum expr_type type, struct expr_struct * left, struct expr_struct * right);
+struct stmt_struct * create_expr_stmt(struct expr_struct * val);
+struct stmt_struct * create_for_stmt(char * iterable_var, struct expr_struct * condition, struct stmt_list_struct* body);
 struct stmt_list_struct * create_stmt_list(struct stmt_struct * val);
 struct stmt_list_struct * add_to_stmt_list(struct stmt_list_struct * list, struct stmt_struct * val);
 
 
-#line 92 "Grammar.tab.c"
+#line 94 "Grammar.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -611,17 +613,17 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,   165,   165,   167,   168,   169,   170,   171,   172,   173,
-     174,   175,   176,   177,   178,   179,   180,   181,   182,   183,
-     184,   185,   186,   187,   188,   189,   190,   191,   192,   193,
-     194,   195,   196,   197,   198,   199,   200,   201,   202,   203,
-     204,   205,   206,   207,   208,   209,   210,   211,   212,   213,
-     214,   215,   216,   217,   220,   221,   222,   223,   226,   227,
-     230,   231,   232,   233,   234,   235,   236,   237,   238,   239,
-     240,   241,   242,   245,   246,   249,   250,   253,   256,   257,
-     260,   261,   264,   265,   268,   269,   270,   271,   274,   275,
-     276,   277,   280,   281,   284,   285,   288,   289,   292,   293,
-     296,   297,   300,   301,   304,   305,   308,   309
+       0,   169,   169,   171,   172,   173,   174,   175,   176,   177,
+     178,   179,   180,   181,   182,   183,   184,   185,   186,   187,
+     188,   189,   190,   191,   192,   193,   194,   195,   196,   197,
+     198,   199,   200,   201,   202,   203,   204,   205,   206,   207,
+     208,   209,   210,   211,   212,   213,   214,   215,   216,   217,
+     218,   219,   220,   221,   224,   225,   226,   227,   230,   231,
+     234,   235,   236,   237,   238,   239,   240,   241,   242,   243,
+     244,   245,   246,   249,   250,   253,   254,   257,   260,   261,
+     264,   265,   268,   269,   272,   273,   274,   275,   278,   279,
+     280,   281,   284,   285,   288,   289,   292,   293,   296,   297,
+     300,   301,   304,   305,   308,   309,   312,   313
 };
 #endif
 
@@ -1792,439 +1794,469 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* program: stmt_list  */
-#line 165 "Grammar.y"
+#line 169 "Grammar.y"
                     { puts("program"); }
-#line 1798 "Grammar.tab.c"
+#line 1800 "Grammar.tab.c"
     break;
 
   case 3: /* expr: INTEGER_NUMBER  */
-#line 167 "Grammar.y"
+#line 171 "Grammar.y"
                      { (yyval.expr_un)=create_const_integer_expr(Integer, (yyvsp[0].int_un)); /* puts("integer"); */ }
-#line 1804 "Grammar.tab.c"
+#line 1806 "Grammar.tab.c"
     break;
 
   case 4: /* expr: FLOAT_NUMBER  */
-#line 168 "Grammar.y"
+#line 172 "Grammar.y"
                    { (yyval.expr_un)=create_const_float_expr((yyvsp[0].float_un)); /* puts("float"); */}
-#line 1810 "Grammar.tab.c"
+#line 1812 "Grammar.tab.c"
     break;
 
   case 5: /* expr: STRING  */
-#line 169 "Grammar.y"
+#line 173 "Grammar.y"
              { (yyval.expr_un)=create_const_string_expr(String, (yyvsp[0].string_un)); /* puts("string"); */ }
-#line 1816 "Grammar.tab.c"
+#line 1818 "Grammar.tab.c"
     break;
 
   case 6: /* expr: NIL_KEYWORD  */
-#line 170 "Grammar.y"
+#line 174 "Grammar.y"
                   { puts("nil"); }
-#line 1822 "Grammar.tab.c"
+#line 1824 "Grammar.tab.c"
     break;
 
   case 7: /* expr: TRUE_KEYWORD  */
-#line 171 "Grammar.y"
+#line 175 "Grammar.y"
                    { (yyval.expr_un)=create_const_integer_expr(Boolean, 1); /* puts("true"); */ }
-#line 1828 "Grammar.tab.c"
+#line 1830 "Grammar.tab.c"
     break;
 
   case 8: /* expr: FALSE_KEYWORD  */
-#line 172 "Grammar.y"
+#line 176 "Grammar.y"
                     { (yyval.expr_un)=create_const_integer_expr(Boolean, 0); /* puts("false"); */ }
-#line 1834 "Grammar.tab.c"
+#line 1836 "Grammar.tab.c"
     break;
 
   case 9: /* expr: LOGICAL_NOT_OP expr  */
-#line 173 "Grammar.y"
+#line 177 "Grammar.y"
                           { (yyval.expr_un)=create_op_expr(logical_not, (yyvsp[0].expr_un), 0); /* puts("LOGICAL_NOT_OP"); */ }
-#line 1840 "Grammar.tab.c"
+#line 1842 "Grammar.tab.c"
     break;
 
   case 10: /* expr: BIN_ONES_COMPLEMENT_OP expr  */
-#line 174 "Grammar.y"
+#line 178 "Grammar.y"
                                   { (yyval.expr_un)=create_op_expr(bin_ones_complement, (yyvsp[0].expr_un), 0); /* puts("BIN_ONES_COMPLEMENT_OP"); */ }
-#line 1846 "Grammar.tab.c"
+#line 1848 "Grammar.tab.c"
     break;
 
   case 11: /* expr: ARITHMETIC_PLUS_OP expr  */
-#line 175 "Grammar.y"
+#line 179 "Grammar.y"
                                                { (yyval.expr_un)=create_op_expr(unary_plus, (yyvsp[0].expr_un), 0); /* puts("unary plus"); */ }
-#line 1852 "Grammar.tab.c"
+#line 1854 "Grammar.tab.c"
     break;
 
   case 12: /* expr: expr ARITHMETIC_POW_OP expr  */
-#line 176 "Grammar.y"
+#line 180 "Grammar.y"
                                   {  (yyval.expr_un)=create_op_expr(pow, (yyvsp[-2].expr_un), (yyvsp[0].expr_un)); /*  puts("pow"); */ }
-#line 1858 "Grammar.tab.c"
+#line 1860 "Grammar.tab.c"
     break;
 
   case 13: /* expr: ARITHMETIC_MINUS_OP expr  */
-#line 177 "Grammar.y"
+#line 181 "Grammar.y"
                                                  { (yyval.expr_un)=create_op_expr(unary_minus, (yyvsp[0].expr_un), 0); /*  puts("unary minus"); */ }
-#line 1864 "Grammar.tab.c"
+#line 1866 "Grammar.tab.c"
     break;
 
   case 14: /* expr: expr ARITHMETIC_MUL_OP expr  */
-#line 178 "Grammar.y"
+#line 182 "Grammar.y"
                                   { (yyval.expr_un)=create_op_expr(mul, (yyvsp[-2].expr_un), (yyvsp[0].expr_un)); /* puts("mul"); */ }
-#line 1870 "Grammar.tab.c"
+#line 1872 "Grammar.tab.c"
     break;
 
   case 15: /* expr: expr ARITHMETIC_DIV_OP expr  */
-#line 179 "Grammar.y"
+#line 183 "Grammar.y"
                                   {  (yyval.expr_un)=create_op_expr(div, (yyvsp[-2].expr_un), (yyvsp[0].expr_un)); /* puts("div"); */ }
-#line 1876 "Grammar.tab.c"
+#line 1878 "Grammar.tab.c"
     break;
 
   case 16: /* expr: expr ARITHMETIC_MOD_OP expr  */
-#line 180 "Grammar.y"
+#line 184 "Grammar.y"
                                   {  (yyval.expr_un)=create_op_expr(mod, (yyvsp[-2].expr_un), (yyvsp[0].expr_un)); /* puts("mod"); */ }
-#line 1882 "Grammar.tab.c"
+#line 1884 "Grammar.tab.c"
     break;
 
   case 17: /* expr: expr ARITHMETIC_PLUS_OP expr  */
-#line 181 "Grammar.y"
+#line 185 "Grammar.y"
                                    {  (yyval.expr_un)=create_op_expr(plus, (yyvsp[-2].expr_un), (yyvsp[0].expr_un)); /* puts("plus"); */ }
-#line 1888 "Grammar.tab.c"
+#line 1890 "Grammar.tab.c"
     break;
 
   case 18: /* expr: expr ARITHMETIC_MINUS_OP expr  */
-#line 182 "Grammar.y"
+#line 186 "Grammar.y"
                                     { (yyval.expr_un)=create_op_expr(minus, (yyvsp[-2].expr_un), (yyvsp[0].expr_un)); /* puts("minus"); */ }
-#line 1894 "Grammar.tab.c"
+#line 1896 "Grammar.tab.c"
     break;
 
   case 19: /* expr: expr BIN_LEFT_SHIFT_OP expr  */
-#line 183 "Grammar.y"
+#line 187 "Grammar.y"
                                   { (yyval.expr_un)=create_op_expr(bin_left_shift, (yyvsp[-2].expr_un), (yyvsp[0].expr_un)); /* puts("left shift"); */ }
-#line 1900 "Grammar.tab.c"
+#line 1902 "Grammar.tab.c"
     break;
 
   case 20: /* expr: expr BIN_RIGHT_SHIFT_OP expr  */
-#line 184 "Grammar.y"
+#line 188 "Grammar.y"
                                    { (yyval.expr_un)=create_op_expr(bin_right_shift, (yyvsp[-2].expr_un), (yyvsp[0].expr_un)); /* puts("right shift"); */ }
-#line 1906 "Grammar.tab.c"
+#line 1908 "Grammar.tab.c"
     break;
 
   case 21: /* expr: expr BIN_AND_OP expr  */
-#line 185 "Grammar.y"
+#line 189 "Grammar.y"
                            { (yyval.expr_un)=create_op_expr(bin_and_op, (yyvsp[-2].expr_un), (yyvsp[0].expr_un)); /* puts("bin and"); */ }
-#line 1912 "Grammar.tab.c"
+#line 1914 "Grammar.tab.c"
     break;
 
   case 22: /* expr: expr BIN_OR_OP expr  */
-#line 186 "Grammar.y"
+#line 190 "Grammar.y"
                           { (yyval.expr_un)=create_op_expr(bin_or_op, (yyvsp[-2].expr_un), (yyvsp[0].expr_un)); /* puts("bin or"); */ }
-#line 1918 "Grammar.tab.c"
+#line 1920 "Grammar.tab.c"
     break;
 
   case 23: /* expr: expr BIN_XOR_OP expr  */
-#line 187 "Grammar.y"
+#line 191 "Grammar.y"
                            { (yyval.expr_un)=create_op_expr(bin_xor_op, (yyvsp[-2].expr_un), (yyvsp[0].expr_un)); /* puts("bin xor"); */ }
-#line 1924 "Grammar.tab.c"
+#line 1926 "Grammar.tab.c"
     break;
 
   case 24: /* expr: expr GREATER_OP expr  */
-#line 188 "Grammar.y"
+#line 192 "Grammar.y"
                            { (yyval.expr_un)=create_op_expr(greater, (yyvsp[-2].expr_un), (yyvsp[0].expr_un)); /* puts(" > "); */ }
-#line 1930 "Grammar.tab.c"
+#line 1932 "Grammar.tab.c"
     break;
 
   case 25: /* expr: expr LESS_OP expr  */
-#line 189 "Grammar.y"
+#line 193 "Grammar.y"
                         { (yyval.expr_un)=create_op_expr(less, (yyvsp[-2].expr_un), (yyvsp[0].expr_un)); /* puts(" < "); */ }
-#line 1936 "Grammar.tab.c"
+#line 1938 "Grammar.tab.c"
     break;
 
   case 26: /* expr: expr GREATER_OR_EQL_OP expr  */
-#line 190 "Grammar.y"
+#line 194 "Grammar.y"
                                   { (yyval.expr_un)=create_op_expr(greater_eql, (yyvsp[-2].expr_un), (yyvsp[0].expr_un)); /* puts(" >= "); */ }
-#line 1942 "Grammar.tab.c"
+#line 1944 "Grammar.tab.c"
     break;
 
   case 27: /* expr: expr LESS_OR_EQL_OP expr  */
-#line 191 "Grammar.y"
+#line 195 "Grammar.y"
                                { (yyval.expr_un)=create_op_expr(less_eql, (yyvsp[-2].expr_un), (yyvsp[0].expr_un)); /* puts(" <= "); */ }
-#line 1948 "Grammar.tab.c"
+#line 1950 "Grammar.tab.c"
     break;
 
   case 28: /* expr: expr COMB_COMPRASION_OP expr  */
-#line 192 "Grammar.y"
+#line 196 "Grammar.y"
                                    { (yyval.expr_un)=create_op_expr(comb_comprassion, (yyvsp[-2].expr_un), (yyvsp[0].expr_un)); /* puts(" COMB_COMPRASION_OP "); */ }
-#line 1954 "Grammar.tab.c"
+#line 1956 "Grammar.tab.c"
     break;
 
   case 29: /* expr: expr EQL_OP expr  */
-#line 193 "Grammar.y"
+#line 197 "Grammar.y"
                        { (yyval.expr_un)=create_op_expr(equal, (yyvsp[-2].expr_un), (yyvsp[0].expr_un)); /* puts(" EQL_OP "); */ }
-#line 1960 "Grammar.tab.c"
+#line 1962 "Grammar.tab.c"
     break;
 
   case 30: /* expr: expr CASE_EQL_OP expr  */
-#line 194 "Grammar.y"
+#line 198 "Grammar.y"
                             {  (yyval.expr_un)=create_op_expr(case_equal, (yyvsp[-2].expr_un), (yyvsp[0].expr_un)); /* puts(" CASE_EQL_OP "); */ }
-#line 1966 "Grammar.tab.c"
+#line 1968 "Grammar.tab.c"
     break;
 
   case 31: /* expr: expr NOT_EQL_OP expr  */
-#line 195 "Grammar.y"
+#line 199 "Grammar.y"
                            { (yyval.expr_un)=create_op_expr(not_equal, (yyvsp[-2].expr_un), (yyvsp[0].expr_un)); /* puts("NOT_EQL_OP"); */ }
-#line 1972 "Grammar.tab.c"
+#line 1974 "Grammar.tab.c"
     break;
 
   case 32: /* expr: expr LOGICAL_AND_OP expr  */
-#line 196 "Grammar.y"
+#line 200 "Grammar.y"
                                { (yyval.expr_un)=create_op_expr(logical_and, (yyvsp[-2].expr_un), (yyvsp[0].expr_un)); /* puts("LOGICAL_AND_OP"); */ }
-#line 1978 "Grammar.tab.c"
+#line 1980 "Grammar.tab.c"
     break;
 
   case 33: /* expr: expr LOGICAL_OR_OP expr  */
-#line 197 "Grammar.y"
+#line 201 "Grammar.y"
                               { (yyval.expr_un)=create_op_expr(logical_or, (yyvsp[-2].expr_un), (yyvsp[0].expr_un)); /* puts("LOGICAL_OR_OP");  */ }
-#line 1984 "Grammar.tab.c"
+#line 1986 "Grammar.tab.c"
     break;
 
   case 34: /* expr: expr INCLUSIVE_RANGE_OP expr  */
-#line 198 "Grammar.y"
+#line 202 "Grammar.y"
                                    { (yyval.expr_un)=create_op_expr(inclusive_range, (yyvsp[-2].expr_un), (yyvsp[0].expr_un)); /* puts("INCLUSIVE_RANGE_OP"); */ }
-#line 1990 "Grammar.tab.c"
+#line 1992 "Grammar.tab.c"
     break;
 
   case 35: /* expr: expr EXCLUSIVE_RANGE_OP expr  */
-#line 199 "Grammar.y"
+#line 203 "Grammar.y"
                                    { (yyval.expr_un)=create_op_expr(exclusive_range, (yyvsp[-2].expr_un), (yyvsp[0].expr_un)); /* puts("EXCLUSIVE_RANGE_OP"); */ }
-#line 1996 "Grammar.tab.c"
+#line 1998 "Grammar.tab.c"
     break;
 
   case 36: /* expr: expr ASSIGN_OP expr  */
-#line 200 "Grammar.y"
+#line 204 "Grammar.y"
                           { (yyval.expr_un)=create_op_expr(assign, (yyvsp[-2].expr_un), (yyvsp[0].expr_un)); /* puts("assign"); */ }
-#line 2002 "Grammar.tab.c"
+#line 2004 "Grammar.tab.c"
     break;
 
   case 37: /* expr: expr MOD_ASSIGN_OP expr  */
-#line 201 "Grammar.y"
+#line 205 "Grammar.y"
                               { (yyval.expr_un)=create_op_expr(mod_assign, (yyvsp[-2].expr_un), (yyvsp[0].expr_un)); /* puts("MOD_ASSIGN_OP"); */ }
-#line 2008 "Grammar.tab.c"
+#line 2010 "Grammar.tab.c"
     break;
 
   case 38: /* expr: expr DIV_ASSIGN_OP expr  */
-#line 202 "Grammar.y"
+#line 206 "Grammar.y"
                               { (yyval.expr_un)=create_op_expr(div_assign, (yyvsp[-2].expr_un), (yyvsp[0].expr_un)); /* puts("DIV_ASSIGN_OP"); */ }
-#line 2014 "Grammar.tab.c"
+#line 2016 "Grammar.tab.c"
     break;
 
   case 39: /* expr: expr SUB_ASSIGN_OP expr  */
-#line 203 "Grammar.y"
+#line 207 "Grammar.y"
                               { (yyval.expr_un)=create_op_expr(sub_assign, (yyvsp[-2].expr_un), (yyvsp[0].expr_un)); /* puts("SUB_ASSIGN_OP"); */ }
-#line 2020 "Grammar.tab.c"
+#line 2022 "Grammar.tab.c"
     break;
 
   case 40: /* expr: expr ADD_ASSIGN_OP expr  */
-#line 204 "Grammar.y"
+#line 208 "Grammar.y"
                               { (yyval.expr_un)=create_op_expr(add_assign, (yyvsp[-2].expr_un), (yyvsp[0].expr_un)); /* puts("SUB_ASSIGN_OP"); */ }
-#line 2026 "Grammar.tab.c"
+#line 2028 "Grammar.tab.c"
     break;
 
   case 41: /* expr: expr MUL_ASSIGN_OP expr  */
-#line 205 "Grammar.y"
+#line 209 "Grammar.y"
                               { (yyval.expr_un)=create_op_expr(mul_assign, (yyvsp[-2].expr_un), (yyvsp[0].expr_un)); /* puts("MUL_ASSIGN_OP"); */ }
-#line 2032 "Grammar.tab.c"
+#line 2034 "Grammar.tab.c"
     break;
 
   case 42: /* expr: expr POW_ASSIGN_OP expr  */
-#line 206 "Grammar.y"
+#line 210 "Grammar.y"
                               { (yyval.expr_un)=create_op_expr(pow_assign, (yyvsp[-2].expr_un), (yyvsp[0].expr_un)); /* puts("POW_ASSIGN_OP"); */ }
-#line 2038 "Grammar.tab.c"
+#line 2040 "Grammar.tab.c"
     break;
 
   case 43: /* expr: expr UNTIL_KEYWORD expr  */
-#line 207 "Grammar.y"
-                              {}
-#line 2044 "Grammar.tab.c"
+#line 211 "Grammar.y"
+                              { (yyval.expr_un)=create_op_expr(until_op, (yyvsp[-2].expr_un), (yyvsp[0].expr_un)); }
+#line 2046 "Grammar.tab.c"
     break;
 
   case 44: /* expr: expr WHILE_KEYWORD expr  */
-#line 208 "Grammar.y"
-                              {}
-#line 2050 "Grammar.tab.c"
+#line 212 "Grammar.y"
+                              { (yyval.expr_un)=create_op_expr(while_op, (yyvsp[-2].expr_un), (yyvsp[0].expr_un)); }
+#line 2052 "Grammar.tab.c"
     break;
 
   case 45: /* expr: DEFINED_KEYWORD expr  */
-#line 209 "Grammar.y"
+#line 213 "Grammar.y"
                            { (yyval.expr_un)=create_op_expr(defined, (yyvsp[0].expr_un), 0); /* puts("DEFINED_KEYWORD"); */ }
-#line 2056 "Grammar.tab.c"
+#line 2058 "Grammar.tab.c"
     break;
 
   case 46: /* expr: NOT_KEYWORD expr  */
-#line 210 "Grammar.y"
+#line 214 "Grammar.y"
                        { (yyval.expr_un)=create_op_expr(not_keyword, (yyvsp[0].expr_un), 0); /* puts("NOT_KEYWORD");  */ }
-#line 2062 "Grammar.tab.c"
+#line 2064 "Grammar.tab.c"
     break;
 
   case 47: /* expr: expr AND_KEYWORD expr  */
-#line 211 "Grammar.y"
+#line 215 "Grammar.y"
                             { (yyval.expr_un)=create_op_expr(and_keyword, (yyvsp[-2].expr_un), (yyvsp[0].expr_un)); /* puts("AND_KEYWORD"); */ }
-#line 2068 "Grammar.tab.c"
+#line 2070 "Grammar.tab.c"
     break;
 
   case 48: /* expr: expr OR_KEYWORD expr  */
-#line 212 "Grammar.y"
+#line 216 "Grammar.y"
                            { (yyval.expr_un)=create_op_expr(or_keyword, (yyvsp[-2].expr_un), (yyvsp[0].expr_un)); /* puts("OR_KEYWORD"); */ }
-#line 2074 "Grammar.tab.c"
+#line 2076 "Grammar.tab.c"
     break;
 
   case 49: /* expr: OPEN_ROUND_BRACKET expr CLOSE_ROUND_BRACKET  */
-#line 213 "Grammar.y"
+#line 217 "Grammar.y"
                                                   { (yyval.expr_un)=(yyvsp[-1].expr_un); /* puts(" expr in round brackets "); */ }
-#line 2080 "Grammar.tab.c"
+#line 2082 "Grammar.tab.c"
     break;
 
   case 50: /* expr: OPEN_SQUARE_BRACKET expr CLOSE_SQUARE_BRACKET  */
-#line 214 "Grammar.y"
+#line 218 "Grammar.y"
                                                         { puts(" expr in square brackets "); }
-#line 2086 "Grammar.tab.c"
+#line 2088 "Grammar.tab.c"
     break;
 
   case 51: /* expr: VAR_METHOD_NAME OPEN_ROUND_BRACKET method_call_param_list CLOSE_ROUND_BRACKET  */
-#line 215 "Grammar.y"
+#line 219 "Grammar.y"
                                                                                     { puts("method call"); /*!!!! ВОПРОС !!!!*/ }
-#line 2092 "Grammar.tab.c"
+#line 2094 "Grammar.tab.c"
     break;
 
   case 52: /* expr: VAR_METHOD_NAME  */
-#line 216 "Grammar.y"
+#line 220 "Grammar.y"
                       { (yyval.expr_un)=create_const_string_expr(var_or_method, (yyvsp[0].var_name_un)); /* puts("var"); */ }
-#line 2098 "Grammar.tab.c"
+#line 2100 "Grammar.tab.c"
     break;
 
   case 53: /* expr: INSTANCE_VAR_NAME  */
-#line 217 "Grammar.y"
+#line 221 "Grammar.y"
                         { (yyval.expr_un)=create_const_string_expr(instance_var, (yyvsp[0].instance_var_name_un)); /* puts("instance var"); */ }
-#line 2104 "Grammar.tab.c"
+#line 2106 "Grammar.tab.c"
     break;
 
   case 60: /* stmt: expr stmt_ends  */
-#line 230 "Grammar.y"
-                     { puts("stmt"); }
-#line 2110 "Grammar.tab.c"
+#line 234 "Grammar.y"
+                     { (yyval.stmt_un)=create_expr_stmt((yyvsp[-1].expr_un)); puts("stmt"); }
+#line 2112 "Grammar.tab.c"
     break;
 
   case 61: /* stmt: stmt_block  */
-#line 231 "Grammar.y"
+#line 235 "Grammar.y"
                     { puts("stmt block"); }
-#line 2116 "Grammar.tab.c"
+#line 2118 "Grammar.tab.c"
     break;
 
   case 63: /* stmt: if_stmt  */
-#line 233 "Grammar.y"
+#line 237 "Grammar.y"
                     { puts("if stmt"); }
-#line 2122 "Grammar.tab.c"
+#line 2124 "Grammar.tab.c"
     break;
 
   case 64: /* stmt: if_stmt stmt_ends  */
-#line 234 "Grammar.y"
+#line 238 "Grammar.y"
                            { puts("if stmt"); }
-#line 2128 "Grammar.tab.c"
+#line 2130 "Grammar.tab.c"
     break;
 
   case 65: /* stmt: for_stmt  */
-#line 235 "Grammar.y"
-                     { puts("for stmt"); }
-#line 2134 "Grammar.tab.c"
+#line 239 "Grammar.y"
+                     { (yyval.stmt_un)=(yyvsp[0].stmt_un); puts("for stmt"); }
+#line 2136 "Grammar.tab.c"
+    break;
+
+  case 66: /* stmt: for_stmt stmt_ends  */
+#line 240 "Grammar.y"
+                         { (yyval.stmt_un)=(yyvsp[-1].stmt_un); puts("for stmt with ends"); }
+#line 2142 "Grammar.tab.c"
     break;
 
   case 67: /* stmt: while_stmt  */
-#line 237 "Grammar.y"
+#line 241 "Grammar.y"
                          { puts("while stmt"); }
-#line 2140 "Grammar.tab.c"
+#line 2148 "Grammar.tab.c"
     break;
 
   case 68: /* stmt: while_stmt stmt_ends  */
-#line 238 "Grammar.y"
+#line 242 "Grammar.y"
                                  { puts("while stmt"); }
-#line 2146 "Grammar.tab.c"
+#line 2154 "Grammar.tab.c"
     break;
 
   case 69: /* stmt: until_stmt  */
-#line 239 "Grammar.y"
+#line 243 "Grammar.y"
                     { puts("until stmt"); }
-#line 2152 "Grammar.tab.c"
+#line 2160 "Grammar.tab.c"
     break;
 
   case 70: /* stmt: until_stmt stmt_ends  */
-#line 240 "Grammar.y"
+#line 244 "Grammar.y"
                              { puts("until stmt"); }
-#line 2158 "Grammar.tab.c"
+#line 2166 "Grammar.tab.c"
     break;
 
   case 71: /* stmt: def_method_stmt  */
-#line 241 "Grammar.y"
+#line 245 "Grammar.y"
                         { puts("def method"); }
-#line 2164 "Grammar.tab.c"
+#line 2172 "Grammar.tab.c"
     break;
 
   case 72: /* stmt: def_method_stmt stmt_ends  */
-#line 242 "Grammar.y"
+#line 246 "Grammar.y"
                                 { puts("def method"); }
-#line 2170 "Grammar.tab.c"
+#line 2178 "Grammar.tab.c"
     break;
 
   case 73: /* stmt_list_not_empty: stmt  */
-#line 245 "Grammar.y"
-                           { puts("list from one stmt"); }
-#line 2176 "Grammar.tab.c"
+#line 249 "Grammar.y"
+                           { (yyval.stmt_list_un)=create_stmt_list((yyvsp[0].stmt_un)); puts("list from one stmt"); }
+#line 2184 "Grammar.tab.c"
     break;
 
   case 74: /* stmt_list_not_empty: stmt stmt_list_not_empty  */
-#line 246 "Grammar.y"
-                               { puts("add stmt to list"); }
-#line 2182 "Grammar.tab.c"
+#line 250 "Grammar.y"
+                               { (yyval.stmt_list_un)=add_to_stmt_list((yyvsp[0].stmt_list_un), (yyvsp[-1].stmt_un)); puts("add stmt to list"); }
+#line 2190 "Grammar.tab.c"
     break;
 
   case 75: /* stmt_list: %empty  */
-#line 249 "Grammar.y"
-                       { puts("empty stmt list"); }
-#line 2188 "Grammar.tab.c"
+#line 253 "Grammar.y"
+                       { (yyval.stmt_list_un)=0; puts("empty stmt list"); }
+#line 2196 "Grammar.tab.c"
     break;
 
   case 76: /* stmt_list: stmt_list_not_empty  */
-#line 250 "Grammar.y"
-                           { puts("stmt list"); }
-#line 2194 "Grammar.tab.c"
+#line 254 "Grammar.y"
+                           { (yyval.stmt_list_un)=(yyvsp[0].stmt_list_un); puts("stmt list"); }
+#line 2202 "Grammar.tab.c"
     break;
 
   case 77: /* stmt_block: BEGIN_KEYWORD stmt_ends_op stmt_list END_KEYWORD  */
-#line 253 "Grammar.y"
+#line 257 "Grammar.y"
                                                               { puts("begin without stmt ends"); }
-#line 2200 "Grammar.tab.c"
+#line 2208 "Grammar.tab.c"
     break;
 
   case 78: /* if_start_stmt: IF_KEYWORD expr stmt_ends stmt_list  */
-#line 256 "Grammar.y"
+#line 260 "Grammar.y"
                                                    { puts("if without then"); }
-#line 2206 "Grammar.tab.c"
+#line 2214 "Grammar.tab.c"
     break;
 
   case 79: /* if_start_stmt: IF_KEYWORD expr THEN_KEYWORD stmt_ends_op stmt_list  */
-#line 257 "Grammar.y"
+#line 261 "Grammar.y"
                                                           { puts("if with then"); }
-#line 2212 "Grammar.tab.c"
+#line 2220 "Grammar.tab.c"
     break;
 
   case 80: /* elsif_stmt: ELSIF_KEYWORD expr stmt_ends stmt_list  */
-#line 260 "Grammar.y"
+#line 264 "Grammar.y"
                                                    { puts("elsif without then");  }
-#line 2218 "Grammar.tab.c"
+#line 2226 "Grammar.tab.c"
     break;
 
   case 81: /* elsif_stmt: ELSIF_KEYWORD expr THEN_KEYWORD stmt_ends_op stmt_list  */
-#line 261 "Grammar.y"
+#line 265 "Grammar.y"
                                                              { puts("elsif with then");  }
-#line 2224 "Grammar.tab.c"
+#line 2232 "Grammar.tab.c"
+    break;
+
+  case 88: /* for_stmt: FOR_KEYWORD VAR_METHOD_NAME IN_KEYWORD expr stmt_ends stmt_list END_KEYWORD  */
+#line 278 "Grammar.y"
+                                                                                      { (yyval.stmt_un)=create_for_stmt((yyvsp[-5].var_name_un), (yyvsp[-3].expr_un), (yyvsp[-1].stmt_list_un)); }
+#line 2238 "Grammar.tab.c"
+    break;
+
+  case 89: /* for_stmt: FOR_KEYWORD INSTANCE_VAR_NAME IN_KEYWORD expr stmt_ends stmt_list END_KEYWORD  */
+#line 279 "Grammar.y"
+                                                                                    { (yyval.stmt_un)=create_for_stmt((yyvsp[-5].instance_var_name_un), (yyvsp[-3].expr_un), (yyvsp[-1].stmt_list_un)); }
+#line 2244 "Grammar.tab.c"
+    break;
+
+  case 90: /* for_stmt: FOR_KEYWORD VAR_METHOD_NAME IN_KEYWORD expr DO_KEYWORD stmt_ends_op stmt_list END_KEYWORD  */
+#line 280 "Grammar.y"
+                                                                                                    { (yyval.stmt_un)=create_for_stmt((yyvsp[-6].var_name_un), (yyvsp[-4].expr_un), (yyvsp[-1].stmt_list_un)); }
+#line 2250 "Grammar.tab.c"
+    break;
+
+  case 91: /* for_stmt: FOR_KEYWORD INSTANCE_VAR_NAME IN_KEYWORD expr DO_KEYWORD stmt_ends_op stmt_list END_KEYWORD  */
+#line 281 "Grammar.y"
+                                                                                                  { (yyval.stmt_un)=create_for_stmt((yyvsp[-6].instance_var_name_un), (yyvsp[-4].expr_un), (yyvsp[-1].stmt_list_un)); }
+#line 2256 "Grammar.tab.c"
     break;
 
 
-#line 2228 "Grammar.tab.c"
+#line 2260 "Grammar.tab.c"
 
       default: break;
     }
@@ -2449,7 +2481,7 @@ yyreturn:
   return yyresult;
 }
 
-#line 312 "Grammar.y"
+#line 316 "Grammar.y"
 
 
 struct expr_struct * create_const_integer_expr(enum expr_type type, int val) {
@@ -2478,6 +2510,14 @@ struct expr_struct * create_op_expr(enum expr_type type, struct expr_struct * le
     result->type = type;
     result->left = left;
     result->right = right;
+    return result;
+}
+
+struct stmt_struct * create_expr_stmt(struct expr_struct * val) {
+    struct stmt_struct * result = (struct stmt_struct *) malloc(sizeof(struct stmt_struct));
+    result->type = expr_stmt_t;
+    result->expr_f = val;
+    return result;
 }
 
 struct stmt_list_struct * create_stmt_list(struct stmt_struct * val) {
@@ -2491,6 +2531,18 @@ struct stmt_list_struct * add_to_stmt_list(struct stmt_list_struct * list, struc
     list->last->next = val;
     list->last = val;
     return list;
+}
+
+struct stmt_struct * create_for_stmt(char * iterable_var, struct expr_struct * condition, struct stmt_list_struct* body) {
+    struct for_stmt_struct * for_s = (struct for_stmt_struct *) malloc(sizeof(struct for_stmt_struct));
+    for_s->iterable_var = iterable_var;
+    for_s->condition = condition;
+    for_s->body = body;
+
+    struct stmt_struct * result = (struct stmt_struct *) malloc(sizeof(struct stmt_struct));
+    result->type = for_stmt_t;
+    result->for_stmt_f = for_s;
+    return result;
 }
 
 void main(int argc, char **argv ){

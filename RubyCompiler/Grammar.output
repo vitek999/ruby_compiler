@@ -280,7 +280,7 @@ Nonterminals, with rules where they appear
     stmt <stmt_un> (101)
         on left: 59 60 61 62 63 64 65 66 67 68 69 70 71
         on right: 72 73
-    stmt_list_not_empty (102)
+    stmt_list_not_empty <stmt_list_un> (102)
         on left: 72 73
         on right: 73 75
     stmt_list <stmt_list_un> (103)
@@ -301,7 +301,7 @@ Nonterminals, with rules where they appear
     if_stmt (108)
         on left: 83 84 85 86
         on right: 62 63
-    for_stmt (109)
+    for_stmt <stmt_un> (109)
         on left: 87 88 89 90
         on right: 64 65
     while_stmt (110)

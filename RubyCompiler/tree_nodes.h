@@ -42,7 +42,9 @@ enum expr_type {
 	and_keyword,
 	or_keyword,
 	var_or_method,
-	instance_var
+	instance_var,
+	until_op,
+	while_op
 };
 
 struct expr_struct {
@@ -55,12 +57,14 @@ struct expr_struct {
 };
 
 enum stmt_type {
-	expr_stmt_t
+	expr_stmt_t,
+	for_stmt_t
 };
 
 struct stmt_struct {
 	enum stmt_type type;
 	struct expr_struct * expr_f;
+	struct for_stmt_struct * for_stmt_f;
 	struct stmt_struct * next;
 };
 
@@ -68,4 +72,10 @@ struct stmt_list_struct
 {
 	struct stmt_struct * first;
 	struct stmt_struct * last;
+};
+
+struct for_stmt_struct {
+	char * iterable_var;
+	struct expr_struct * condition;
+	struct stmt_list_struct* body;
 };

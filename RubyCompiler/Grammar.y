@@ -16,6 +16,8 @@ struct expr_struct * create_const_integer_expr(enum expr_type type, int val);
 struct expr_struct * create_const_float_expr(float val);
 struct expr_struct * create_const_string_expr(enum expr_type type, char * val);
 struct expr_struct * create_op_expr(enum expr_type type, struct expr_struct * left, struct expr_struct * right);
+struct stmt_struct * create_expr_stmt(struct expr_struct * val);
+struct stmt_struct * create_for_stmt(char * iterable_var, struct expr_struct * condition, struct stmt_list_struct* body);
 struct stmt_list_struct * create_stmt_list(struct stmt_struct * val);
 struct stmt_list_struct * add_to_stmt_list(struct stmt_list_struct * list, struct stmt_struct * val);
 
@@ -36,7 +38,9 @@ struct stmt_list_struct * add_to_stmt_list(struct stmt_list_struct * list, struc
 
 %type <expr_un> expr
 %type <stmt_un> stmt
+%type <stmt_un> for_stmt
 %type <stmt_list_un> stmt_list
+%type <stmt_list_un> stmt_list_not_empty
 
 %token ALIAS_KEYWORD
 %token AND_KEYWORD
@@ -204,8 +208,8 @@ expr: INTEGER_NUMBER { $$=create_const_integer_expr(Integer, $1); /* puts("integ
     | expr ADD_ASSIGN_OP expr { $$=create_op_expr(add_assign, $1, $3); /* puts("SUB_ASSIGN_OP"); */ }
     | expr MUL_ASSIGN_OP expr { $$=create_op_expr(mul_assign, $1, $3); /* puts("MUL_ASSIGN_OP"); */ }
     | expr POW_ASSIGN_OP expr { $$=create_op_expr(pow_assign, $1, $3); /* puts("POW_ASSIGN_OP"); */ }
-    | expr UNTIL_KEYWORD expr {}  
-    | expr WHILE_KEYWORD expr {}  
+    | expr UNTIL_KEYWORD expr { $$=create_op_expr(until_op, $1, $3); }  
+    | expr WHILE_KEYWORD expr { $$=create_op_expr(while_op, $1, $3); }  
     | DEFINED_KEYWORD expr { $$=create_op_expr(defined, $2, 0); /* puts("DEFINED_KEYWORD"); */ }
     | NOT_KEYWORD expr { $$=create_op_expr(not_keyword, $2, 0); /* puts("NOT_KEYWORD");  */ }
     | expr AND_KEYWORD expr { $$=create_op_expr(and_keyword, $1, $3); /* puts("AND_KEYWORD"); */ }
@@ -227,13 +231,13 @@ stmt_ends_op: /* empty */
     | stmt_ends
     ;
 
-stmt: expr stmt_ends { puts("stmt"); }
+stmt: expr stmt_ends { $$=create_expr_stmt($1); puts("stmt"); }
     | stmt_block    { puts("stmt block"); }
     | stmt_block stmt_ends
     | if_stmt       { puts("if stmt"); }
     | if_stmt stmt_ends    { puts("if stmt"); }
-    | for_stmt       { puts("for stmt"); }
-    | for_stmt stmt_ends
+    | for_stmt       { $$=$1; puts("for stmt"); }
+    | for_stmt stmt_ends { $$=$1; puts("for stmt with ends"); }
     | while_stmt         { puts("while stmt"); }
     | while_stmt stmt_ends       { puts("while stmt"); }
     | until_stmt    { puts("until stmt"); }
@@ -242,12 +246,12 @@ stmt: expr stmt_ends { puts("stmt"); }
     | def_method_stmt stmt_ends { puts("def method"); }
     ;
 
-stmt_list_not_empty: stmt  { puts("list from one stmt"); }
-    | stmt stmt_list_not_empty { puts("add stmt to list"); }
+stmt_list_not_empty: stmt  { $$=create_stmt_list($1); puts("list from one stmt"); }
+    | stmt stmt_list_not_empty { $$=add_to_stmt_list($2, $1); puts("add stmt to list"); }
     ;
 
-stmt_list: /* empty */ { puts("empty stmt list"); }
-    | stmt_list_not_empty  { puts("stmt list"); }
+stmt_list: /* empty */ { $$=0; puts("empty stmt list"); }
+    | stmt_list_not_empty  { $$=$1; puts("stmt list"); }
     ;
 
 stmt_block: BEGIN_KEYWORD stmt_ends_op stmt_list END_KEYWORD  { puts("begin without stmt ends"); }
@@ -271,10 +275,10 @@ if_stmt: if_start_stmt END_KEYWORD
     | if_start_stmt elsif_stmt_list ELSE_KEYWORD stmt_ends_op stmt_list END_KEYWORD
     ;
 
-for_stmt: FOR_KEYWORD VAR_METHOD_NAME IN_KEYWORD expr stmt_ends stmt_list END_KEYWORD 
-    | FOR_KEYWORD INSTANCE_VAR_NAME IN_KEYWORD expr stmt_ends stmt_list END_KEYWORD
-	| FOR_KEYWORD VAR_METHOD_NAME IN_KEYWORD expr DO_KEYWORD stmt_ends_op stmt_list END_KEYWORD
-    | FOR_KEYWORD INSTANCE_VAR_NAME IN_KEYWORD expr DO_KEYWORD stmt_ends_op stmt_list END_KEYWORD
+for_stmt: FOR_KEYWORD VAR_METHOD_NAME IN_KEYWORD expr stmt_ends stmt_list END_KEYWORD { $$=create_for_stmt($2, $4, $6); } 
+    | FOR_KEYWORD INSTANCE_VAR_NAME IN_KEYWORD expr stmt_ends stmt_list END_KEYWORD { $$=create_for_stmt($2, $4, $6); } 
+	| FOR_KEYWORD VAR_METHOD_NAME IN_KEYWORD expr DO_KEYWORD stmt_ends_op stmt_list END_KEYWORD { $$=create_for_stmt($2, $4, $7); } 
+    | FOR_KEYWORD INSTANCE_VAR_NAME IN_KEYWORD expr DO_KEYWORD stmt_ends_op stmt_list END_KEYWORD { $$=create_for_stmt($2, $4, $7); }
 	;
 
 while_stmt: WHILE_KEYWORD expr stmt_ends stmt_list END_KEYWORD
@@ -337,6 +341,14 @@ struct expr_struct * create_op_expr(enum expr_type type, struct expr_struct * le
     result->type = type;
     result->left = left;
     result->right = right;
+    return result;
+}
+
+struct stmt_struct * create_expr_stmt(struct expr_struct * val) {
+    struct stmt_struct * result = (struct stmt_struct *) malloc(sizeof(struct stmt_struct));
+    result->type = expr_stmt_t;
+    result->expr_f = val;
+    return result;
 }
 
 struct stmt_list_struct * create_stmt_list(struct stmt_struct * val) {
@@ -350,6 +362,18 @@ struct stmt_list_struct * add_to_stmt_list(struct stmt_list_struct * list, struc
     list->last->next = val;
     list->last = val;
     return list;
+}
+
+struct stmt_struct * create_for_stmt(char * iterable_var, struct expr_struct * condition, struct stmt_list_struct* body) {
+    struct for_stmt_struct * for_s = (struct for_stmt_struct *) malloc(sizeof(struct for_stmt_struct));
+    for_s->iterable_var = iterable_var;
+    for_s->condition = condition;
+    for_s->body = body;
+
+    struct stmt_struct * result = (struct stmt_struct *) malloc(sizeof(struct stmt_struct));
+    result->type = for_stmt_t;
+    result->for_stmt_f = for_s;
+    return result;
 }
 
 void main(int argc, char **argv ){
