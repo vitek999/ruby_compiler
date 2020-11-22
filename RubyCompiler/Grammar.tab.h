@@ -155,7 +155,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 26 "Grammar.y"
+#line 42 "Grammar.y"
 
     int int_un;
     float float_un;
@@ -167,8 +167,15 @@ union YYSTYPE
     struct expr_struct * expr_un; 
     struct stmt_struct * stmt_un;
     struct stmt_list_struct * stmt_list_un;
+    struct expr_list_struct * expr_list_un;
+    struct if_part_stmt_struct * if_part_un;
+    struct elsif_stmt_list * elsif_list_un;
+    struct stmt_block_struct* block_un;
+    struct method_param_struct* method_param_un;
+    struct method_param_list* method_param_list_un;
+    struct program_struct * program_un;
 
-#line 172 "Grammar.tab.h"
+#line 179 "Grammar.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

@@ -1,4 +1,21 @@
-for a in 1..2 do
-v = 2
-c = 2
+def a
+ a + 2
+end
+def c(a)
+ a / 2
+end
+def d(a = 3)
+ a * 2
+ 1..2
+end
+begin
+if true then
+print(1)
+elsif true then
+print(3)
+elsif false then
+a = 3
+else
+print(2)
+end
 end

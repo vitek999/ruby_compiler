@@ -111,7 +111,7 @@ Grammar
    71     | def_method_stmt stmt_ends
 
    72 stmt_list_not_empty: stmt
-   73                    | stmt stmt_list_not_empty
+   73                    | stmt_list_not_empty stmt
 
    74 stmt_list: %empty
    75          | stmt_list_not_empty
@@ -125,7 +125,7 @@ Grammar
    80           | ELSIF_KEYWORD expr THEN_KEYWORD stmt_ends_op stmt_list
 
    81 elsif_stmt_list: elsif_stmt
-   82                | elsif_stmt elsif_stmt_list
+   82                | elsif_stmt_list elsif_stmt
 
    83 if_stmt: if_start_stmt END_KEYWORD
    84        | if_start_stmt ELSE_KEYWORD stmt_ends_op stmt_list END_KEYWORD
@@ -153,7 +153,7 @@ Grammar
   100                             | method_params_list_not_empty COMMA_SYMBOL method_param
 
   101 def_method_stmt: DEF_KEYWORD VAR_METHOD_NAME stmt_ends stmt_list END_KEYWORD
-  102                | DEF_KEYWORD VAR_METHOD_NAME OPEN_ROUND_BRACKET method_params_list CLOSE_ROUND_BRACKET stmt_list END_KEYWORD
+  102                | DEF_KEYWORD VAR_METHOD_NAME OPEN_ROUND_BRACKET method_params_list CLOSE_ROUND_BRACKET stmt_ends_op stmt_list END_KEYWORD
 
   103 method_call_param_list: %empty
   104                       | method_call_param_list_not_empty
@@ -265,7 +265,7 @@ Nonterminals, with rules where they appear
 
     $accept (96)
         on left: 0
-    program (97)
+    program <program_un> (97)
         on left: 1
         on right: 0
     expr <expr_un> (98)
@@ -276,7 +276,7 @@ Nonterminals, with rules where they appear
         on right: 55 56 58 59 61 63 65 67 69 71 77 79 87 88 91 93 101
     stmt_ends_op (100)
         on left: 57 58
-        on right: 76 78 80 84 86 89 90 92 94
+        on right: 76 78 80 84 86 89 90 92 94 102
     stmt <stmt_un> (101)
         on left: 59 60 61 62 63 64 65 66 67 68 69 70 71
         on right: 72 73
@@ -286,46 +286,46 @@ Nonterminals, with rules where they appear
     stmt_list <stmt_list_un> (103)
         on left: 74 75
         on right: 1 76 77 78 79 80 84 86 87 88 89 90 91 92 93 94 101 102
-    stmt_block (104)
+    stmt_block <block_un> (104)
         on left: 76
         on right: 60 61
-    if_start_stmt (105)
+    if_start_stmt <if_part_un> (105)
         on left: 77 78
         on right: 83 84 85 86
-    elsif_stmt (106)
+    elsif_stmt <if_part_un> (106)
         on left: 79 80
         on right: 81 82
-    elsif_stmt_list (107)
+    elsif_stmt_list <elsif_list_un> (107)
         on left: 81 82
         on right: 82 85 86
-    if_stmt (108)
+    if_stmt <stmt_un> (108)
         on left: 83 84 85 86
         on right: 62 63
     for_stmt <stmt_un> (109)
         on left: 87 88 89 90
         on right: 64 65
-    while_stmt (110)
+    while_stmt <stmt_un> (110)
         on left: 91 92
         on right: 66 67
-    until_stmt (111)
+    until_stmt <stmt_un> (111)
         on left: 93 94
         on right: 68 69
-    method_param (112)
+    method_param <method_param_un> (112)
         on left: 95 96
         on right: 99 100
-    method_params_list (113)
+    method_params_list <method_param_list_un> (113)
         on left: 97 98
         on right: 102
-    method_params_list_not_empty (114)
+    method_params_list_not_empty <method_param_list_un> (114)
         on left: 99 100
         on right: 98 100
-    def_method_stmt (115)
+    def_method_stmt <stmt_un> (115)
         on left: 101 102
         on right: 70 71
-    method_call_param_list (116)
+    method_call_param_list <expr_list_un> (116)
         on left: 103 104
         on right: 50
-    method_call_param_list_not_empty (117)
+    method_call_param_list_not_empty <expr_list_un> (117)
         on left: 105 106
         on right: 104 106
 
@@ -389,7 +389,7 @@ State 1
 State 2
 
   101 def_method_stmt: DEF_KEYWORD . VAR_METHOD_NAME stmt_ends stmt_list END_KEYWORD
-  102                | DEF_KEYWORD . VAR_METHOD_NAME OPEN_ROUND_BRACKET method_params_list CLOSE_ROUND_BRACKET stmt_list END_KEYWORD
+  102                | DEF_KEYWORD . VAR_METHOD_NAME OPEN_ROUND_BRACKET method_params_list CLOSE_ROUND_BRACKET stmt_ends_op stmt_list END_KEYWORD
 
     VAR_METHOD_NAME  shift, and go to state 39
 
@@ -819,7 +819,14 @@ State 24
 State 25
 
    72 stmt_list_not_empty: stmt .
-   73                    | stmt . stmt_list_not_empty
+
+    $default  reduce using rule 72 (stmt_list_not_empty)
+
+
+State 26
+
+   73 stmt_list_not_empty: stmt_list_not_empty . stmt
+   75 stmt_list: stmt_list_not_empty .
 
     BEGIN_KEYWORD           shift, and go to state 1
     DEF_KEYWORD             shift, and go to state 2
@@ -844,25 +851,17 @@ State 25
     VAR_METHOD_NAME         shift, and go to state 21
     INSTANCE_VAR_NAME       shift, and go to state 22
 
-    $default  reduce using rule 72 (stmt_list_not_empty)
-
-    expr                 go to state 24
-    stmt                 go to state 25
-    stmt_list_not_empty  go to state 90
-    stmt_block           go to state 28
-    if_start_stmt        go to state 29
-    if_stmt              go to state 30
-    for_stmt             go to state 31
-    while_stmt           go to state 32
-    until_stmt           go to state 33
-    def_method_stmt      go to state 34
-
-
-State 26
-
-   75 stmt_list: stmt_list_not_empty .
-
     $default  reduce using rule 75 (stmt_list)
+
+    expr             go to state 24
+    stmt             go to state 90
+    stmt_block       go to state 28
+    if_start_stmt    go to state 29
+    if_stmt          go to state 30
+    for_stmt         go to state 31
+    while_stmt       go to state 32
+    until_stmt       go to state 33
+    def_method_stmt  go to state 34
 
 
 State 27
@@ -1043,7 +1042,7 @@ State 38
 State 39
 
   101 def_method_stmt: DEF_KEYWORD VAR_METHOD_NAME . stmt_ends stmt_list END_KEYWORD
-  102                | DEF_KEYWORD VAR_METHOD_NAME . OPEN_ROUND_BRACKET method_params_list CLOSE_ROUND_BRACKET stmt_list END_KEYWORD
+  102                | DEF_KEYWORD VAR_METHOD_NAME . OPEN_ROUND_BRACKET method_params_list CLOSE_ROUND_BRACKET stmt_ends_op stmt_list END_KEYWORD
 
     OPEN_ROUND_BRACKET  shift, and go to state 105
     SEMICOLON_SYMBOL    shift, and go to state 35
@@ -2634,7 +2633,7 @@ State 89
 
 State 90
 
-   73 stmt_list_not_empty: stmt stmt_list_not_empty .
+   73 stmt_list_not_empty: stmt_list_not_empty stmt .
 
     $default  reduce using rule 73 (stmt_list_not_empty)
 
@@ -2694,23 +2693,21 @@ State 94
 State 95
 
    81 elsif_stmt_list: elsif_stmt .
-   82                | elsif_stmt . elsif_stmt_list
-
-    ELSIF_KEYWORD  shift, and go to state 93
 
     $default  reduce using rule 81 (elsif_stmt_list)
-
-    elsif_stmt       go to state 95
-    elsif_stmt_list  go to state 156
 
 
 State 96
 
+   82 elsif_stmt_list: elsif_stmt_list . elsif_stmt
    85 if_stmt: if_start_stmt elsif_stmt_list . END_KEYWORD
    86        | if_start_stmt elsif_stmt_list . ELSE_KEYWORD stmt_ends_op stmt_list END_KEYWORD
 
-    ELSE_KEYWORD  shift, and go to state 157
-    END_KEYWORD   shift, and go to state 158
+    ELSE_KEYWORD   shift, and go to state 156
+    ELSIF_KEYWORD  shift, and go to state 93
+    END_KEYWORD    shift, and go to state 157
+
+    elsif_stmt  go to state 158
 
 
 State 97
@@ -2771,7 +2768,7 @@ State 104
 
 State 105
 
-  102 def_method_stmt: DEF_KEYWORD VAR_METHOD_NAME OPEN_ROUND_BRACKET . method_params_list CLOSE_ROUND_BRACKET stmt_list END_KEYWORD
+  102 def_method_stmt: DEF_KEYWORD VAR_METHOD_NAME OPEN_ROUND_BRACKET . method_params_list CLOSE_ROUND_BRACKET stmt_ends_op stmt_list END_KEYWORD
 
     VAR_METHOD_NAME  shift, and go to state 160
 
@@ -5293,13 +5290,6 @@ State 155
 
 State 156
 
-   82 elsif_stmt_list: elsif_stmt elsif_stmt_list .
-
-    $default  reduce using rule 82 (elsif_stmt_list)
-
-
-State 157
-
    86 if_stmt: if_start_stmt elsif_stmt_list ELSE_KEYWORD . stmt_ends_op stmt_list END_KEYWORD
 
     SEMICOLON_SYMBOL  shift, and go to state 35
@@ -5311,11 +5301,18 @@ State 157
     stmt_ends_op  go to state 178
 
 
-State 158
+State 157
 
    85 if_stmt: if_start_stmt elsif_stmt_list END_KEYWORD .
 
     $default  reduce using rule 85 (if_stmt)
+
+
+State 158
+
+   82 elsif_stmt_list: elsif_stmt_list elsif_stmt .
+
+    $default  reduce using rule 82 (elsif_stmt_list)
 
 
 State 159
@@ -5344,7 +5341,7 @@ State 161
 
 State 162
 
-  102 def_method_stmt: DEF_KEYWORD VAR_METHOD_NAME OPEN_ROUND_BRACKET method_params_list . CLOSE_ROUND_BRACKET stmt_list END_KEYWORD
+  102 def_method_stmt: DEF_KEYWORD VAR_METHOD_NAME OPEN_ROUND_BRACKET method_params_list . CLOSE_ROUND_BRACKET stmt_ends_op stmt_list END_KEYWORD
 
     CLOSE_ROUND_BRACKET  shift, and go to state 180
 
@@ -5834,44 +5831,15 @@ State 179
 
 State 180
 
-  102 def_method_stmt: DEF_KEYWORD VAR_METHOD_NAME OPEN_ROUND_BRACKET method_params_list CLOSE_ROUND_BRACKET . stmt_list END_KEYWORD
+  102 def_method_stmt: DEF_KEYWORD VAR_METHOD_NAME OPEN_ROUND_BRACKET method_params_list CLOSE_ROUND_BRACKET . stmt_ends_op stmt_list END_KEYWORD
 
-    BEGIN_KEYWORD           shift, and go to state 1
-    DEF_KEYWORD             shift, and go to state 2
-    DEFINED_KEYWORD         shift, and go to state 3
-    IF_KEYWORD              shift, and go to state 4
-    FALSE_KEYWORD           shift, and go to state 5
-    FOR_KEYWORD             shift, and go to state 6
-    NIL_KEYWORD             shift, and go to state 7
-    NOT_KEYWORD             shift, and go to state 8
-    TRUE_KEYWORD            shift, and go to state 9
-    UNTIL_KEYWORD           shift, and go to state 10
-    WHILE_KEYWORD           shift, and go to state 11
-    ARITHMETIC_PLUS_OP      shift, and go to state 12
-    ARITHMETIC_MINUS_OP     shift, and go to state 13
-    BIN_ONES_COMPLEMENT_OP  shift, and go to state 14
-    LOGICAL_NOT_OP          shift, and go to state 15
-    OPEN_ROUND_BRACKET      shift, and go to state 16
-    OPEN_SQUARE_BRACKET     shift, and go to state 17
-    STRING                  shift, and go to state 18
-    INTEGER_NUMBER          shift, and go to state 19
-    FLOAT_NUMBER            shift, and go to state 20
-    VAR_METHOD_NAME         shift, and go to state 21
-    INSTANCE_VAR_NAME       shift, and go to state 22
+    SEMICOLON_SYMBOL  shift, and go to state 35
+    NEW_LINE_SYMBOL   shift, and go to state 36
 
-    $default  reduce using rule 74 (stmt_list)
+    $default  reduce using rule 57 (stmt_ends_op)
 
-    expr                 go to state 24
-    stmt                 go to state 25
-    stmt_list_not_empty  go to state 26
-    stmt_list            go to state 198
-    stmt_block           go to state 28
-    if_start_stmt        go to state 29
-    if_stmt              go to state 30
-    for_stmt             go to state 31
-    while_stmt           go to state 32
-    until_stmt           go to state 33
-    def_method_stmt      go to state 34
+    stmt_ends     go to state 37
+    stmt_ends_op  go to state 198
 
 
 State 181
@@ -6252,9 +6220,44 @@ State 197
 
 State 198
 
-  102 def_method_stmt: DEF_KEYWORD VAR_METHOD_NAME OPEN_ROUND_BRACKET method_params_list CLOSE_ROUND_BRACKET stmt_list . END_KEYWORD
+  102 def_method_stmt: DEF_KEYWORD VAR_METHOD_NAME OPEN_ROUND_BRACKET method_params_list CLOSE_ROUND_BRACKET stmt_ends_op . stmt_list END_KEYWORD
 
-    END_KEYWORD  shift, and go to state 208
+    BEGIN_KEYWORD           shift, and go to state 1
+    DEF_KEYWORD             shift, and go to state 2
+    DEFINED_KEYWORD         shift, and go to state 3
+    IF_KEYWORD              shift, and go to state 4
+    FALSE_KEYWORD           shift, and go to state 5
+    FOR_KEYWORD             shift, and go to state 6
+    NIL_KEYWORD             shift, and go to state 7
+    NOT_KEYWORD             shift, and go to state 8
+    TRUE_KEYWORD            shift, and go to state 9
+    UNTIL_KEYWORD           shift, and go to state 10
+    WHILE_KEYWORD           shift, and go to state 11
+    ARITHMETIC_PLUS_OP      shift, and go to state 12
+    ARITHMETIC_MINUS_OP     shift, and go to state 13
+    BIN_ONES_COMPLEMENT_OP  shift, and go to state 14
+    LOGICAL_NOT_OP          shift, and go to state 15
+    OPEN_ROUND_BRACKET      shift, and go to state 16
+    OPEN_SQUARE_BRACKET     shift, and go to state 17
+    STRING                  shift, and go to state 18
+    INTEGER_NUMBER          shift, and go to state 19
+    FLOAT_NUMBER            shift, and go to state 20
+    VAR_METHOD_NAME         shift, and go to state 21
+    INSTANCE_VAR_NAME       shift, and go to state 22
+
+    $default  reduce using rule 74 (stmt_list)
+
+    expr                 go to state 24
+    stmt                 go to state 25
+    stmt_list_not_empty  go to state 26
+    stmt_list            go to state 208
+    stmt_block           go to state 28
+    if_start_stmt        go to state 29
+    if_stmt              go to state 30
+    for_stmt             go to state 31
+    while_stmt           go to state 32
+    until_stmt           go to state 33
+    def_method_stmt      go to state 34
 
 
 State 199
@@ -6392,16 +6395,16 @@ State 207
 
 State 208
 
-  102 def_method_stmt: DEF_KEYWORD VAR_METHOD_NAME OPEN_ROUND_BRACKET method_params_list CLOSE_ROUND_BRACKET stmt_list END_KEYWORD .
+  102 def_method_stmt: DEF_KEYWORD VAR_METHOD_NAME OPEN_ROUND_BRACKET method_params_list CLOSE_ROUND_BRACKET stmt_ends_op stmt_list . END_KEYWORD
 
-    $default  reduce using rule 102 (def_method_stmt)
+    END_KEYWORD  shift, and go to state 213
 
 
 State 209
 
    89 for_stmt: FOR_KEYWORD VAR_METHOD_NAME IN_KEYWORD expr DO_KEYWORD stmt_ends_op stmt_list . END_KEYWORD
 
-    END_KEYWORD  shift, and go to state 213
+    END_KEYWORD  shift, and go to state 214
 
 
 State 210
@@ -6415,7 +6418,7 @@ State 211
 
    90 for_stmt: FOR_KEYWORD INSTANCE_VAR_NAME IN_KEYWORD expr DO_KEYWORD stmt_ends_op stmt_list . END_KEYWORD
 
-    END_KEYWORD  shift, and go to state 214
+    END_KEYWORD  shift, and go to state 215
 
 
 State 212
@@ -6427,12 +6430,19 @@ State 212
 
 State 213
 
+  102 def_method_stmt: DEF_KEYWORD VAR_METHOD_NAME OPEN_ROUND_BRACKET method_params_list CLOSE_ROUND_BRACKET stmt_ends_op stmt_list END_KEYWORD .
+
+    $default  reduce using rule 102 (def_method_stmt)
+
+
+State 214
+
    89 for_stmt: FOR_KEYWORD VAR_METHOD_NAME IN_KEYWORD expr DO_KEYWORD stmt_ends_op stmt_list END_KEYWORD .
 
     $default  reduce using rule 89 (for_stmt)
 
 
-State 214
+State 215
 
    90 for_stmt: FOR_KEYWORD INSTANCE_VAR_NAME IN_KEYWORD expr DO_KEYWORD stmt_ends_op stmt_list END_KEYWORD .
 

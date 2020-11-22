@@ -16,10 +16,26 @@ struct expr_struct * create_const_integer_expr(enum expr_type type, int val);
 struct expr_struct * create_const_float_expr(float val);
 struct expr_struct * create_const_string_expr(enum expr_type type, char * val);
 struct expr_struct * create_op_expr(enum expr_type type, struct expr_struct * left, struct expr_struct * right);
+struct expr_struct * create_method_call_expr(char * method_name, struct expr_list_struct * list);
 struct stmt_struct * create_expr_stmt(struct expr_struct * val);
 struct stmt_struct * create_for_stmt(char * iterable_var, struct expr_struct * condition, struct stmt_list_struct* body);
+struct stmt_struct * create_while_stmt(struct expr_struct * condition, struct stmt_list_struct* body);
+struct stmt_struct * create_until_stmt(struct expr_struct * condition, struct stmt_list_struct* body);
+struct stmt_struct * create_if_stmt(struct if_part_stmt_struct* if_branch, struct elsif_stmt_list* elsif_branches, struct stmt_list_struct* else_branch);
+struct stmt_struct * create_block_stmt(struct stmt_block_struct * val);
+struct stmt_struct * create_def_method_stmt(char* name, struct method_param_list* params, struct stmt_list_struct* body);
 struct stmt_list_struct * create_stmt_list(struct stmt_struct * val);
 struct stmt_list_struct * add_to_stmt_list(struct stmt_list_struct * list, struct stmt_struct * val);
+struct expr_list_struct * create_expr_list(struct expr_struct * val);
+struct expr_list_struct * add_to_expr_list(struct expr_list_struct * list, struct expr_struct * val);
+struct if_part_stmt_struct * create_if_part_struct(struct expr_struct * condition, struct stmt_list_struct * body);
+struct elsif_stmt_list * create_elsif_stmt_list(struct if_part_stmt_struct * val);
+struct elsif_stmt_list * add_to_elsif_stmt_list(struct elsif_stmt_list * list, struct if_part_stmt_struct * val);
+struct stmt_block_struct * create_stmt_block_struct(struct stmt_list_struct * list);
+struct method_param_struct * create_method_param_struct(char * name, struct expr_struct * default_value);
+struct method_param_list * create_method_param_list(struct method_param_struct * val);
+struct method_param_list * add_to_method_param_list(struct method_param_list * list, struct method_param_struct * val);
+struct program_struct * create_program_struct(struct stmt_list_struct * stmts);
 
 %}
 
@@ -34,13 +50,34 @@ struct stmt_list_struct * add_to_stmt_list(struct stmt_list_struct * list, struc
     struct expr_struct * expr_un; 
     struct stmt_struct * stmt_un;
     struct stmt_list_struct * stmt_list_un;
+    struct expr_list_struct * expr_list_un;
+    struct if_part_stmt_struct * if_part_un;
+    struct elsif_stmt_list * elsif_list_un;
+    struct stmt_block_struct* block_un;
+    struct method_param_struct* method_param_un;
+    struct method_param_list* method_param_list_un;
+    struct program_struct * program_un;
 }
 
 %type <expr_un> expr
 %type <stmt_un> stmt
 %type <stmt_un> for_stmt
+%type <stmt_un> while_stmt
+%type <stmt_un> until_stmt
+%type <stmt_un> if_stmt 
+%type <stmt_un> def_method_stmt
 %type <stmt_list_un> stmt_list
 %type <stmt_list_un> stmt_list_not_empty
+%type <expr_list_un> method_call_param_list_not_empty
+%type <expr_list_un> method_call_param_list
+%type <if_part_un> if_start_stmt 
+%type <if_part_un> elsif_stmt
+%type <elsif_list_un> elsif_stmt_list
+%type <block_un> stmt_block
+%type <method_param_un> method_param
+%type <method_param_list_un> method_params_list_not_empty
+%type <method_param_list_un> method_params_list
+%type <program_un> program
 
 %token ALIAS_KEYWORD
 %token AND_KEYWORD
@@ -166,7 +203,7 @@ struct stmt_list_struct * add_to_stmt_list(struct stmt_list_struct * list, struc
 %nonassoc OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET
 
 %%
-program: stmt_list  { puts("program"); }
+program: stmt_list  { $$=create_program_struct($1); puts("program"); }
 
 expr: INTEGER_NUMBER { $$=create_const_integer_expr(Integer, $1); /* puts("integer"); */ }
     | FLOAT_NUMBER { $$=create_const_float_expr($1); /* puts("float"); */}
@@ -216,7 +253,7 @@ expr: INTEGER_NUMBER { $$=create_const_integer_expr(Integer, $1); /* puts("integ
     | expr OR_KEYWORD expr { $$=create_op_expr(or_keyword, $1, $3); /* puts("OR_KEYWORD"); */ }
     | OPEN_ROUND_BRACKET expr CLOSE_ROUND_BRACKET { $$=$2; /* puts(" expr in round brackets "); */ }
 	| OPEN_SQUARE_BRACKET expr CLOSE_SQUARE_BRACKET { puts(" expr in square brackets "); }
-    | VAR_METHOD_NAME OPEN_ROUND_BRACKET method_call_param_list CLOSE_ROUND_BRACKET { puts("method call"); /*!!!! ВОПРОС !!!!*/ }
+    | VAR_METHOD_NAME OPEN_ROUND_BRACKET method_call_param_list CLOSE_ROUND_BRACKET { $$=create_method_call_expr($1, $3); puts("method call"); /*!!!! ВОПРОС !!!!*/ }
     | VAR_METHOD_NAME { $$=create_const_string_expr(var_or_method, $1); /* puts("var"); */ }     
     | INSTANCE_VAR_NAME { $$=create_const_string_expr(instance_var, $1); /* puts("instance var"); */ }
     ;
@@ -232,47 +269,47 @@ stmt_ends_op: /* empty */
     ;
 
 stmt: expr stmt_ends { $$=create_expr_stmt($1); puts("stmt"); }
-    | stmt_block    { puts("stmt block"); }
-    | stmt_block stmt_ends
-    | if_stmt       { puts("if stmt"); }
-    | if_stmt stmt_ends    { puts("if stmt"); }
+    | stmt_block    { $$=create_block_stmt($1); puts("stmt block"); }
+    | stmt_block stmt_ends { $$=create_block_stmt($1); }
+    | if_stmt       { $$=$1; puts("if stmt"); }
+    | if_stmt stmt_ends    { $$=$1; puts("if stmt"); }
     | for_stmt       { $$=$1; puts("for stmt"); }
     | for_stmt stmt_ends { $$=$1; puts("for stmt with ends"); }
-    | while_stmt         { puts("while stmt"); }
-    | while_stmt stmt_ends       { puts("while stmt"); }
-    | until_stmt    { puts("until stmt"); }
-    | until_stmt stmt_ends   { puts("until stmt"); }
-    | def_method_stmt   { puts("def method"); }
-    | def_method_stmt stmt_ends { puts("def method"); }
+    | while_stmt         { $$=$1; puts("while stmt"); }
+    | while_stmt stmt_ends       { $$=$1; puts("while stmt"); }
+    | until_stmt    { $$=$1; puts("until stmt"); }
+    | until_stmt stmt_ends   { $$=$1; puts("until stmt"); }
+    | def_method_stmt   { $$=$1; puts("def method"); }
+    | def_method_stmt stmt_ends { $$=$1; puts("def method"); }
     ;
 
 stmt_list_not_empty: stmt  { $$=create_stmt_list($1); puts("list from one stmt"); }
-    | stmt stmt_list_not_empty { $$=add_to_stmt_list($2, $1); puts("add stmt to list"); }
+    | stmt_list_not_empty stmt { $$=add_to_stmt_list($1, $2); puts("add stmt to list"); }
     ;
 
 stmt_list: /* empty */ { $$=0; puts("empty stmt list"); }
     | stmt_list_not_empty  { $$=$1; puts("stmt list"); }
     ;
 
-stmt_block: BEGIN_KEYWORD stmt_ends_op stmt_list END_KEYWORD  { puts("begin without stmt ends"); }
+stmt_block: BEGIN_KEYWORD stmt_ends_op stmt_list END_KEYWORD  { $$=create_stmt_block_struct($3); puts("begin without stmt ends"); }
     ;
 
-if_start_stmt: IF_KEYWORD expr stmt_ends stmt_list { puts("if without then"); }
-    | IF_KEYWORD expr THEN_KEYWORD stmt_ends_op stmt_list { puts("if with then"); }
+if_start_stmt: IF_KEYWORD expr stmt_ends stmt_list { $$=create_if_part_struct($2, $4); puts("if without then"); }
+    | IF_KEYWORD expr THEN_KEYWORD stmt_ends_op stmt_list { $$=create_if_part_struct($2, $5); puts("if with then"); }
     ;
 
-elsif_stmt: ELSIF_KEYWORD expr stmt_ends stmt_list { puts("elsif without then");  } 
-    | ELSIF_KEYWORD expr THEN_KEYWORD stmt_ends_op stmt_list { puts("elsif with then");  } 
+elsif_stmt: ELSIF_KEYWORD expr stmt_ends stmt_list { $$=create_if_part_struct($2, $4); puts("elsif without then");  } 
+    | ELSIF_KEYWORD expr THEN_KEYWORD stmt_ends_op stmt_list { $$=create_if_part_struct($2, $5); puts("elsif with then");  } 
     ;
 
-elsif_stmt_list: elsif_stmt 
-    | elsif_stmt elsif_stmt_list
+elsif_stmt_list: elsif_stmt { $$=create_elsif_stmt_list($1); } 
+    | elsif_stmt_list elsif_stmt { $$=add_to_elsif_stmt_list($1, $2); }
     ;
 
-if_stmt: if_start_stmt END_KEYWORD
-    | if_start_stmt ELSE_KEYWORD stmt_ends_op stmt_list END_KEYWORD 
-    | if_start_stmt elsif_stmt_list END_KEYWORD
-    | if_start_stmt elsif_stmt_list ELSE_KEYWORD stmt_ends_op stmt_list END_KEYWORD
+if_stmt: if_start_stmt END_KEYWORD { $$=create_if_stmt($1, 0, 0); }
+    | if_start_stmt ELSE_KEYWORD stmt_ends_op stmt_list END_KEYWORD { $$=create_if_stmt($1, 0, $4); }
+    | if_start_stmt elsif_stmt_list END_KEYWORD { $$=create_if_stmt($1, $2, 0); }
+    | if_start_stmt elsif_stmt_list ELSE_KEYWORD stmt_ends_op stmt_list END_KEYWORD { $$=create_if_stmt($1, $2, $5); }
     ;
 
 for_stmt: FOR_KEYWORD VAR_METHOD_NAME IN_KEYWORD expr stmt_ends stmt_list END_KEYWORD { $$=create_for_stmt($2, $4, $6); } 
@@ -281,36 +318,36 @@ for_stmt: FOR_KEYWORD VAR_METHOD_NAME IN_KEYWORD expr stmt_ends stmt_list END_KE
     | FOR_KEYWORD INSTANCE_VAR_NAME IN_KEYWORD expr DO_KEYWORD stmt_ends_op stmt_list END_KEYWORD { $$=create_for_stmt($2, $4, $7); }
 	;
 
-while_stmt: WHILE_KEYWORD expr stmt_ends stmt_list END_KEYWORD
-	| WHILE_KEYWORD expr DO_KEYWORD stmt_ends_op stmt_list END_KEYWORD
+while_stmt: WHILE_KEYWORD expr stmt_ends stmt_list END_KEYWORD { $$=create_while_stmt($2, $4); }
+	| WHILE_KEYWORD expr DO_KEYWORD stmt_ends_op stmt_list END_KEYWORD { $$=create_while_stmt($2, $5); }
 	;
 
-until_stmt: UNTIL_KEYWORD expr stmt_ends stmt_list END_KEYWORD
-	| UNTIL_KEYWORD expr DO_KEYWORD stmt_ends_op stmt_list END_KEYWORD
+until_stmt: UNTIL_KEYWORD expr stmt_ends stmt_list END_KEYWORD { $$=create_until_stmt($2, $4); }
+	| UNTIL_KEYWORD expr DO_KEYWORD stmt_ends_op stmt_list END_KEYWORD { $$=create_until_stmt($2, $5); }
 	;
 
-method_param: VAR_METHOD_NAME
-	| VAR_METHOD_NAME ASSIGN_OP expr
+method_param: VAR_METHOD_NAME { $$=create_method_param_struct($1, 0); }
+	| VAR_METHOD_NAME ASSIGN_OP expr { $$=create_method_param_struct($1, $3); }
 	;
 
-method_params_list: /* empty */
-	| method_params_list_not_empty
+method_params_list: /* empty */ { $$=0; }
+	| method_params_list_not_empty { $$=$1; }
 	;
 
-method_params_list_not_empty: method_param
-	| method_params_list_not_empty COMMA_SYMBOL method_param
+method_params_list_not_empty: method_param { $$=create_method_param_list($1); }
+	| method_params_list_not_empty COMMA_SYMBOL method_param { $$=add_to_method_param_list($1, $3); }
 	;
 
-def_method_stmt: DEF_KEYWORD VAR_METHOD_NAME stmt_ends stmt_list END_KEYWORD  
-    | DEF_KEYWORD VAR_METHOD_NAME OPEN_ROUND_BRACKET method_params_list CLOSE_ROUND_BRACKET stmt_list END_KEYWORD
+def_method_stmt: DEF_KEYWORD VAR_METHOD_NAME stmt_ends stmt_list END_KEYWORD { $$=create_def_method_stmt($2, 0, $4); }
+    | DEF_KEYWORD VAR_METHOD_NAME OPEN_ROUND_BRACKET method_params_list CLOSE_ROUND_BRACKET stmt_ends_op stmt_list END_KEYWORD { $$=create_def_method_stmt($2, $4, $7); }
     ;
 
-method_call_param_list: /* empty */
-	| method_call_param_list_not_empty
+method_call_param_list: /* empty */ { $$=0; }
+	| method_call_param_list_not_empty {$$=$1; }
 	;
 
-method_call_param_list_not_empty: expr
-	| method_call_param_list_not_empty COMMA_SYMBOL expr
+method_call_param_list_not_empty: expr { $$=create_expr_list($1); }
+	| method_call_param_list_not_empty COMMA_SYMBOL expr { $$=add_to_expr_list($1, $3); }
 	;
 
 %%
@@ -364,6 +401,19 @@ struct stmt_list_struct * add_to_stmt_list(struct stmt_list_struct * list, struc
     return list;
 }
 
+struct expr_list_struct * create_expr_list(struct expr_struct * val) {
+    struct expr_list_struct * res = (struct expr_list_struct *) malloc(sizeof(struct expr_list_struct));
+    res->first = val;
+    res->last = val;
+    return res;
+}
+
+struct expr_list_struct * add_to_expr_list(struct expr_list_struct * list, struct expr_struct * val) {
+    list->last->next = val;
+    list->last = val;
+    return list;
+}
+
 struct stmt_struct * create_for_stmt(char * iterable_var, struct expr_struct * condition, struct stmt_list_struct* body) {
     struct for_stmt_struct * for_s = (struct for_stmt_struct *) malloc(sizeof(struct for_stmt_struct));
     for_s->iterable_var = iterable_var;
@@ -373,6 +423,120 @@ struct stmt_struct * create_for_stmt(char * iterable_var, struct expr_struct * c
     struct stmt_struct * result = (struct stmt_struct *) malloc(sizeof(struct stmt_struct));
     result->type = for_stmt_t;
     result->for_stmt_f = for_s;
+    return result;
+}
+
+struct stmt_struct * create_while_stmt(struct expr_struct * condition, struct stmt_list_struct* body) {
+    struct while_stmt_struct * while_s = (struct while_stmt_struct *) malloc(sizeof(struct while_stmt_struct));
+    while_s->condition = condition;
+    while_s->body = body;
+
+    struct stmt_struct * result = (struct stmt_struct *) malloc(sizeof(struct stmt_struct));
+    result->type = while_stmt_t;
+    result->while_stmt_f = while_s;
+    return result;
+}
+
+struct stmt_struct * create_until_stmt(struct expr_struct * condition, struct stmt_list_struct* body) {
+    struct until_stmt_struct * while_s = (struct until_stmt_struct *) malloc(sizeof(struct until_stmt_struct));
+    while_s->condition = condition;
+    while_s->body = body;
+
+    struct stmt_struct * result = (struct stmt_struct *) malloc(sizeof(struct stmt_struct));
+    result->type = until_stmt_t;
+    result->until_stmt_f = while_s;
+    return result;
+}
+
+struct expr_struct * create_method_call_expr(char * method_name, struct expr_list_struct * list) {
+    struct expr_struct * result = (struct expr_struct *) malloc(sizeof(struct expr_struct));
+    result->type = method_call;
+    result->str_val = method_name;
+    result->list = list;
+    return result;
+}
+
+struct if_part_stmt_struct * create_if_part_struct(struct expr_struct * condition, struct stmt_list_struct * body) {
+    struct if_part_stmt_struct * result = (struct if_part_stmt_struct *) malloc(sizeof(struct if_part_stmt_struct));
+    result->condition = condition;
+    result->body = body;
+    return result;
+}
+
+struct elsif_stmt_list * create_elsif_stmt_list(struct if_part_stmt_struct * val) {
+    struct elsif_stmt_list * result = (struct elsif_stmt_list *) malloc(sizeof(struct elsif_stmt_list));
+    result->first = val;
+    result->last = val;
+    return result;
+}
+
+struct elsif_stmt_list * add_to_elsif_stmt_list(struct elsif_stmt_list * list, struct if_part_stmt_struct * val) {
+    list->last->next = val;
+    list->last = val;
+    return list;
+}
+
+struct stmt_struct * create_if_stmt(struct if_part_stmt_struct* if_branch, struct elsif_stmt_list* elsif_branches, struct stmt_list_struct* else_branch) {
+    struct if_stmt_struct * if_s = (struct if_stmt_struct *) malloc(sizeof(struct if_stmt_struct));
+    if_s->if_branch = if_branch;
+    if_s->elsif_branches = elsif_branches;
+    if_s->else_branch = else_branch;
+
+    struct stmt_struct * result = (struct stmt_struct *) malloc(sizeof(struct stmt_struct));
+    result->type = if_stmt_t;
+    result->if_stmt_f = if_s;
+    return result;
+}
+
+struct stmt_block_struct * create_stmt_block_struct(struct stmt_list_struct * list) {
+    struct stmt_block_struct * result = (struct stmt_block_struct * ) malloc(sizeof(struct stmt_block_struct));
+    result->list = list;
+    return result;
+}
+
+struct stmt_struct * create_block_stmt(struct stmt_block_struct * val) {
+    struct stmt_struct * result = (struct stmt_struct *) malloc(sizeof(struct stmt_struct));
+    result->type = block_stmt_t;
+    result->block_stmt_f = val;
+    return result;
+}
+
+struct method_param_struct * create_method_param_struct(char * name, struct expr_struct * default_value) {
+    struct method_param_struct * result = (struct method_param_struct *) malloc(sizeof(struct method_param_struct));
+    result->name = name;
+    result->default_value = default_value;
+    return result;
+}
+
+struct method_param_list * create_method_param_list(struct method_param_struct * val) {
+    struct method_param_list * result = (struct method_param_list *) malloc(sizeof(struct method_param_list));
+    result->first = val;
+    result->last = val;
+    return result;
+}
+
+struct method_param_list * add_to_method_param_list(struct method_param_list * list, struct method_param_struct * val) {
+    struct method_param_list * result = (struct method_param_list *) malloc(sizeof(struct method_param_list));
+    result->last->next = val;
+    result->last = val;
+    return result;
+}
+
+struct stmt_struct * create_def_method_stmt(char* name, struct method_param_list* params, struct stmt_list_struct* body) {
+    struct def_method_stmt_struct * method_def_s = (struct def_method_stmt_struct *) malloc(sizeof(struct def_method_stmt_struct));
+    method_def_s->name = name;
+    method_def_s->params = params;
+    method_def_s->body = body;
+
+    struct stmt_struct * result = (struct stmt_struct *) malloc(sizeof(struct stmt_struct));
+    result->type = def_method_t;
+    result->def_method_f = method_def_s;
+    return result;
+}
+
+struct program_struct * create_program_struct(struct stmt_list_struct * stmts) {
+    struct program_struct * result = (struct program_struct *) malloc(sizeof(struct program_struct));
+    result->stmts = stmts;
     return result;
 }
 
