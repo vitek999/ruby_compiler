@@ -243,7 +243,7 @@ stmt: expr stmt_ends { puts("stmt"); }
     ;
 
 stmt_list_not_empty: stmt  { puts("list from one stmt"); }
-    | stmt_list_not_empty stmt { puts("add stmt to list"); }
+    | stmt stmt_list_not_empty { puts("add stmt to list"); }
     ;
 
 stmt_list: /* empty */ { puts("empty stmt list"); }
@@ -262,7 +262,7 @@ elsif_stmt: ELSIF_KEYWORD expr stmt_ends stmt_list { puts("elsif without then");
     ;
 
 elsif_stmt_list: elsif_stmt 
-    | elsif_stmt_list elsif_stmt
+    | elsif_stmt elsif_stmt_list
     ;
 
 if_stmt: if_start_stmt END_KEYWORD

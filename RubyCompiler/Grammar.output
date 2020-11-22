@@ -111,7 +111,7 @@ Grammar
    71     | def_method_stmt stmt_ends
 
    72 stmt_list_not_empty: stmt
-   73                    | stmt_list_not_empty stmt
+   73                    | stmt stmt_list_not_empty
 
    74 stmt_list: %empty
    75          | stmt_list_not_empty
@@ -125,7 +125,7 @@ Grammar
    80           | ELSIF_KEYWORD expr THEN_KEYWORD stmt_ends_op stmt_list
 
    81 elsif_stmt_list: elsif_stmt
-   82                | elsif_stmt_list elsif_stmt
+   82                | elsif_stmt elsif_stmt_list
 
    83 if_stmt: if_start_stmt END_KEYWORD
    84        | if_start_stmt ELSE_KEYWORD stmt_ends_op stmt_list END_KEYWORD
@@ -819,14 +819,7 @@ State 24
 State 25
 
    72 stmt_list_not_empty: stmt .
-
-    $default  reduce using rule 72 (stmt_list_not_empty)
-
-
-State 26
-
-   73 stmt_list_not_empty: stmt_list_not_empty . stmt
-   75 stmt_list: stmt_list_not_empty .
+   73                    | stmt . stmt_list_not_empty
 
     BEGIN_KEYWORD           shift, and go to state 1
     DEF_KEYWORD             shift, and go to state 2
@@ -851,17 +844,25 @@ State 26
     VAR_METHOD_NAME         shift, and go to state 21
     INSTANCE_VAR_NAME       shift, and go to state 22
 
-    $default  reduce using rule 75 (stmt_list)
+    $default  reduce using rule 72 (stmt_list_not_empty)
 
-    expr             go to state 24
-    stmt             go to state 90
-    stmt_block       go to state 28
-    if_start_stmt    go to state 29
-    if_stmt          go to state 30
-    for_stmt         go to state 31
-    while_stmt       go to state 32
-    until_stmt       go to state 33
-    def_method_stmt  go to state 34
+    expr                 go to state 24
+    stmt                 go to state 25
+    stmt_list_not_empty  go to state 90
+    stmt_block           go to state 28
+    if_start_stmt        go to state 29
+    if_stmt              go to state 30
+    for_stmt             go to state 31
+    while_stmt           go to state 32
+    until_stmt           go to state 33
+    def_method_stmt      go to state 34
+
+
+State 26
+
+   75 stmt_list: stmt_list_not_empty .
+
+    $default  reduce using rule 75 (stmt_list)
 
 
 State 27
@@ -2633,7 +2634,7 @@ State 89
 
 State 90
 
-   73 stmt_list_not_empty: stmt_list_not_empty stmt .
+   73 stmt_list_not_empty: stmt stmt_list_not_empty .
 
     $default  reduce using rule 73 (stmt_list_not_empty)
 
@@ -2693,21 +2694,23 @@ State 94
 State 95
 
    81 elsif_stmt_list: elsif_stmt .
+   82                | elsif_stmt . elsif_stmt_list
+
+    ELSIF_KEYWORD  shift, and go to state 93
 
     $default  reduce using rule 81 (elsif_stmt_list)
+
+    elsif_stmt       go to state 95
+    elsif_stmt_list  go to state 156
 
 
 State 96
 
-   82 elsif_stmt_list: elsif_stmt_list . elsif_stmt
    85 if_stmt: if_start_stmt elsif_stmt_list . END_KEYWORD
    86        | if_start_stmt elsif_stmt_list . ELSE_KEYWORD stmt_ends_op stmt_list END_KEYWORD
 
-    ELSE_KEYWORD   shift, and go to state 156
-    ELSIF_KEYWORD  shift, and go to state 93
-    END_KEYWORD    shift, and go to state 157
-
-    elsif_stmt  go to state 158
+    ELSE_KEYWORD  shift, and go to state 157
+    END_KEYWORD   shift, and go to state 158
 
 
 State 97
@@ -5290,6 +5293,13 @@ State 155
 
 State 156
 
+   82 elsif_stmt_list: elsif_stmt elsif_stmt_list .
+
+    $default  reduce using rule 82 (elsif_stmt_list)
+
+
+State 157
+
    86 if_stmt: if_start_stmt elsif_stmt_list ELSE_KEYWORD . stmt_ends_op stmt_list END_KEYWORD
 
     SEMICOLON_SYMBOL  shift, and go to state 35
@@ -5301,18 +5311,11 @@ State 156
     stmt_ends_op  go to state 178
 
 
-State 157
+State 158
 
    85 if_stmt: if_start_stmt elsif_stmt_list END_KEYWORD .
 
     $default  reduce using rule 85 (if_stmt)
-
-
-State 158
-
-   82 elsif_stmt_list: elsif_stmt_list elsif_stmt .
-
-    $default  reduce using rule 82 (elsif_stmt_list)
 
 
 State 159
