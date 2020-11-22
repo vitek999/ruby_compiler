@@ -159,6 +159,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Grammar.tab.h" />
+    <ClInclude Include="print_tree.h" />
     <ClInclude Include="tree_nodes.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1,5 +1,6 @@
+print(1,2)
 def a
- a + 2
+ print(1)
 end
 def c(a)
  a / 2
@@ -10,12 +11,24 @@ def d(a = 3)
 end
 begin
 if true then
-print(1)
+c = 21
 elsif true then
-print(3)
+c = 23
 elsif false then
 a = 3
 else
-print(2)
+c = 24
 end
+end
+for i in 1..10 do
+a = 1
+2**2
+end
+while a == 2 do 
+a = 2
+c = 3
+end
+until a == 2 do 
+a + 2
+c / 3
 end

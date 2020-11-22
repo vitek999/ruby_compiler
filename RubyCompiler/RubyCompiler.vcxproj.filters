@@ -39,5 +39,8 @@
     <ClInclude Include="tree_nodes.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="print_tree.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

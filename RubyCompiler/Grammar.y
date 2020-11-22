@@ -3,6 +3,7 @@
 %{
 #include <stdio.h>
 #include "tree_nodes.h"
+#include "print_tree.h"
 #include <malloc.h>
 
 void yyerror(const char* message) {
@@ -11,6 +12,8 @@ void yyerror(const char* message) {
 int yylex();
 int yyparse();
 extern FILE* yyin;
+
+struct program_struct * root;
 
 struct expr_struct * create_const_integer_expr(enum expr_type type, int val);
 struct expr_struct * create_const_float_expr(float val);
@@ -203,7 +206,7 @@ struct program_struct * create_program_struct(struct stmt_list_struct * stmts);
 %nonassoc OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET
 
 %%
-program: stmt_list  { $$=create_program_struct($1); puts("program"); }
+program: stmt_list  { root=create_program_struct($1); puts("program"); }
 
 expr: INTEGER_NUMBER { $$=create_const_integer_expr(Integer, $1); /* puts("integer"); */ }
     | FLOAT_NUMBER { $$=create_const_float_expr($1); /* puts("float"); */}
@@ -392,12 +395,14 @@ struct stmt_list_struct * create_stmt_list(struct stmt_struct * val) {
     struct stmt_list_struct * res = (struct stmt_list_struct *) malloc(sizeof(struct stmt_list_struct));
     res->first = val;
     res->last = val;
+    val->next = 0;
     return res;
 }
 
 struct stmt_list_struct * add_to_stmt_list(struct stmt_list_struct * list, struct stmt_struct * val) {
     list->last->next = val;
     list->last = val;
+    val->next = 0;
     return list;
 }
 
@@ -405,12 +410,14 @@ struct expr_list_struct * create_expr_list(struct expr_struct * val) {
     struct expr_list_struct * res = (struct expr_list_struct *) malloc(sizeof(struct expr_list_struct));
     res->first = val;
     res->last = val;
+    val->next = 0;
     return res;
 }
 
 struct expr_list_struct * add_to_expr_list(struct expr_list_struct * list, struct expr_struct * val) {
     list->last->next = val;
     list->last = val;
+    val->next = 0;
     return list;
 }
 
@@ -467,12 +474,14 @@ struct elsif_stmt_list * create_elsif_stmt_list(struct if_part_stmt_struct * val
     struct elsif_stmt_list * result = (struct elsif_stmt_list *) malloc(sizeof(struct elsif_stmt_list));
     result->first = val;
     result->last = val;
+    val->next = 0;
     return result;
 }
 
 struct elsif_stmt_list * add_to_elsif_stmt_list(struct elsif_stmt_list * list, struct if_part_stmt_struct * val) {
     list->last->next = val;
     list->last = val;
+    val->next = 0;
     return list;
 }
 
@@ -512,6 +521,7 @@ struct method_param_list * create_method_param_list(struct method_param_struct *
     struct method_param_list * result = (struct method_param_list *) malloc(sizeof(struct method_param_list));
     result->first = val;
     result->last = val;
+    val->next = 0;
     return result;
 }
 
@@ -519,6 +529,7 @@ struct method_param_list * add_to_method_param_list(struct method_param_list * l
     struct method_param_list * result = (struct method_param_list *) malloc(sizeof(struct method_param_list));
     result->last->next = val;
     result->last = val;
+    val->next = 0;
     return result;
 }
 
@@ -543,6 +554,9 @@ struct program_struct * create_program_struct(struct stmt_list_struct * stmts) {
 void main(int argc, char **argv ){
 	yyin = fopen(argv[1], "r" );
 
+    FILE * tree = fopen("tree.dot", "w");
+
     yyparse();
+    PrintProgram(root, tree);
     return;
 }
