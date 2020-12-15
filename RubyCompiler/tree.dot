@@ -1,37 +1,157 @@
 digraph G {
-Id00CB04D0 [label="program"]
-Id00CB9A48 [label="stmt"]
-Id00CB99C8 [label="="]
-Id00CB98F0 [label="var or method"]
-IdVal00CB98F0 [label="a"]
-Id00CB98F0->IdVal00CB98F0
-Id00CB9978 [label="STRING"]
-IdVal00CB9978 [label="asdr"]
-Id00CB9978->IdVal00CB9978
-Id00CB99C8->Id00CB98F0
-Id00CB99C8->Id00CB9978
-Id00CB9A48->Id00CB99C8
-Id00CB04D0->Id00CB9A48
-Id00CC2380 [label="stmt"]
-Id00CC2510 [label="method_call"]
-IdMethodName00CC2510 [label="name"]
-Id00CC2510->IdMethodName00CC2510
-IdMethodNameVal00CC2510 [label="b"]
-IdMethodName00CC2510->IdMethodNameVal00CC2510
-Id00CB9AD0 [label="params"]
-Id00CC2510->Id00CB9AD0
-Id00CC2010 [label="INT"]
-IdVal00CC2010 [label="1"]
-Id00CC2010->IdVal00CC2010
-Id00CB9AD0->Id00CC2010
-Id00CC2060 [label="INT"]
-IdVal00CC2060 [label="2"]
-Id00CC2060->IdVal00CC2060
-Id00CB9AD0->Id00CC2060
-Id00CC2420 [label="INT"]
-IdVal00CC2420 [label="3"]
-Id00CC2420->IdVal00CC2420
-Id00CB9AD0->Id00CC2420
-Id00CC2380->Id00CC2510
-Id00CB04D0->Id00CC2380
+Id00B442E8 [label="program"]
+Id00B304D0 [label="stmt"]
+Id00B3F048 [label="="]
+Id00B39B00 [label="var or method"]
+IdVal00B39B00 [label="a"]
+Id00B39B00->IdVal00B39B00
+Id00B39B50 [label="INT"]
+IdVal00B39B50 [label="0"]
+Id00B39B50->IdVal00B39B50
+Id00B3F048->Id00B39B00
+Id00B3F048->Id00B39B50
+Id00B304D0->Id00B3F048
+Id00B442E8->Id00B304D0
+Id00B42270 [label="stmt"]
+Id00B42C40 [label="for"]
+IdItersName00B42C40 [label="i"]
+Id00B42C40->IdItersName00B42C40  [label="iterable var"]
+Id00B42310 [label=".."]
+Id00B42770 [label="INT"]
+IdVal00B42770 [label="1"]
+Id00B42770->IdVal00B42770
+Id00B41FF0 [label="INT"]
+IdVal00B41FF0 [label="2"]
+Id00B41FF0->IdVal00B41FF0
+Id00B42310->Id00B42770
+Id00B42310->Id00B41FF0
+Id00B42C40->Id00B42310  [label="condition"]
+IdBody00B42C40 [label="body"]
+Id00B424F0 [label="stmt"]
+Id00B424A0 [label="method_call"]
+IdMethodNameVal00B424A0 [label="print"]
+Id00B424A0->IdMethodNameVal00B424A0 [label="name"]
+Id00B42BD0 [label="params"]
+Id00B424A0->Id00B42BD0
+Id00B42090 [label="INT"]
+IdVal00B42090 [label="1"]
+Id00B42090->IdVal00B42090
+Id00B42BD0->Id00B42090
+Id00B424F0->Id00B424A0
+IdBody00B42C40->Id00B424F0
+Id00B42C40->IdBody00B42C40
+Id00B42270->Id00B42C40
+Id00B442E8->Id00B42270
+Id00B426D0 [label="stmt"]
+Id00B42E10 [label="while"]
+Id00B420E0 [label="=="]
+Id00B42040 [label="var or method"]
+IdVal00B42040 [label="a"]
+Id00B42040->IdVal00B42040
+Id00B42400 [label="INT"]
+IdVal00B42400 [label="0"]
+Id00B42400->IdVal00B42400
+Id00B420E0->Id00B42040
+Id00B420E0->Id00B42400
+Id00B42E10->Id00B420E0 [label="condition"]
+Id00B42DB0 [label="body"]
+Id00B42E10->Id00B42DB0
+Id00B42540 [label="stmt"]
+Id00B42360 [label="method_call"]
+IdMethodNameVal00B42360 [label="print"]
+Id00B42360->IdMethodNameVal00B42360 [label="name"]
+Id00B42D10 [label="params"]
+Id00B42360->Id00B42D10
+Id00B42590 [label="var or method"]
+IdVal00B42590 [label="a"]
+Id00B42590->IdVal00B42590
+Id00B42D10->Id00B42590
+Id00B422C0 [label="var or method"]
+IdVal00B422C0 [label="b"]
+Id00B422C0->IdVal00B422C0
+Id00B42D10->Id00B422C0
+Id00B42540->Id00B42360
+Id00B42DB0->Id00B42540
+Id00B42680 [label="stmt"]
+Id00B42630 [label="method_call"]
+IdMethodNameVal00B42630 [label="print"]
+Id00B42630->IdMethodNameVal00B42630 [label="name"]
+Id00B43120 [label="params"]
+Id00B42630->Id00B43120
+Id00B425E0 [label="INT"]
+IdVal00B425E0 [label="2"]
+Id00B425E0->IdVal00B425E0
+Id00B43120->Id00B425E0
+Id00B42450 [label="INT"]
+IdVal00B42450 [label="3"]
+Id00B42450->IdVal00B42450
+Id00B43120->Id00B42450
+Id00B42680->Id00B42630
+Id00B42DB0->Id00B42680
+Id00B426D0->Id00B42E10
+Id00B442E8->Id00B426D0
+Id00B42220 [label="stmt"]
+Id00B43040 [label="until"]
+Id00B423B0 [label="BOOLEAN"]
+IdVal00B423B0 [label="true"]
+Id00B423B0->IdVal00B423B0
+Id00B43040->Id00B423B0 [label="condition"]
+Id00B43008 [label="body"]
+Id00B43040->Id00B43008
+Id00B421D0 [label="stmt"]
+Id00B42180 [label="="]
+Id00B42130 [label="var or method"]
+IdVal00B42130 [label="a"]
+Id00B42130->IdVal00B42130
+Id00B42720 [label="INT"]
+IdVal00B42720 [label="2"]
+Id00B42720->IdVal00B42720
+Id00B42180->Id00B42130
+Id00B42180->Id00B42720
+Id00B421D0->Id00B42180
+Id00B43008->Id00B421D0
+Id00B42220->Id00B43040
+Id00B442E8->Id00B42220
+Id00B43780 [label="stmt"]
+Id00B43190 [label="def_method"]
+IdName00B43190 [label="some_fun"]
+Id00B43190->IdName00B43190 [label = "name"]
+Id00B42E48 [label="params"]
+Id00B42EB8 [label="param"]
+Id00B42E48->Id00B42EB8
+IdNameVal00B42EB8 [label="a"]
+Id00B42EB8->IdNameVal00B42EB8 [label="name"]
+Id00B43B40 [label="INT"]
+IdVal00B43B40 [label="2"]
+Id00B43B40->IdVal00B43B40
+Id00B42EB8->Id00B43B40 [label="default value"]
+Id00B43078 [label="param"]
+Id00B42E48->Id00B43078
+IdNameVal00B43078 [label="v"]
+Id00B43078->IdNameVal00B43078 [label="name"]
+Id00B430B0 [label="param"]
+Id00B42E48->Id00B430B0
+IdNameVal00B430B0 [label="c"]
+Id00B430B0->IdNameVal00B430B0 [label="name"]
+Id00B437D0 [label="INT"]
+IdVal00B437D0 [label="3"]
+Id00B437D0->IdVal00B437D0
+Id00B430B0->Id00B437D0 [label="default value"]
+Id00B43190->Id00B42E48
+Id00B42F98 [label="body"]
+Id00B43C30 [label="stmt"]
+Id00B43320 [label="method_call"]
+IdMethodNameVal00B43320 [label="print"]
+Id00B43320->IdMethodNameVal00B43320 [label="name"]
+Id00B42F28 [label="params"]
+Id00B43320->Id00B42F28
+Id00B43820 [label="var or method"]
+IdVal00B43820 [label="a"]
+Id00B43820->IdVal00B43820
+Id00B42F28->Id00B43820
+Id00B43C30->Id00B43320
+Id00B42F98->Id00B43C30
+Id00B43190->Id00B42F98
+Id00B43780->Id00B43190
+Id00B442E8->Id00B43780
 }

@@ -73,26 +73,20 @@ void PrintBranch(struct if_part_stmt_struct* branch, FILE* file) {
 
 void PrintDefMethod(struct def_method_stmt_struct* method, FILE* file) {
 	fprintf(file, "Id%p [label=\"def_method\"]\n", method);
-	fprintf(file, "IdName%p [label=\"name\"]\n", method);
-	fprintf(file, "IdNameVal%p [label=\"%s\"]\n", method, method->name);
-	fprintf(file, "Id%p->IdName%p\n", method, method);
-	fprintf(file, "IdName%p->IdNameVal%p\n", method, method);
+	fprintf(file, "IdName%p [label=\"%s\"]\n", method, method->name);
+	fprintf(file, "Id%p->IdName%p [label = \"name\"]\n", method, method);
 	if (method->params != 0) {
 		fprintf(file, "Id%p [label=\"params\"]\n", method->params);
 		struct method_param_struct* current = method->params->first;
 		while (current != 0) {
 			fprintf(file, "Id%p [label=\"param\"]\n", current);
 			fprintf(file, "Id%p->Id%p\n", method->params, current);
-			fprintf(file, "IdName%p [label=\"name\"]\n", current);
-			fprintf(file, "Id%p->IdName%p\n", current, current);
 			fprintf(file, "IdNameVal%p [label=\"%s\"]\n", current, current->name);
-			fprintf(file, "IdName%p->IdNameVal%p\n", current, current);
+			fprintf(file, "Id%p->IdNameVal%p [label=\"name\"]\n", current, current);
 
 			if (current->default_value != 0) {
-				fprintf(file, "IdDefault%p [label=\"default_value\"]\n", current);
-				fprintf(file, "Id%p->IdDefault%p\n", current, current);
 				PrintExpr(current->default_value, file);
-				fprintf(file, "IdDefault%p->Id%p\n", current, current->default_value);
+				fprintf(file, "Id%p->Id%p [label=\"default value\"]\n", current, current->default_value);
 			}
 			current = current->next;
 		}
@@ -132,10 +126,8 @@ void PrintIf(struct if_stmt_struct* if_s, FILE* file) {
 
 void PrintWhile(struct while_stmt_struct* while_s, FILE* file) {
 	fprintf(file, "Id%p [label=\"while\"]\n", while_s);
-	fprintf(file, "IdCondition%p [label=\"condition\"]\n", while_s);
-	fprintf(file, "Id%p->IdCondition%p\n", while_s, while_s);
 	PrintExpr(while_s->condition, file);
-	fprintf(file, "IdCondition%p->Id%p\n", while_s, while_s->condition);
+	fprintf(file, "Id%p->Id%p [label=\"condition\"]\n", while_s, while_s->condition);
 
 	fprintf(file, "Id%p [label=\"body\"]\n", while_s->body);
 	fprintf(file, "Id%p->Id%p\n", while_s, while_s->body);
@@ -144,10 +136,8 @@ void PrintWhile(struct while_stmt_struct* while_s, FILE* file) {
 
 void PrintUntil(struct until_stmt_struct* until_s, FILE* file) {
 	fprintf(file, "Id%p [label=\"until\"]\n", until_s);
-	fprintf(file, "IdCondition%p [label=\"condition\"]\n", until_s);
-	fprintf(file, "Id%p->IdCondition%p\n", until_s, until_s);
 	PrintExpr(until_s->condition, file);
-	fprintf(file, "IdCondition%p->Id%p\n", until_s, until_s->condition);
+	fprintf(file, "Id%p->Id%p [label=\"condition\"]\n", until_s, until_s->condition);
 
 	fprintf(file, "Id%p [label=\"body\"]\n", until_s->body);
 	fprintf(file, "Id%p->Id%p\n", until_s, until_s->body);
@@ -156,14 +146,10 @@ void PrintUntil(struct until_stmt_struct* until_s, FILE* file) {
 
 void PrintFor(struct for_stmt_struct* for_s, FILE* file) {
 	fprintf(file, "Id%p [label=\"for\"]\n", for_s);
-	fprintf(file, "IdIters%p [label=\"iterable var\"]\n", for_s);
 	fprintf(file, "IdItersName%p [label=\"%s\"]\n", for_s, for_s->iterable_var);
-	fprintf(file, "Id%p->IdIters%p\n", for_s, for_s);
-	fprintf(file, "IdIters%p->IdItersName%p\n", for_s, for_s);
-	fprintf(file, "IdCondition%p [label=\"condition\"]\n", for_s);
-	fprintf(file, "Id%p->IdCondition%p\n", for_s, for_s);
+	fprintf(file, "Id%p->IdItersName%p  [label=\"iterable var\"]\n", for_s, for_s);
 	PrintExpr(for_s->condition, file);
-	fprintf(file, "IdCondition%p->Id%p\n", for_s, for_s->condition);
+	fprintf(file, "Id%p->Id%p  [label=\"condition\"]\n", for_s, for_s->condition);
 	fprintf(file, "IdBody%p [label=\"body\"]\n", for_s);
 	struct stmt_struct* current = for_s->body->first;
 	while (current != 0) {
@@ -481,12 +467,9 @@ void PrintExpr(struct expr_struct* expr, FILE* file) {
 		fprintf(file, "Id%p->Id%p\n", expr, expr->right);
 		break;
 	case method_call:
-		// TODO: Print method call
 		fprintf(file, "Id%p [label=\"method_call\"]\n", expr);
-		fprintf(file, "IdMethodName%p [label=\"name\"]\n", expr);
-		fprintf(file, "Id%p->IdMethodName%p\n", expr, expr);
 		fprintf(file, "IdMethodNameVal%p [label=\"%s\"]\n", expr, expr->str_val);
-		fprintf(file, "IdMethodName%p->IdMethodNameVal%p\n", expr, expr);
+		fprintf(file, "Id%p->IdMethodNameVal%p [label=\"name\"]\n", expr, expr);
 		if (expr->list != 0) {
 			fprintf(file, "Id%p [label=\"params\"]\n", expr->list);
 			fprintf(file, "Id%p->Id%p\n", expr, expr->list);
