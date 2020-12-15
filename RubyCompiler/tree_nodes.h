@@ -47,7 +47,8 @@ enum expr_type {
 	instance_var,
 	until_op,
 	while_op,
-	method_call
+	method_call,
+	array
 };
 
 struct expr_struct {

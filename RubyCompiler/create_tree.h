@@ -27,3 +27,4 @@ struct method_param_struct* create_method_param_struct(char* name, struct expr_s
 struct method_param_list* create_method_param_list(struct method_param_struct* val);
 struct method_param_list* add_to_method_param_list(struct method_param_list* list, struct method_param_struct* val);
 struct program_struct* create_program_struct(struct stmt_list_struct* stmts);
+struct expr_struct* create_array_struct(struct expr_list_struct * items);

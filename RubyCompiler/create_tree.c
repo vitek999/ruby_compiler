@@ -194,3 +194,10 @@ struct program_struct* create_program_struct(struct stmt_list_struct* stmts) {
     result->stmts = stmts;
     return result;
 }
+
+struct expr_struct* create_array_struct(struct expr_list_struct* items) {
+    struct expr_struct* result = (struct expr_struct*)malloc(sizeof(struct expr_struct));
+    result->type = array;
+    result->list = items;
+    return result;
+}

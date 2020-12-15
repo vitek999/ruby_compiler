@@ -479,6 +479,17 @@ void PrintExpr(struct expr_struct* expr, FILE* file) {
 			}
 		}
 		break;
+	case array:
+		fprintf(file, "Id%p [label = \"array\"]\n", expr);
+		if (expr->list != 0) {
+			struct expr_struct* current = expr->list->first;
+			while (current != 0) {
+				PrintExpr(current, file);
+				fprintf(file, "Id%p->Id%p\n", expr, current);
+				current = current->next;
+			}
+		}
+		break;
 	default:
 		fprintf(file, "Id%p [label=\"expr\"]\n", expr);
 		break;

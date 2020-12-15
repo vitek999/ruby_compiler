@@ -1,7 +1,5 @@
-if true then
-print(3)
-elsif false
-print(2)
-else
-print(1)
-end
+a = [1, 2, 3, 4]
+b = [[1,2],[1,2]]
+c = []
+a[1]
+a[2][0]
