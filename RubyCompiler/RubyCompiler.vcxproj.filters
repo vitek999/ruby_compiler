@@ -26,6 +26,9 @@
     <ClCompile Include="Grammar.tab.c">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="create_tree.c">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Bison Include="Grammar.y">
@@ -40,6 +43,9 @@
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="print_tree.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="create_tree.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,4 +1,3 @@
-#pragma once
 #include <stdio.h>
 
 void PrintProgram(struct program_struct* smts, FILE* file);

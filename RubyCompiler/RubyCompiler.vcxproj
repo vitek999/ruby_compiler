@@ -147,6 +147,7 @@
     </Flex>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="create_tree.c" />
     <ClCompile Include="Grammar.tab.c" />
     <ClCompile Include="lexer.flex.c" />
   </ItemGroup>
@@ -158,6 +159,7 @@
     </Bison>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="create_tree.h" />
     <ClInclude Include="Grammar.tab.h" />
     <ClInclude Include="print_tree.h" />
     <ClInclude Include="tree_nodes.h" />

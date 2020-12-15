@@ -155,7 +155,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 45 "Grammar.y"
+#line 19 "Grammar.y"
 
     int int_un;
     float float_un;
