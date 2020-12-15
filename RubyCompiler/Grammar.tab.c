@@ -2097,7 +2097,7 @@ yyreduce:
 
   case 50: /* expr: expr OPEN_SQUARE_BRACKET expr CLOSE_SQUARE_BRACKET  */
 #line 234 "Grammar.y"
-                                                             { puts(" expr in square brackets "); }
+                                                             { (yyval.expr_un)=create_op_expr(member_access, (yyvsp[-3].expr_un), (yyvsp[-1].expr_un)); puts(" expr in square brackets "); }
 #line 2102 "Grammar.tab.c"
     break;
 
