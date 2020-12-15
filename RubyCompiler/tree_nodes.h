@@ -6,7 +6,7 @@ enum expr_type {
 	logical_not,
 	bin_ones_complement,
 	unary_plus,
-	pow,
+	pow_,
 	unary_minus,
 	mul,
 	div,

@@ -228,7 +228,7 @@ void PrintExpr(struct expr_struct* expr, FILE* file) {
 		PrintExpr(expr->left, file);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->left);
 		break;
-	case pow:
+	case pow_:
 		fprintf(file, "Id%p [label=\"**\"]\n", expr);
 		PrintExpr(expr->left, file);
 		PrintExpr(expr->right, file);

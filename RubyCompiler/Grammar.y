@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include "tree_nodes.h"
 #include "print_tree.h"
+#include "dot.h"
 
 void yyerror(const char* message) {
     fprintf(stderr, message);
@@ -191,7 +192,7 @@ expr: INTEGER_NUMBER { $$=create_const_integer_expr(Integer, $1); /* puts("integ
     | LOGICAL_NOT_OP expr { $$=create_op_expr(logical_not, $2, 0); /* puts("LOGICAL_NOT_OP"); */ }
     | BIN_ONES_COMPLEMENT_OP expr { $$=create_op_expr(bin_ones_complement, $2, 0); /* puts("BIN_ONES_COMPLEMENT_OP"); */ }
     | ARITHMETIC_PLUS_OP expr %prec UNARY_PLUS { $$=create_op_expr(unary_plus, $2, 0); /* puts("unary plus"); */ }
-    | expr ARITHMETIC_POW_OP expr {  $$=create_op_expr(pow, $1, $3); /*  puts("pow"); */ }
+    | expr ARITHMETIC_POW_OP expr {  $$=create_op_expr(pow_, $1, $3); /*  puts("pow"); */ }
     | ARITHMETIC_MINUS_OP expr %prec UNARY_MINUS { $$=create_op_expr(unary_minus, $2, 0); /*  puts("unary minus"); */ }
     | expr ARITHMETIC_MUL_OP expr { $$=create_op_expr(mul, $1, $3); /* puts("mul"); */ }
     | expr ARITHMETIC_DIV_OP expr {  $$=create_op_expr(div, $1, $3); /* puts("div"); */ }
@@ -336,5 +337,7 @@ void main(int argc, char **argv ){
 
     yyparse();
     PrintProgram(root, tree);
+
+    run_dot("../dot/dot.exe", "../RubyCompiler/tree.dot");
     return;
 }
