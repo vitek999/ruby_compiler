@@ -1888,29 +1888,33 @@ case 122:
 YY_RULE_SETUP
 #line 273 "lexer.l"
 {
+                                                 yylval.string_un=(char *)malloc(strlen(yytext)+1);
+                                                 strcpy(yylval.string_un, yytext); 
                                                  return CLASS_VAR_NAME;
                                              }
 	YY_BREAK
 case 123:
 YY_RULE_SETUP
-#line 277 "lexer.l"
+#line 279 "lexer.l"
 {
+                                                yylval.string_un=(char *)malloc(strlen(yytext)+1);
+                                                strcpy(yylval.string_un, yytext); 
                                                 return CLASS_NAME;
                                            }
 	YY_BREAK
 case 124:
 /* rule 124 can match eol */
 YY_RULE_SETUP
-#line 281 "lexer.l"
+#line 285 "lexer.l"
 { return NEW_LINE_SYMBOL;
         }
 	YY_BREAK
 case 125:
 YY_RULE_SETUP
-#line 283 "lexer.l"
+#line 287 "lexer.l"
 ECHO;
 	YY_BREAK
-#line 1913 "lexer.flex.c"
+#line 1917 "lexer.flex.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(ML_COMMENT):
 	yyterminate();
@@ -2931,7 +2935,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 283 "lexer.l"
+#line 287 "lexer.l"
 
 
 void remove_char_from_str(const char * str, char * dest, char deleted_char) {

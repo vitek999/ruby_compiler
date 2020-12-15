@@ -66,6 +66,11 @@ void PrintProgramItemsList(struct program_item_list_struct* list, void* parent, 
 			PrintStmt(current->stmt_f, file);
 			fprintf(file, "Id%p->Id%p\n", parent, current->stmt_f);
 			break;
+
+		case class_declaration_t:
+			PrintClassDeclaration(current->class_declaration_f, file);
+			fprintf(file, "Id%p->Id%p\n", parent, current->class_declaration_f);
+			break;
 		default:
 			break;
 		}
@@ -112,6 +117,22 @@ void PrintDefMethod(struct def_method_stmt_struct* method, FILE* file) {
 	fprintf(file, "Id%p [label=\"body\"]\n", method->body);
 	PrintStmtList(method->body, method->body, file);
 	fprintf(file, "Id%p->Id%p\n", method, method->body);
+}
+
+void PrintClassDeclaration(struct class_declaration_struct* class_decl, FILE* file) {
+	fprintf(file, "Id%p [label=\"class\"]\n", class_decl);
+
+	fprintf(file, "IdName%p [label=\"%s\"]\n", class_decl, class_decl->name);
+	fprintf(file, "Id%p->IdName%p [label=\"name\"]\n", class_decl, class_decl);
+	
+	if (class_decl->parent != 0) {
+		fprintf(file, "IdParent%p [label=\"%s\"]\n", class_decl, class_decl->parent);
+		fprintf(file, "Id%p->IdParent%p [label=\"parent\"]\n", class_decl, class_decl);
+	}
+	
+	if (class_decl->body != 0) {
+		PrintProgramItemsList(class_decl->body, class_decl, file);
+	}
 }
 
 void PrintIf(struct if_stmt_struct* if_s, FILE* file) {
@@ -257,7 +278,7 @@ void PrintExpr(struct expr_struct* expr, FILE* file) {
 		fprintf(file, "Id%p->Id%p\n", expr, expr->right);
 		break;
 	case mod:
-		fprintf(file, "Id%p [label=\"%\"]\n", expr);
+		fprintf(file, "Id%p [label=\"%%\"]\n", expr);
 		PrintExpr(expr->left, file);
 		PrintExpr(expr->right, file);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->left);

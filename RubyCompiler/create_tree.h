@@ -30,5 +30,6 @@ struct program_struct* create_program_struct(struct program_item_list_struct* it
 struct expr_struct* create_array_struct(struct expr_list_struct * items);
 struct program_item_struct* create_stmt_program_item(struct stmt_struct* stmt);
 struct program_item_struct* create_def_method_program_item(char* name, struct method_param_list* params, struct stmt_list_struct* body);
+struct class_declaration_struct* create_class_declaration(char * name, char * parent,  struct program_item_list_struct* body);
 struct program_item_list_struct* create_program_item_list(struct program_item_struct* val);
 struct program_item_list_struct* add_to_program_item_list(struct program_item_list_struct* list,  struct program_item_struct* val);

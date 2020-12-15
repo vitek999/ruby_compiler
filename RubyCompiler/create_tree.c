@@ -216,6 +216,20 @@ struct program_item_struct* create_stmt_program_item(struct stmt_struct* stmt) {
     return result;
 }
 
+struct program_item_struct* create_class_declaration_program_item(char* name, char * parent, struct program_item_list_struct* body) {
+    struct program_item_struct* result = (struct program_item_struct*)malloc(sizeof(struct program_item_struct));
+    struct class_declaration_struct* class_decl = (struct class_declaration_struct*)malloc(sizeof(struct class_declaration_struct));
+    
+    class_decl->name = name;
+    class_decl->body = body;
+    class_decl->parent = parent;
+
+    result->type = class_declaration_t;
+    result->class_declaration_f = class_decl;
+
+    return result;
+}
+
 struct program_item_list_struct* create_program_item_list(struct program_item_struct* val) {
     struct program_item_list_struct* result = (struct program_item_list_struct*)malloc(sizeof(struct program_item_list_struct));
     result->first = val;

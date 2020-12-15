@@ -1,3 +1,20 @@
+class A < B
+    a = 2
+    
+    def b()
+        print(a)
+    end
+end
+
+class C 
+    def a()
+        print(1)
+    end
+end
+
+class D
+end
+
 arr = [1, 2, 3 ,4, 5]
 
 def printOddNumbers(arr) 

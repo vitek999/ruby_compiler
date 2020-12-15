@@ -75,13 +75,21 @@ enum stmt_type {
 
 enum program_item_type {
 	def_method_t,
-	pi_stmt_t
+	pi_stmt_t,
+	class_declaration_t
+};
+
+struct class_declaration_struct {
+	char* name;
+	char* parent;
+	struct program_item_list_struct* body;
 };
 
 struct program_item_struct {
 	enum program_item_type type;
 	struct def_method_stmt_struct* def_method_f;
 	struct stmt_stuct * stmt_f;
+	struct class_declaration_struct* class_declaration_f;
 	struct program_item_struct* next;
 };
 

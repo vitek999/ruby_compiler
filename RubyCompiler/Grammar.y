@@ -46,7 +46,8 @@ struct program_struct * root;
 %type <stmt_un> until_stmt
 %type <stmt_un> if_stmt 
 %type <program_item_un> def_method_stmt
-%type <program_item_un> program_item
+%type <program_item_un> program_item 
+%type <program_item_un> class_declaration
 %type <stmt_list_un> stmt_list
 %type <stmt_list_un> stmt_list_not_empty
 %type <expr_list_un> expr_list_not_empty
@@ -192,6 +193,7 @@ program: program_items_list  { root=create_program_struct($1); puts("program"); 
 
 program_item : stmt { $$=create_stmt_program_item($1); puts("program item stmt list"); }
     | def_method_stmt stmt_ends_op { $$=$1;  puts("def method"); }
+    | class_declaration { $$=$1; puts("program item from class declaration"); }
     ;
 
 program_items_list_not_empty: program_item         { $$=create_program_item_list($1); puts("program items from one prorgram item"); }
@@ -347,6 +349,10 @@ expr_list: /* empty */ { $$=0; }
 expr_list_not_empty: expr { $$=create_expr_list($1); }
 	| expr_list_not_empty COMMA_SYMBOL expr { $$=add_to_expr_list($1, $3); }
 	;
+
+class_declaration: CLASS_KEYWORD CLASS_NAME stmt_ends program_items_list END_KEYWORD stmt_ends { $$=create_class_declaration_program_item($2, 0, $4); puts("class declaration"); }
+    | CLASS_KEYWORD CLASS_NAME LESS_OP CLASS_NAME stmt_ends program_items_list END_KEYWORD stmt_ends { $$=create_class_declaration_program_item($2, $4, $6); puts("class declaration"); }
+    ;
 
 %%
 

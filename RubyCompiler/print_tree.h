@@ -15,3 +15,4 @@ void PrintBlock(struct stmt_block_struct* block, FILE* file);
 void PrintIf(struct if_stmt_struct * if_s, FILE * file);
 void PrintReturnStmt(struct stmt_struct* stmt, FILE * file);
 void PrintDefMethod(struct def_method_stmt_struct * method, FILE* file);
+void PrintClassDeclaration(struct class_declaration_struct* class_decl, FILE* file);
