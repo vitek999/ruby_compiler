@@ -46,8 +46,8 @@ struct program_struct * root;
 %type <stmt_un> def_method_stmt
 %type <stmt_list_un> stmt_list
 %type <stmt_list_un> stmt_list_not_empty
-%type <expr_list_un> method_call_param_list_not_empty
-%type <expr_list_un> method_call_param_list
+%type <expr_list_un> expr_list_not_empty
+%type <expr_list_un> expr_list
 %type <if_part_un> if_start_stmt 
 %type <if_part_un> elsif_stmt
 %type <elsif_list_un> elsif_stmt_list
@@ -231,7 +231,7 @@ expr: INTEGER_NUMBER { $$=create_const_integer_expr(Integer, $1); /* puts("integ
     | expr OR_KEYWORD expr { $$=create_op_expr(or_keyword, $1, $3); /* puts("OR_KEYWORD"); */ }
     | OPEN_ROUND_BRACKET expr CLOSE_ROUND_BRACKET { $$=$2; /* puts(" expr in round brackets "); */ }
 	| OPEN_SQUARE_BRACKET expr CLOSE_SQUARE_BRACKET { puts(" expr in square brackets "); }
-    | VAR_METHOD_NAME OPEN_ROUND_BRACKET method_call_param_list CLOSE_ROUND_BRACKET { $$=create_method_call_expr($1, $3); puts("method call"); /*!!!! ВОПРОС !!!!*/ }
+    | VAR_METHOD_NAME OPEN_ROUND_BRACKET expr_list CLOSE_ROUND_BRACKET { $$=create_method_call_expr($1, $3); puts("method call");}
     | VAR_METHOD_NAME { $$=create_const_string_expr(var_or_method, $1); /* puts("var"); */ }     
     | INSTANCE_VAR_NAME { $$=create_const_string_expr(instance_var, $1); /* puts("instance var"); */ }
     ;
@@ -320,12 +320,12 @@ def_method_stmt: DEF_KEYWORD VAR_METHOD_NAME stmt_ends stmt_list END_KEYWORD { $
     | DEF_KEYWORD VAR_METHOD_NAME OPEN_ROUND_BRACKET method_params_list CLOSE_ROUND_BRACKET stmt_ends_op stmt_list END_KEYWORD { $$=create_def_method_stmt($2, $4, $7); }
     ;
 
-method_call_param_list: /* empty */ { $$=0; }
-	| method_call_param_list_not_empty {$$=$1; }
+expr_list: /* empty */ { $$=0; }
+	| expr_list_not_empty {$$=$1; }
 	;
 
-method_call_param_list_not_empty: expr { $$=create_expr_list($1); }
-	| method_call_param_list_not_empty COMMA_SYMBOL expr { $$=add_to_expr_list($1, $3); }
+expr_list_not_empty: expr { $$=create_expr_list($1); }
+	| expr_list_not_empty COMMA_SYMBOL expr { $$=add_to_expr_list($1, $3); }
 	;
 
 %%

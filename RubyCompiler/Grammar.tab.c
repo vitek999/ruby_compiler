@@ -228,8 +228,8 @@ enum yysymbol_kind_t
   YYSYMBOL_method_params_list = 113,       /* method_params_list  */
   YYSYMBOL_method_params_list_not_empty = 114, /* method_params_list_not_empty  */
   YYSYMBOL_def_method_stmt = 115,          /* def_method_stmt  */
-  YYSYMBOL_method_call_param_list = 116,   /* method_call_param_list  */
-  YYSYMBOL_method_call_param_list_not_empty = 117 /* method_call_param_list_not_empty  */
+  YYSYMBOL_expr_list = 116,                /* expr_list  */
+  YYSYMBOL_expr_list_not_empty = 117       /* expr_list_not_empty  */
 };
 typedef enum yysymbol_kind_t yysymbol_kind_t;
 
@@ -662,8 +662,8 @@ static const char *const yytname[] =
   "stmt_ends_op", "stmt", "stmt_list_not_empty", "stmt_list", "stmt_block",
   "if_start_stmt", "elsif_stmt", "elsif_stmt_list", "if_stmt", "for_stmt",
   "while_stmt", "until_stmt", "method_param", "method_params_list",
-  "method_params_list_not_empty", "def_method_stmt",
-  "method_call_param_list", "method_call_param_list_not_empty", YY_NULLPTR
+  "method_params_list_not_empty", "def_method_stmt", "expr_list",
+  "expr_list_not_empty", YY_NULLPTR
 };
 
 static const char *
@@ -2087,9 +2087,9 @@ yyreduce:
 #line 2088 "Grammar.tab.c"
     break;
 
-  case 51: /* expr: VAR_METHOD_NAME OPEN_ROUND_BRACKET method_call_param_list CLOSE_ROUND_BRACKET  */
+  case 51: /* expr: VAR_METHOD_NAME OPEN_ROUND_BRACKET expr_list CLOSE_ROUND_BRACKET  */
 #line 234 "Grammar.y"
-                                                                                    { (yyval.expr_un)=create_method_call_expr((yyvsp[-3].var_name_un), (yyvsp[-1].expr_list_un)); puts("method call"); /*!!!! ВОПРОС !!!!*/ }
+                                                                       { (yyval.expr_un)=create_method_call_expr((yyvsp[-3].var_name_un), (yyvsp[-1].expr_list_un)); puts("method call");}
 #line 2094 "Grammar.tab.c"
     break;
 
@@ -2369,27 +2369,27 @@ yyreduce:
 #line 2370 "Grammar.tab.c"
     break;
 
-  case 104: /* method_call_param_list: %empty  */
+  case 104: /* expr_list: %empty  */
 #line 323 "Grammar.y"
-                                    { (yyval.expr_list_un)=0; }
+                       { (yyval.expr_list_un)=0; }
 #line 2376 "Grammar.tab.c"
     break;
 
-  case 105: /* method_call_param_list: method_call_param_list_not_empty  */
+  case 105: /* expr_list: expr_list_not_empty  */
 #line 324 "Grammar.y"
-                                           {(yyval.expr_list_un)=(yyvsp[0].expr_list_un); }
+                              {(yyval.expr_list_un)=(yyvsp[0].expr_list_un); }
 #line 2382 "Grammar.tab.c"
     break;
 
-  case 106: /* method_call_param_list_not_empty: expr  */
+  case 106: /* expr_list_not_empty: expr  */
 #line 327 "Grammar.y"
-                                       { (yyval.expr_list_un)=create_expr_list((yyvsp[0].expr_un)); }
+                          { (yyval.expr_list_un)=create_expr_list((yyvsp[0].expr_un)); }
 #line 2388 "Grammar.tab.c"
     break;
 
-  case 107: /* method_call_param_list_not_empty: method_call_param_list_not_empty COMMA_SYMBOL expr  */
+  case 107: /* expr_list_not_empty: expr_list_not_empty COMMA_SYMBOL expr  */
 #line 328 "Grammar.y"
-                                                             { (yyval.expr_list_un)=add_to_expr_list((yyvsp[-2].expr_list_un), (yyvsp[0].expr_un)); }
+                                                { (yyval.expr_list_un)=add_to_expr_list((yyvsp[-2].expr_list_un), (yyvsp[0].expr_un)); }
 #line 2394 "Grammar.tab.c"
     break;
 

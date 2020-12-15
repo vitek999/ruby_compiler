@@ -84,7 +84,7 @@ Grammar
    47     | expr OR_KEYWORD expr
    48     | OPEN_ROUND_BRACKET expr CLOSE_ROUND_BRACKET
    49     | OPEN_SQUARE_BRACKET expr CLOSE_SQUARE_BRACKET
-   50     | VAR_METHOD_NAME OPEN_ROUND_BRACKET method_call_param_list CLOSE_ROUND_BRACKET
+   50     | VAR_METHOD_NAME OPEN_ROUND_BRACKET expr_list CLOSE_ROUND_BRACKET
    51     | VAR_METHOD_NAME
    52     | INSTANCE_VAR_NAME
 
@@ -155,11 +155,11 @@ Grammar
   101 def_method_stmt: DEF_KEYWORD VAR_METHOD_NAME stmt_ends stmt_list END_KEYWORD
   102                | DEF_KEYWORD VAR_METHOD_NAME OPEN_ROUND_BRACKET method_params_list CLOSE_ROUND_BRACKET stmt_ends_op stmt_list END_KEYWORD
 
-  103 method_call_param_list: %empty
-  104                       | method_call_param_list_not_empty
+  103 expr_list: %empty
+  104          | expr_list_not_empty
 
-  105 method_call_param_list_not_empty: expr
-  106                                 | method_call_param_list_not_empty COMMA_SYMBOL expr
+  105 expr_list_not_empty: expr
+  106                    | expr_list_not_empty COMMA_SYMBOL expr
 
 
 Terminals, with rules where they appear
@@ -322,10 +322,10 @@ Nonterminals, with rules where they appear
     def_method_stmt <stmt_un> (115)
         on left: 101 102
         on right: 70 71
-    method_call_param_list <expr_list_un> (116)
+    expr_list <expr_list_un> (116)
         on left: 103 104
         on right: 50
-    method_call_param_list_not_empty <expr_list_un> (117)
+    expr_list_not_empty <expr_list_un> (117)
         on left: 105 106
         on right: 104 106
 
@@ -716,7 +716,7 @@ State 20
 
 State 21
 
-   50 expr: VAR_METHOD_NAME . OPEN_ROUND_BRACKET method_call_param_list CLOSE_ROUND_BRACKET
+   50 expr: VAR_METHOD_NAME . OPEN_ROUND_BRACKET expr_list CLOSE_ROUND_BRACKET
    51     | VAR_METHOD_NAME .
 
     OPEN_ROUND_BRACKET  shift, and go to state 53
@@ -1775,7 +1775,7 @@ State 52
 
 State 53
 
-   50 expr: VAR_METHOD_NAME OPEN_ROUND_BRACKET . method_call_param_list CLOSE_ROUND_BRACKET
+   50 expr: VAR_METHOD_NAME OPEN_ROUND_BRACKET . expr_list CLOSE_ROUND_BRACKET
 
     DEFINED_KEYWORD         shift, and go to state 3
     FALSE_KEYWORD           shift, and go to state 5
@@ -1794,11 +1794,11 @@ State 53
     VAR_METHOD_NAME         shift, and go to state 21
     INSTANCE_VAR_NAME       shift, and go to state 22
 
-    $default  reduce using rule 103 (method_call_param_list)
+    $default  reduce using rule 103 (expr_list)
 
-    expr                              go to state 117
-    method_call_param_list            go to state 118
-    method_call_param_list_not_empty  go to state 119
+    expr                 go to state 117
+    expr_list            go to state 118
+    expr_list_not_empty  go to state 119
 
 
 State 54
@@ -3086,7 +3086,7 @@ State 117
    43     | expr . WHILE_KEYWORD expr
    46     | expr . AND_KEYWORD expr
    47     | expr . OR_KEYWORD expr
-  105 method_call_param_list_not_empty: expr .
+  105 expr_list_not_empty: expr .
 
     AND_KEYWORD          shift, and go to state 55
     OR_KEYWORD           shift, and go to state 56
@@ -3123,24 +3123,24 @@ State 117
     INCLUSIVE_RANGE_OP   shift, and go to state 87
     EXCLUSIVE_RANGE_OP   shift, and go to state 88
 
-    $default  reduce using rule 105 (method_call_param_list_not_empty)
+    $default  reduce using rule 105 (expr_list_not_empty)
 
 
 State 118
 
-   50 expr: VAR_METHOD_NAME OPEN_ROUND_BRACKET method_call_param_list . CLOSE_ROUND_BRACKET
+   50 expr: VAR_METHOD_NAME OPEN_ROUND_BRACKET expr_list . CLOSE_ROUND_BRACKET
 
     CLOSE_ROUND_BRACKET  shift, and go to state 173
 
 
 State 119
 
-  104 method_call_param_list: method_call_param_list_not_empty .
-  106 method_call_param_list_not_empty: method_call_param_list_not_empty . COMMA_SYMBOL expr
+  104 expr_list: expr_list_not_empty .
+  106 expr_list_not_empty: expr_list_not_empty . COMMA_SYMBOL expr
 
     COMMA_SYMBOL  shift, and go to state 174
 
-    $default  reduce using rule 104 (method_call_param_list)
+    $default  reduce using rule 104 (expr_list)
 
 
 State 120
@@ -5672,14 +5672,14 @@ State 172
 
 State 173
 
-   50 expr: VAR_METHOD_NAME OPEN_ROUND_BRACKET method_call_param_list CLOSE_ROUND_BRACKET .
+   50 expr: VAR_METHOD_NAME OPEN_ROUND_BRACKET expr_list CLOSE_ROUND_BRACKET .
 
     $default  reduce using rule 50 (expr)
 
 
 State 174
 
-  106 method_call_param_list_not_empty: method_call_param_list_not_empty COMMA_SYMBOL . expr
+  106 expr_list_not_empty: expr_list_not_empty COMMA_SYMBOL . expr
 
     DEFINED_KEYWORD         shift, and go to state 3
     FALSE_KEYWORD           shift, and go to state 5
@@ -6039,7 +6039,7 @@ State 192
    43     | expr . WHILE_KEYWORD expr
    46     | expr . AND_KEYWORD expr
    47     | expr . OR_KEYWORD expr
-  106 method_call_param_list_not_empty: method_call_param_list_not_empty COMMA_SYMBOL expr .
+  106 expr_list_not_empty: expr_list_not_empty COMMA_SYMBOL expr .
 
     AND_KEYWORD          shift, and go to state 55
     OR_KEYWORD           shift, and go to state 56
@@ -6076,7 +6076,7 @@ State 192
     INCLUSIVE_RANGE_OP   shift, and go to state 87
     EXCLUSIVE_RANGE_OP   shift, and go to state 88
 
-    $default  reduce using rule 106 (method_call_param_list_not_empty)
+    $default  reduce using rule 106 (expr_list_not_empty)
 
 
 State 193
