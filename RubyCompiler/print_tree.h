@@ -202,6 +202,8 @@ void PrintExpr(struct expr_struct* expr, FILE* file) {
 		break;
 	case String:
 		fprintf(file, "Id%p [label=\"STRING\"]\n", expr);
+		fprintf(file, "IdVal%p [label=\"%s\"]\n", expr, expr->str_val);
+		fprintf(file, "Id%p->IdVal%p\n", expr, expr);
 		break;
 	case Boolean:
 		fprintf(file, "Id%p [label=\"BOOLEAN\"]\n", expr);
