@@ -259,6 +259,8 @@ stmt: expr stmt_ends { $$=create_expr_stmt($1); puts("stmt"); }
     | while_stmt stmt_ends       { $$=$1; puts("while stmt"); }
     | until_stmt    { $$=$1; puts("until stmt"); }
     | until_stmt stmt_ends   { $$=$1; puts("until stmt"); }
+    | RETURN_KEYWORD expr stmt_ends { $$=create_return_stmt($2); puts("return with expr"); /* TODO: implement */}
+    | RETURN_KEYWORD stmt_ends { $$=create_return_stmt(0); puts("return"); /* TODO: implement */}
     | def_method_stmt   { $$=$1; puts("def method"); }
     | def_method_stmt stmt_ends { $$=$1; puts("def method"); }
     ;

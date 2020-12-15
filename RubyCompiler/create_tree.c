@@ -189,6 +189,13 @@ struct stmt_struct* create_def_method_stmt(char* name, struct method_param_list*
     return result;
 }
 
+struct stmt_struct* create_return_stmt(struct expr_struct* val) {
+    struct stmt_struct* result = (struct stmt_struct*)malloc(sizeof(struct stmt_struct));
+    result->type = return_stmt_t;
+    result->expr_f = val;
+    return result;
+}
+
 struct program_struct* create_program_struct(struct stmt_list_struct* stmts) {
     struct program_struct* result = (struct program_struct*)malloc(sizeof(struct program_struct));
     result->stmts = stmts;

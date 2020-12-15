@@ -40,6 +40,10 @@ void PrintStmt(struct stmt_struct* stmt, FILE* file) {
 		PrintDefMethod(stmt->def_method_f, file);
 		fprintf(file, "Id%p->Id%p\n", stmt, stmt->def_method_f);
 		break;
+	case return_stmt_t:
+		PrintReturnStmt(stmt, file);
+		fprintf(file, "Id%p->IdName%p\n", stmt, stmt);
+		break;
 	default:
 		break;
 	}
@@ -119,6 +123,14 @@ void PrintIf(struct if_stmt_struct* if_s, FILE* file) {
 			current_body = current_body->next;
 		}
 		fprintf(file, "Id%p->IdElse%p\n", if_s, if_s->else_branch);
+	}
+}
+
+void PrintReturnStmt(struct stmt_struct* stmt, FILE* file) {
+	fprintf(file, "IdName%p [label=\"return\"]\n", stmt);
+	if (stmt->expr_f != 0) {
+		PrintExpr(stmt->expr_f, file);
+		fprintf(file, "IdName%p->Id%p [label=\"value\"]\n", stmt, stmt->expr_f);
 	}
 }
 

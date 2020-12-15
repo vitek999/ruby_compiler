@@ -70,7 +70,8 @@ enum stmt_type {
 	until_stmt_t,
 	if_stmt_t,
 	block_stmt_t, 
-	def_method_t
+	def_method_t,
+	return_stmt_t
 };
 
 struct stmt_struct {

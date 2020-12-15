@@ -15,6 +15,7 @@ struct stmt_struct* create_until_stmt(struct expr_struct* condition, struct stmt
 struct stmt_struct* create_if_stmt(struct if_part_stmt_struct* if_branch, struct elsif_stmt_list* elsif_branches, struct stmt_list_struct* else_branch);
 struct stmt_struct* create_block_stmt(struct stmt_block_struct* val);
 struct stmt_struct* create_def_method_stmt(char* name, struct method_param_list* params, struct stmt_list_struct* body);
+struct stmt_struct* create_return_stmt(struct expr_struct* val);
 struct stmt_list_struct* create_stmt_list(struct stmt_struct* val);
 struct stmt_list_struct* add_to_stmt_list(struct stmt_list_struct* list, struct stmt_struct* val);
 struct expr_list_struct* create_expr_list(struct expr_struct* val);
