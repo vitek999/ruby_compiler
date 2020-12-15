@@ -174,8 +174,11 @@ yield		{ return YIELD_KEYWORD; }
 <STRING>\\x[^0-9A-Fa-f\n"}]*       { printf("ERROR: Invalid hex escape \n"); }
 
 <STRING>\" { 
-                printf("Found string %s \n", string);
+                /* printf("Found string %s \n", string); */
+                yylval.string_un=(char *)malloc(strlen(yytext)+1);
+                strcpy(yylval.string_un, yytext); 
                 BEGIN(INITIAL);
+                return STRING;
             }
 <STRING><<EOF>> { printf("ERROR: expected\" \n"); }
 

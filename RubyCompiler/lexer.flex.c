@@ -1731,17 +1731,20 @@ case 102:
 YY_RULE_SETUP
 #line 177 "lexer.l"
 { 
-                printf("Found string %s \n", string);
+                /* printf("Found string %s \n", string); */
+                yylval.string_un=(char *)malloc(strlen(yytext)+1);
+                strcpy(yylval.string_un, yytext); 
                 BEGIN(INITIAL);
+                return STRING;
             }
 	YY_BREAK
 case YY_STATE_EOF(STRING):
-#line 181 "lexer.l"
+#line 184 "lexer.l"
 { printf("ERROR: expected\" \n"); }
 	YY_BREAK
 case 103:
 YY_RULE_SETUP
-#line 183 "lexer.l"
+#line 186 "lexer.l"
 { 
                                 remove_char_from_str(yytext,temp1,'_');
                                 yylval.int_un = atoi(temp1);
@@ -1750,12 +1753,12 @@ YY_RULE_SETUP
 	YY_BREAK
 case 104:
 YY_RULE_SETUP
-#line 189 "lexer.l"
+#line 192 "lexer.l"
 { printf("Found decimal number error1 %s\n", yytext); }
 	YY_BREAK
 case 105:
 YY_RULE_SETUP
-#line 191 "lexer.l"
+#line 194 "lexer.l"
 {
                                 remove_char_from_str(yytext+2,temp1,'_');
                                 yylval.int_un = atoi(temp1);
@@ -1764,12 +1767,12 @@ YY_RULE_SETUP
 	YY_BREAK
 case 106:
 YY_RULE_SETUP
-#line 197 "lexer.l"
+#line 200 "lexer.l"
 { printf("Found decimal number error2 %s\n", yytext); }
 	YY_BREAK
 case 107:
 YY_RULE_SETUP
-#line 199 "lexer.l"
+#line 202 "lexer.l"
 {
                                         remove_char_from_str(yytext,temp1,'_');
                                         remove_char_from_str(temp1,temp2,'o');
@@ -1781,12 +1784,12 @@ YY_RULE_SETUP
 	YY_BREAK
 case 108:
 YY_RULE_SETUP
-#line 208 "lexer.l"
+#line 211 "lexer.l"
 { printf("Found oct number error %s\n", yytext); }
 	YY_BREAK
 case 109:
 YY_RULE_SETUP
-#line 210 "lexer.l"
+#line 213 "lexer.l"
 {
                                         remove_char_from_str(yytext + 2,temp1,'_');
                                         sscanf(temp1,"%x",&num);
@@ -1796,12 +1799,12 @@ YY_RULE_SETUP
 	YY_BREAK
 case 110:
 YY_RULE_SETUP
-#line 217 "lexer.l"
+#line 220 "lexer.l"
 { printf("Found hex number error %s\n", yytext); }
 	YY_BREAK
 case 111:
 YY_RULE_SETUP
-#line 219 "lexer.l"
+#line 222 "lexer.l"
 {
                                         remove_char_from_str(yytext + 2,temp1,'_');
                                         num = binstr_to_dec(temp1);
@@ -1811,12 +1814,12 @@ YY_RULE_SETUP
 	YY_BREAK
 case 112:
 YY_RULE_SETUP
-#line 226 "lexer.l"
+#line 229 "lexer.l"
 { printf("Found bin number error %s\n", yytext); }
 	YY_BREAK
 case 113:
 YY_RULE_SETUP
-#line 230 "lexer.l"
+#line 233 "lexer.l"
 {
                                                                  remove_char_from_str(yytext,temp1,'_');
                                                                  real_num = atof(temp1);
@@ -1825,22 +1828,22 @@ YY_RULE_SETUP
 	YY_BREAK
 case 114:
 YY_RULE_SETUP
-#line 236 "lexer.l"
+#line 239 "lexer.l"
 { printf("Found float number error1 %s\n", yytext); }
 	YY_BREAK
 case 115:
 YY_RULE_SETUP
-#line 238 "lexer.l"
+#line 241 "lexer.l"
 { printf("Found float number error2 %s\n", yytext); }
 	YY_BREAK
 case 116:
 YY_RULE_SETUP
-#line 242 "lexer.l"
+#line 245 "lexer.l"
 { printf("Found single-line comment: %s\n", yytext + 1); }
 	YY_BREAK
 case 117:
 YY_RULE_SETUP
-#line 244 "lexer.l"
+#line 247 "lexer.l"
 { 
                                     // printf("Foun start ml-comment");
                                     comment[0] = 0; 
@@ -1849,7 +1852,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 118:
 YY_RULE_SETUP
-#line 250 "lexer.l"
+#line 253 "lexer.l"
 {
                                     strcat(comment, yytext + 5);
                                     printf("Found multi-line comment: %s\n", comment);
@@ -1858,14 +1861,14 @@ YY_RULE_SETUP
 	YY_BREAK
 case 119:
 YY_RULE_SETUP
-#line 256 "lexer.l"
+#line 259 "lexer.l"
 { 
                                     strcat(comment, yytext); 
                                 }
 	YY_BREAK
 case 120:
 YY_RULE_SETUP
-#line 260 "lexer.l"
+#line 263 "lexer.l"
 {
                                                 yylval.string_un=(char *)malloc(strlen(yytext)+1);
                                                 strcpy(yylval.string_un, yytext); 
@@ -1874,7 +1877,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 121:
 YY_RULE_SETUP
-#line 265 "lexer.l"
+#line 268 "lexer.l"
 {
                                                              yylval.string_un=(char *)malloc(strlen(yytext)+1);
                                                              strcpy(yylval.string_un, yytext); 
@@ -1883,14 +1886,14 @@ YY_RULE_SETUP
 	YY_BREAK
 case 122:
 YY_RULE_SETUP
-#line 270 "lexer.l"
+#line 273 "lexer.l"
 {
                                                  return CLASS_VAR_NAME;
                                              }
 	YY_BREAK
 case 123:
 YY_RULE_SETUP
-#line 274 "lexer.l"
+#line 277 "lexer.l"
 {
                                                 return CLASS_NAME;
                                            }
@@ -1898,16 +1901,16 @@ YY_RULE_SETUP
 case 124:
 /* rule 124 can match eol */
 YY_RULE_SETUP
-#line 278 "lexer.l"
+#line 281 "lexer.l"
 { return NEW_LINE_SYMBOL;
         }
 	YY_BREAK
 case 125:
 YY_RULE_SETUP
-#line 280 "lexer.l"
+#line 283 "lexer.l"
 ECHO;
 	YY_BREAK
-#line 1910 "lexer.flex.c"
+#line 1913 "lexer.flex.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(ML_COMMENT):
 	yyterminate();
@@ -2928,7 +2931,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 280 "lexer.l"
+#line 283 "lexer.l"
 
 
 void remove_char_from_str(const char * str, char * dest, char deleted_char) {
