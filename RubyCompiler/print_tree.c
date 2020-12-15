@@ -56,10 +56,8 @@ void PrintStmtList(struct stmt_list_struct* list, void* parent, FILE* file) {
 
 void PrintBranch(struct if_part_stmt_struct* branch, FILE* file) {
 	fprintf(file, "Id%p [label=\"branch\"]\n", branch);
-	fprintf(file, "IdCond%p [label=\"condition\"]\n", branch);
 	PrintExpr(branch->condition, file);
-	fprintf(file, "IdCond%p->Id%p\n", branch, branch->condition);
-	fprintf(file, "Id%p->IdCond%p\n", branch, branch);
+	fprintf(file, "Id%p->Id%p  [label=\"condition\"]\n", branch, branch->condition);
 
 	fprintf(file, "IdBody%p [label=\"body\"]\n", branch);
 	struct stmt_struct* current_body = branch->body->first;

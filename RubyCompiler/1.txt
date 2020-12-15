@@ -1,18 +1,7 @@
-a = 0
-
-for i in 1..2
-	print(1)
-end
-
-while(a == 0) 
-	print(a, b)
-	print(2, 3)
-end
-
-until true do 
-	a = 2
-end
-
-def some_fun(a = 2, v, c = 3) 
-	print(a)
+if true then
+print(3)
+elsif false
+print(2)
+else
+print(1)
 end
