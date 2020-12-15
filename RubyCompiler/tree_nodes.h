@@ -1,3 +1,5 @@
+#pragma once
+
 enum expr_type {
 	Integer,
 	Float,

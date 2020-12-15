@@ -32,6 +32,9 @@
     <ClCompile Include="dot.c">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="print_tree.c">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Bison Include="Grammar.y">
