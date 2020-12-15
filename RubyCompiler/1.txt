@@ -1,3 +1,13 @@
-def a()
-return
+arr = [1, 2, 3 ,4, 5]
+
+def printOddNumbers(arr) 
+	for i in 0..4
+    if arr[i] % 2 != 0
+      print(arr[i])
+    else
+      print("*")
+    end
+	end
 end
+
+printOddNumbers(arr)

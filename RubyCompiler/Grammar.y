@@ -35,6 +35,8 @@ struct program_struct * root;
     struct method_param_struct* method_param_un;
     struct method_param_list* method_param_list_un;
     struct program_struct * program_un;
+    struct program_item_struct * program_item_un;
+    struct program_item_list_struct * program_item_list_un;
 }
 
 %type <expr_un> expr
@@ -43,7 +45,8 @@ struct program_struct * root;
 %type <stmt_un> while_stmt
 %type <stmt_un> until_stmt
 %type <stmt_un> if_stmt 
-%type <stmt_un> def_method_stmt
+%type <program_item_un> def_method_stmt
+%type <program_item_un> program_item
 %type <stmt_list_un> stmt_list
 %type <stmt_list_un> stmt_list_not_empty
 %type <expr_list_un> expr_list_not_empty
@@ -56,6 +59,8 @@ struct program_struct * root;
 %type <method_param_list_un> method_params_list_not_empty
 %type <method_param_list_un> method_params_list
 %type <program_un> program
+%type <program_item_list_un> program_items_list
+%type <program_item_list_un> program_items_list_not_empty
 
 %token ALIAS_KEYWORD
 %token AND_KEYWORD
@@ -182,7 +187,20 @@ struct program_struct * root;
 %nonassoc OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET
 
 %%
-program: stmt_list  { root=create_program_struct($1); puts("program"); }
+program: program_items_list  { root=create_program_struct($1); puts("program"); }
+    ;
+
+program_item : stmt { $$=create_stmt_program_item($1); puts("program item stmt list"); }
+    | def_method_stmt stmt_ends_op { $$=$1;  puts("def method"); }
+    ;
+
+program_items_list_not_empty: program_item         { $$=create_program_item_list($1); puts("program items from one prorgram item"); }
+    | program_items_list_not_empty program_item   { $$=add_to_program_item_list($1, $2); puts("add item to program items"); }
+    ;
+
+program_items_list: /* empty */     { $$=0; puts("empty program items");}
+    | program_items_list_not_empty  { $$=$1; puts("program items from not empty program items");}
+    ;
 
 expr: INTEGER_NUMBER { $$=create_const_integer_expr(Integer, $1); /* puts("integer"); */ }
     | FLOAT_NUMBER { $$=create_const_float_expr($1); /* puts("float"); */}
@@ -261,8 +279,6 @@ stmt: expr stmt_ends { $$=create_expr_stmt($1); puts("stmt"); }
     | until_stmt stmt_ends   { $$=$1; puts("until stmt"); }
     | RETURN_KEYWORD expr stmt_ends { $$=create_return_stmt($2); puts("return with expr"); /* TODO: implement */}
     | RETURN_KEYWORD stmt_ends { $$=create_return_stmt(0); puts("return"); /* TODO: implement */}
-    | def_method_stmt   { $$=$1; puts("def method"); }
-    | def_method_stmt stmt_ends { $$=$1; puts("def method"); }
     ;
 
 stmt_list_not_empty: stmt  { $$=create_stmt_list($1); puts("list from one stmt"); }
@@ -320,8 +336,8 @@ method_params_list_not_empty: method_param { $$=create_method_param_list($1); }
 	| method_params_list_not_empty COMMA_SYMBOL method_param { $$=add_to_method_param_list($1, $3); }
 	;
 
-def_method_stmt: DEF_KEYWORD VAR_METHOD_NAME stmt_ends stmt_list END_KEYWORD { $$=create_def_method_stmt($2, 0, $4); }
-    | DEF_KEYWORD VAR_METHOD_NAME OPEN_ROUND_BRACKET method_params_list CLOSE_ROUND_BRACKET stmt_ends_op stmt_list END_KEYWORD { $$=create_def_method_stmt($2, $4, $7); }
+def_method_stmt: DEF_KEYWORD VAR_METHOD_NAME stmt_ends stmt_list END_KEYWORD { $$=create_def_method_program_item($2, 0, $4); }
+    | DEF_KEYWORD VAR_METHOD_NAME OPEN_ROUND_BRACKET method_params_list CLOSE_ROUND_BRACKET stmt_ends_op stmt_list END_KEYWORD { $$=create_def_method_program_item($2, $4, $7); }
     ;
 
 expr_list: /* empty */ { $$=0; }

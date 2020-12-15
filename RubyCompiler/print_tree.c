@@ -3,8 +3,8 @@
 void PrintProgram(struct program_struct* smts, FILE* file) {
 	fprintf(file, "digraph G {\n");
 	fprintf(file, "Id%p [label=\"program\"]\n", smts);
-	if (smts->stmts != 0) {
-		PrintStmtList(smts->stmts, smts, file);
+	if (smts->items != 0) {
+		PrintProgramItemsList(smts->items, smts, file);
 	}
 	fprintf(file, "}");
 }
@@ -36,10 +36,6 @@ void PrintStmt(struct stmt_struct* stmt, FILE* file) {
 		PrintBlock(stmt->block_stmt_f, file);
 		fprintf(file, "Id%p->Id%p\n", stmt, stmt->block_stmt_f);
 		break;
-	case def_method_t:
-		PrintDefMethod(stmt->def_method_f, file);
-		fprintf(file, "Id%p->Id%p\n", stmt, stmt->def_method_f);
-		break;
 	case return_stmt_t:
 		PrintReturnStmt(stmt, file);
 		fprintf(file, "Id%p->IdName%p\n", stmt, stmt);
@@ -54,6 +50,25 @@ void PrintStmtList(struct stmt_list_struct* list, void* parent, FILE* file) {
 	while (current != 0) {
 		PrintStmt(current, file);
 		fprintf(file, "Id%p->Id%p\n", parent, current);
+		current = current->next;
+	}
+}
+
+void PrintProgramItemsList(struct program_item_list_struct* list, void* parent, FILE* file) {
+	struct program_item_struct* current = list->first;
+	while (current != 0) {
+		switch (current->type) {
+		case def_method_t: 
+			PrintDefMethod(current->def_method_f, file);
+			fprintf(file, "Id%p->Id%p\n", parent, current->def_method_f);
+			break;
+		case pi_stmt_t:
+			PrintStmt(current->stmt_f, file);
+			fprintf(file, "Id%p->Id%p\n", parent, current->stmt_f);
+			break;
+		default:
+			break;
+		}
 		current = current->next;
 	}
 }

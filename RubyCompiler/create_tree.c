@@ -177,18 +177,6 @@ struct method_param_list* add_to_method_param_list(struct method_param_list* lis
     return list;
 }
 
-struct stmt_struct* create_def_method_stmt(char* name, struct method_param_list* params, struct stmt_list_struct* body) {
-    struct def_method_stmt_struct* method_def_s = (struct def_method_stmt_struct*)malloc(sizeof(struct def_method_stmt_struct));
-    method_def_s->name = name;
-    method_def_s->params = params;
-    method_def_s->body = body;
-
-    struct stmt_struct* result = (struct stmt_struct*)malloc(sizeof(struct stmt_struct));
-    result->type = def_method_t;
-    result->def_method_f = method_def_s;
-    return result;
-}
-
 struct stmt_struct* create_return_stmt(struct expr_struct* val) {
     struct stmt_struct* result = (struct stmt_struct*)malloc(sizeof(struct stmt_struct));
     result->type = return_stmt_t;
@@ -196,9 +184,9 @@ struct stmt_struct* create_return_stmt(struct expr_struct* val) {
     return result;
 }
 
-struct program_struct* create_program_struct(struct stmt_list_struct* stmts) {
+struct program_struct* create_program_struct(struct program_item_list_struct* items) {
     struct program_struct* result = (struct program_struct*)malloc(sizeof(struct program_struct));
-    result->stmts = stmts;
+    result->items = items;
     return result;
 }
 
@@ -207,4 +195,38 @@ struct expr_struct* create_array_struct(struct expr_list_struct* items) {
     result->type = array;
     result->list = items;
     return result;
+}
+
+struct program_item_struct* create_def_method_program_item(char* name, struct method_param_list* params, struct stmt_list_struct* body) {
+    struct def_method_stmt_struct* method_def_s = (struct def_method_stmt_struct*)malloc(sizeof(struct def_method_stmt_struct));
+    method_def_s->name = name;
+    method_def_s->params = params;
+    method_def_s->body = body;
+
+    struct program_item_struct* result = (struct program_item_struct*)malloc(sizeof(struct program_item_struct));
+    result->type = def_method_t;
+    result->def_method_f = method_def_s;
+    return result;
+}
+
+struct program_item_struct* create_stmt_program_item(struct stmt_struct* stmt) {
+    struct program_item_struct* result = (struct program_item_struct*)malloc(sizeof(struct program_item_struct));
+    result->type = pi_stmt_t;
+    result->stmt_f = stmt;
+    return result;
+}
+
+struct program_item_list_struct* create_program_item_list(struct program_item_struct* val) {
+    struct program_item_list_struct* result = (struct program_item_list_struct*)malloc(sizeof(struct program_item_list_struct));
+    result->first = val;
+    result->last = val;
+    val->next = 0;
+    return result;
+}
+
+struct program_item_list_struct* add_to_program_item_list(struct program_item_list_struct* list, struct program_item_struct* val) {
+    list->last->next = val;
+    list->last = val;
+    val->next = 0;
+    return list;
 }

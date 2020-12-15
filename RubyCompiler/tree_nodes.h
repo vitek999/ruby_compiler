@@ -70,8 +70,24 @@ enum stmt_type {
 	until_stmt_t,
 	if_stmt_t,
 	block_stmt_t, 
-	def_method_t,
 	return_stmt_t
+};
+
+enum program_item_type {
+	def_method_t,
+	pi_stmt_t
+};
+
+struct program_item_struct {
+	enum program_item_type type;
+	struct def_method_stmt_struct* def_method_f;
+	struct stmt_stuct * stmt_f;
+	struct program_item_struct* next;
+};
+
+struct program_item_list_struct {
+	struct program_item_struct* first;
+	struct program_item_struct* last;
 };
 
 struct stmt_struct {
@@ -83,7 +99,6 @@ struct stmt_struct {
 	struct if_stmt_struct* if_stmt_f;
 	struct stmt_struct * next;
 	struct stmt_block_struct* block_stmt_f;
-	struct def_method_stmt_struct* def_method_f;
 };
 
 struct stmt_list_struct
@@ -140,17 +155,17 @@ struct method_param_struct {
 	struct method_param_struct * next;
 };
 
-struct method_param_list {
-	struct method_param_struct* first;
-	struct method_param_struct* last;
-};
-
 struct def_method_stmt_struct {
 	char* name;
 	struct method_param_list* params;
 	struct stmt_list_struct* body;
 };
 
+struct method_param_list {
+	struct method_param_struct* first;
+	struct method_param_struct* last;
+};
+
 struct program_struct {
-	struct stmt_list_struct* stmts;
+	struct program_item_list_struct* items;
 };
