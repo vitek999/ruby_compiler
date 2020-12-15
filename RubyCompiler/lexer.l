@@ -175,10 +175,10 @@ yield		{ return YIELD_KEYWORD; }
 
 <STRING>\" { 
                 /* printf("Found string %s \n", string); */
-                yylval.string_un=(char *)malloc(strlen(yytext)+1);
-                strcpy(yylval.string_un, yytext); 
+                yylval.string_un=(char *)malloc(strlen(string)+1);
+                strcpy(yylval.string_un, string);
                 BEGIN(INITIAL);
-                return STRING;
+                return STR;
             }
 <STRING><<EOF>> { printf("ERROR: expected\" \n"); }
 

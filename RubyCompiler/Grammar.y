@@ -149,7 +149,7 @@ struct program_struct * root;
 %token SEMICOLON_SYMBOL
 %token NEW_LINE_SYMBOL
 
-%token <string_un> STRING 
+%token <string_un> STR
 %token <int_un> INTEGER_NUMBER
 %token <float_un> FLOAT_NUMBER
 
@@ -184,7 +184,7 @@ program: stmt_list  { root=create_program_struct($1); puts("program"); }
 
 expr: INTEGER_NUMBER { $$=create_const_integer_expr(Integer, $1); /* puts("integer"); */ }
     | FLOAT_NUMBER { $$=create_const_float_expr($1); /* puts("float"); */}
-    | STRING { $$=create_const_string_expr(String, $1); /* puts("string"); */ }
+    | STR { $$=create_const_string_expr(String, $1); puts("string"); }
     | NIL_KEYWORD { puts("nil"); }
     | TRUE_KEYWORD { $$=create_const_integer_expr(Boolean, 1); /* puts("true"); */ }
     | FALSE_KEYWORD { $$=create_const_integer_expr(Boolean, 0); /* puts("false"); */ }

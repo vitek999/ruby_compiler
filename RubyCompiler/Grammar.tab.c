@@ -198,7 +198,7 @@ enum yysymbol_kind_t
   YYSYMBOL_DOUBLE_COLON_SYMBOL = 84,       /* DOUBLE_COLON_SYMBOL  */
   YYSYMBOL_SEMICOLON_SYMBOL = 85,          /* SEMICOLON_SYMBOL  */
   YYSYMBOL_NEW_LINE_SYMBOL = 86,           /* NEW_LINE_SYMBOL  */
-  YYSYMBOL_STRING = 87,                    /* STRING  */
+  YYSYMBOL_STR = 87,                       /* STR  */
   YYSYMBOL_INTEGER_NUMBER = 88,            /* INTEGER_NUMBER  */
   YYSYMBOL_FLOAT_NUMBER = 89,              /* FLOAT_NUMBER  */
   YYSYMBOL_VAR_METHOD_NAME = 90,           /* VAR_METHOD_NAME  */
@@ -655,7 +655,7 @@ static const char *const yytname[] =
   "CLOSE_CURLY_BRACKET", "OPEN_SQUARE_BRACKET", "CLOSE_SQUARE_BRACKET",
   "COMMERCIAL_AT", "QUESTION_SYMBOL", "DOT_SYMBOL", "COMMA_SYMBOL",
   "COLON_SYMBOL", "DOUBLE_COLON_SYMBOL", "SEMICOLON_SYMBOL",
-  "NEW_LINE_SYMBOL", "STRING", "INTEGER_NUMBER", "FLOAT_NUMBER",
+  "NEW_LINE_SYMBOL", "STR", "INTEGER_NUMBER", "FLOAT_NUMBER",
   "VAR_METHOD_NAME", "INSTANCE_VAR_NAME", "CLASS_NAME", "CLASS_VAR_NAME",
   "UNARY_MINUS", "UNARY_PLUS", "$accept", "program", "expr", "stmt_ends",
   "stmt_ends_op", "stmt", "stmt_list_not_empty", "stmt_list", "stmt_block",
@@ -1810,9 +1810,9 @@ yyreduce:
 #line 1811 "Grammar.tab.c"
     break;
 
-  case 5: /* expr: STRING  */
+  case 5: /* expr: STR  */
 #line 187 "Grammar.y"
-             { (yyval.expr_un)=create_const_string_expr(String, (yyvsp[0].string_un)); /* puts("string"); */ }
+          { (yyval.expr_un)=create_const_string_expr(String, (yyvsp[0].string_un)); puts("string"); }
 #line 1817 "Grammar.tab.c"
     break;
 

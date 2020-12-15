@@ -138,7 +138,7 @@ extern int yydebug;
     DOUBLE_COLON_SYMBOL = 339,     /* DOUBLE_COLON_SYMBOL  */
     SEMICOLON_SYMBOL = 340,        /* SEMICOLON_SYMBOL  */
     NEW_LINE_SYMBOL = 341,         /* NEW_LINE_SYMBOL  */
-    STRING = 342,                  /* STRING  */
+    STR = 342,                     /* STR  */
     INTEGER_NUMBER = 343,          /* INTEGER_NUMBER  */
     FLOAT_NUMBER = 344,            /* FLOAT_NUMBER  */
     VAR_METHOD_NAME = 345,         /* VAR_METHOD_NAME  */

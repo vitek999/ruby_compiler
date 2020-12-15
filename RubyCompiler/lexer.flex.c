@@ -1732,10 +1732,10 @@ YY_RULE_SETUP
 #line 177 "lexer.l"
 { 
                 /* printf("Found string %s \n", string); */
-                yylval.string_un=(char *)malloc(strlen(yytext)+1);
-                strcpy(yylval.string_un, yytext); 
+                yylval.string_un=(char *)malloc(strlen(string)+1);
+                strcpy(yylval.string_un, string);
                 BEGIN(INITIAL);
-                return STRING;
+                return STR;
             }
 	YY_BREAK
 case YY_STATE_EOF(STRING):
