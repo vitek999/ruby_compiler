@@ -1,11 +1,13 @@
-Id00EE9CE8 [label="program"]
-Id00EE9C60 [label="stmt"]
-Id00EE9C10 [label="="]
-Id00EE9B38 [label="var or method"]
-IdVal00EE9B38 [label="a"]
-Id00EE9B38->IdVal00EE9B38
-Id00EE9BC0 [label="STRING"]
-Id00EE9C10->Id00EE9B38
-Id00EE9C10->Id00EE9BC0
-Id00EE9C60->Id00EE9C10
-Id00EE9CE8->Id00EE9C60
+digraph G {
+Id01359AB8 [label="program"]
+Id01359A30 [label="stmt"]
+Id013599E0 [label="="]
+Id01359908 [label="var or method"]
+IdVal01359908 [label="a"]
+Id01359908->IdVal01359908
+Id01359990 [label="STRING"]
+Id013599E0->Id01359908
+Id013599E0->Id01359990
+Id01359A30->Id013599E0
+Id01359AB8->Id01359A30
+}

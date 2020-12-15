@@ -12,10 +12,12 @@ void PrintIf(struct if_stmt_struct * if_s, FILE * file);
 void PrintDefMethod(struct def_method_stmt_struct * method, FILE* file);
 
 void PrintProgram(struct program_struct * smts, FILE * file) {
+	fprintf(file, "digraph G {\n");
 	fprintf(file, "Id%p [label=\"program\"]\n", smts);
 	if (smts->stmts != 0) {
 		PrintStmtList(smts->stmts, smts, file);
 	}
+	fprintf(file, "}");
 }
 
 void PrintStmt(struct stmt_struct* stmt, FILE* file) {
