@@ -108,6 +108,14 @@ struct expr_struct* create_method_call_expr(char* method_name, struct expr_list_
     return result;
 }
 
+struct expr_struct* create_field_call_expr(struct expr_struct* left, char* right) {
+    struct expr_struct* result = (struct expr_struct*)malloc(sizeof(struct expr_struct));
+    result->type = field_call;
+    result->str_val = right;
+    result->left = left;
+    return result;
+}
+
 struct if_part_stmt_struct* create_if_part_struct(struct expr_struct* condition, struct stmt_list_struct* body) {
     struct if_part_stmt_struct* result = (struct if_part_stmt_struct*)malloc(sizeof(struct if_part_stmt_struct));
     result->condition = condition;

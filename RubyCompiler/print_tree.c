@@ -545,6 +545,13 @@ void PrintExpr(struct expr_struct* expr, FILE* file) {
 		fprintf(file, "Id%p->Id%p [label = \"array\"]\n", expr, expr->left);
 		fprintf(file, "Id%p->Id%p [label = \"index\"]\n", expr, expr->right);
 		break;
+	case field_call:
+		fprintf(file, "Id%p [label=\".\"]", expr);
+		PrintExpr(expr->left, file);
+		fprintf(file, "Id%p->Id%p [label = \"object\"]\n", expr, expr->left);
+		fprintf(file, "Id%p [label = \"%s\"]\n", expr->str_val, expr->str_val);
+		fprintf(file, "Id%p->Id%p [label = \"field\"]\n", expr, expr->str_val);
+		break;
 	default:
 		fprintf(file, "Id%p [label=\"expr\"]\n", expr);
 		break;

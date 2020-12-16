@@ -184,7 +184,7 @@ struct program_struct * root;
 %left ARITHMETIC_MUL_OP ARITHMETIC_DIV_OP ARITHMETIC_MOD_OP
 %right UNARY_MINUS
 %right LOGICAL_NOT_OP BIN_ONES_COMPLEMENT_OP UNARY_PLUS ARITHMETIC_POW_OP  
-%left OPEN_SQUARE_BRACKET CLOSE_SQUARE_BRACKET
+%left OPEN_SQUARE_BRACKET CLOSE_SQUARE_BRACKET DOT_SYMBOL
 %nonassoc OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET
 
 %%
@@ -256,6 +256,10 @@ expr: INTEGER_NUMBER { $$=create_const_integer_expr(Integer, $1); /* puts("integ
     | VAR_METHOD_NAME OPEN_ROUND_BRACKET expr_list CLOSE_ROUND_BRACKET { $$=create_method_call_expr($1, $3); puts("method call");}
     | VAR_METHOD_NAME { $$=create_const_string_expr(var_or_method, $1); /* puts("var"); */ }     
     | INSTANCE_VAR_NAME { $$=create_const_string_expr(instance_var, $1); /* puts("instance var"); */ }
+    | expr DOT_SYMBOL VAR_METHOD_NAME { $$=create_field_call_expr($1, $3); puts("123"); }
+    | expr DOT_SYMBOL VAR_METHOD_NAME OPEN_ROUND_BRACKET expr_list CLOSE_ROUND_BRACKET { puts("345"); }
+    | SELF_KEYWORD DOT_SYMBOL VAR_METHOD_NAME { puts("678"); }
+    | SELF_KEYWORD DOT_SYMBOL VAR_METHOD_NAME OPEN_ROUND_BRACKET expr_list CLOSE_ROUND_BRACKET { puts("910"); }
     ;
 
 stmt_ends: SEMICOLON_SYMBOL
