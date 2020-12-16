@@ -559,6 +559,16 @@ void PrintExpr(struct expr_struct* expr, FILE* file) {
 		fprintf(file, "Id%p->Id%p [label = \"object\"]\n", expr, expr->left);
 		fprintf(file, "Id%p->Id%p [label = \"method\"]\n", expr, expr->right);
 		break;
+	case self_field_call: 
+		fprintf(file, "Id%p [label=\"self.\"]", expr);
+		fprintf(file, "Id%p [label = \"%s\"]\n", expr->str_val, expr->str_val);
+		fprintf(file, "Id%p->Id%p [label = \"field\"]\n", expr, expr->str_val);
+		break;
+	case self_method_call:
+		fprintf(file, "Id%p [label=\"self.\"]", expr);
+		PrintExpr(expr->right, file);
+		fprintf(file, "Id%p->Id%p [label = \"method\"]\n", expr, expr->right);
+		break;
 	default:
 		fprintf(file, "Id%p [label=\"expr\"]\n", expr);
 		break;

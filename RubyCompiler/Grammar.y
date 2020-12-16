@@ -258,8 +258,8 @@ expr: INTEGER_NUMBER { $$=create_const_integer_expr(Integer, $1); /* puts("integ
     | INSTANCE_VAR_NAME { $$=create_const_string_expr(instance_var, $1); /* puts("instance var"); */ }
     | expr DOT_SYMBOL VAR_METHOD_NAME { $$=create_field_call_expr($1, $3); puts("object field call"); }
     | expr DOT_SYMBOL VAR_METHOD_NAME OPEN_ROUND_BRACKET expr_list CLOSE_ROUND_BRACKET { $$=create_object_method_call_expr($1, $3, $5); puts("object method call"); }
-    | SELF_KEYWORD DOT_SYMBOL VAR_METHOD_NAME { puts("678"); }
-    | SELF_KEYWORD DOT_SYMBOL VAR_METHOD_NAME OPEN_ROUND_BRACKET expr_list CLOSE_ROUND_BRACKET { puts("910"); }
+    | SELF_KEYWORD DOT_SYMBOL VAR_METHOD_NAME { $$=create_self_field_call_expr($3); puts("678"); }
+    | SELF_KEYWORD DOT_SYMBOL VAR_METHOD_NAME OPEN_ROUND_BRACKET expr_list CLOSE_ROUND_BRACKET { $$=create_self_method_call_expr($3, $5); puts("910"); }
     ;
 
 stmt_ends: SEMICOLON_SYMBOL

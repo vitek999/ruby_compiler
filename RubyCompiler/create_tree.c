@@ -125,6 +125,21 @@ struct expr_struct* create_object_method_call_expr(struct expr_struct* left, cha
     return result;
 }
 
+struct expr_struct* create_self_field_call_expr(char* right) {
+    struct expr_struct* result = (struct expr_struct*)malloc(sizeof(struct expr_struct));
+    result->type = self_field_call;
+    result->str_val = right;
+    return result;
+}
+
+struct expr_struct* create_self_method_call_expr(char* method_name, struct expr_list_struct* params) {
+    struct expr_struct* result = (struct expr_struct*)malloc(sizeof(struct expr_struct));
+    struct expr_struct* method_call = create_method_call_expr(method_name, params);
+    result->type = self_method_call;
+    result->right = method_call;
+    return result;
+}
+
 struct if_part_stmt_struct* create_if_part_struct(struct expr_struct* condition, struct stmt_list_struct* body) {
     struct if_part_stmt_struct* result = (struct if_part_stmt_struct*)malloc(sizeof(struct if_part_stmt_struct));
     result->condition = condition;

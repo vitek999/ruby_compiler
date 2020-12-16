@@ -51,7 +51,9 @@ enum expr_type {
 	array,
 	member_access,
 	field_call,
-	object_method_call
+	object_method_call,
+	self_field_call,
+	self_method_call
 };
 
 struct expr_struct {

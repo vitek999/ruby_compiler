@@ -2,19 +2,21 @@ a.b(1,2,3).c.s()
 
 class A < B
     a = 2
-    
+    self.a(1,2,3)
     def b()
         print(a)
     end
 end
 
 class C 
+    self.c
     def a()
         print(1)
     end
 end
 
 class D
+    self.c.a(1)
 end
 
 arr = [1, 2, 3 ,4, 5]

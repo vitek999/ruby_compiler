@@ -2242,13 +2242,13 @@ yyreduce:
 
   case 64: /* expr: SELF_KEYWORD DOT_SYMBOL VAR_METHOD_NAME  */
 #line 261 "Grammar.y"
-                                              { puts("678"); }
+                                              { (yyval.expr_un)=create_self_field_call_expr((yyvsp[0].var_name_un)); puts("678"); }
 #line 2247 "Grammar.tab.c"
     break;
 
   case 65: /* expr: SELF_KEYWORD DOT_SYMBOL VAR_METHOD_NAME OPEN_ROUND_BRACKET expr_list CLOSE_ROUND_BRACKET  */
 #line 262 "Grammar.y"
-                                                                                               { puts("910"); }
+                                                                                               { (yyval.expr_un)=create_self_method_call_expr((yyvsp[-3].var_name_un), (yyvsp[-1].expr_list_un)); puts("910"); }
 #line 2253 "Grammar.tab.c"
     break;
 
