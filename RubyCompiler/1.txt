@@ -1,4 +1,4 @@
-a.b.c.s
+a.b(1,2,3).c.s()
 
 class A < B
     a = 2
@@ -20,7 +20,7 @@ end
 arr = [1, 2, 3 ,4, 5]
 
 def printOddNumbers(arr) 
-	for i in 0..4
+	for i in 0..arr.size
     if arr[i] % 2 != 0
       print(arr[i])
     else

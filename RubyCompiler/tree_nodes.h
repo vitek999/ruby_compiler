@@ -50,7 +50,8 @@ enum expr_type {
 	method_call,
 	array,
 	member_access,
-	field_call
+	field_call,
+	object_method_call
 };
 
 struct expr_struct {

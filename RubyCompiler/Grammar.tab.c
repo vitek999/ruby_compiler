@@ -2230,13 +2230,13 @@ yyreduce:
 
   case 62: /* expr: expr DOT_SYMBOL VAR_METHOD_NAME  */
 #line 259 "Grammar.y"
-                                      { (yyval.expr_un)=create_field_call_expr((yyvsp[-2].expr_un), (yyvsp[0].var_name_un)); puts("123"); }
+                                      { (yyval.expr_un)=create_field_call_expr((yyvsp[-2].expr_un), (yyvsp[0].var_name_un)); puts("object field call"); }
 #line 2235 "Grammar.tab.c"
     break;
 
   case 63: /* expr: expr DOT_SYMBOL VAR_METHOD_NAME OPEN_ROUND_BRACKET expr_list CLOSE_ROUND_BRACKET  */
 #line 260 "Grammar.y"
-                                                                                       { puts("345"); }
+                                                                                       { (yyval.expr_un)=create_object_method_call_expr((yyvsp[-5].expr_un), (yyvsp[-3].var_name_un), (yyvsp[-1].expr_list_un)); puts("object method call"); }
 #line 2241 "Grammar.tab.c"
     break;
 
