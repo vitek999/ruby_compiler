@@ -152,6 +152,7 @@
     <ClCompile Include="Grammar.tab.c" />
     <ClCompile Include="lexer.flex.c" />
     <ClCompile Include="print_tree.c" />
+    <ClCompile Include="RubyCompiler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Bison Include="Grammar.y">

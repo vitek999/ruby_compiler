@@ -1,6 +1,6 @@
 class A < B
     def printOddNumbers(arr)
-        @var = 2
+        @var = 3
         a = 2 + 3 / 4 * 10 - (a[0])
 	    for i in 0..arr.size
             if arr[i][j].field(1, 2)[0] % (2 + 1 % 3) != 0 then

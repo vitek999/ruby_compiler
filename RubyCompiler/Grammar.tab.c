@@ -2830,15 +2830,3 @@ yyreturn:
 
 #line 384 "Grammar.y"
 
-
-void main(int argc, char **argv ){
-	yyin = fopen(argv[1], "r" );
-
-    FILE * tree = fopen("tree.dot", "w");
-
-    yyparse();
-    PrintProgram(root, tree);
-
-    run_dot("../dot/dot.exe", "../RubyCompiler/tree.dot");
-    return;
-}
