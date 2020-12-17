@@ -504,6 +504,8 @@ void PrintExpr(struct expr_struct* expr, FILE* file) {
 		break;
 	case instance_var:
 		fprintf(file, "Id%p [label=\"instance var\"]\n", expr);
+		fprintf(file, "IdVal%p [label=\"%s\"]\n", expr, expr->str_val);
+		fprintf(file, "Id%p->IdVal%p\n", expr, expr);
 		break;
 	case until_op:
 		fprintf(file, "Id%p [label=\"until\"]\n", expr);
