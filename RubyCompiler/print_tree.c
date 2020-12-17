@@ -131,7 +131,14 @@ void PrintClassDeclaration(struct class_declaration_struct* class_decl, FILE* fi
 	}
 	
 	if (class_decl->body != 0) {
-		PrintProgramItemsList(class_decl->body, class_decl, file);
+		fprintf(file, "Id%p [label=\"body\"]\n", class_decl->body);
+		fprintf(file, "Id%p->Id%p\n", class_decl, class_decl->body);
+		struct def_method_stmt_struct* current = class_decl->body->first;
+		while (current != 0) {
+			PrintDefMethod(current, file);
+			fprintf(file, "Id%p->Id%p\n", class_decl->body, current);
+			current = current->next;
+		}
 	}
 }
 
@@ -553,19 +560,19 @@ void PrintExpr(struct expr_struct* expr, FILE* file) {
 		fprintf(file, "Id%p->Id%p [label = \"field\"]\n", expr, expr->str_val);
 		break;
 	case object_method_call:
-		fprintf(file, "Id%p [label=\".\"]", expr);
+		fprintf(file, "Id%p [label=\".\"]\n", expr);
 		PrintExpr(expr->left, file);
 		PrintExpr(expr->right, file);
 		fprintf(file, "Id%p->Id%p [label = \"object\"]\n", expr, expr->left);
 		fprintf(file, "Id%p->Id%p [label = \"method\"]\n", expr, expr->right);
 		break;
 	case self_field_call: 
-		fprintf(file, "Id%p [label=\"self.\"]", expr);
+		fprintf(file, "Id%p [label=\"self.\"]\n", expr);
 		fprintf(file, "Id%p [label = \"%s\"]\n", expr->str_val, expr->str_val);
 		fprintf(file, "Id%p->Id%p [label = \"field\"]\n", expr, expr->str_val);
 		break;
 	case self_method_call:
-		fprintf(file, "Id%p [label=\"self.\"]", expr);
+		fprintf(file, "Id%p [label=\"self.\"]\n", expr);
 		PrintExpr(expr->right, file);
 		fprintf(file, "Id%p->Id%p [label = \"method\"]\n", expr, expr->right);
 		break;

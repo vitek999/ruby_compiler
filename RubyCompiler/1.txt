@@ -1,34 +1,29 @@
-a.b(1,2,3).c.s()
-
 class A < B
+    def printOddNumbers(arr)
+        a = 2 + 3 / 4 * 10 - (a[0])
+	    for i in 0..arr.size
+            if arr[i][j].field(1, 2)[0] % (2 + 1 % 3) != 0 then
+              print(arr[i])
+            else
+              print("*")
+            end
+	    end
+    end
+    def some()
+        a = 2
+    end
+end
+
+
+def free()
     a = 2
-    self.a(1,2,3)
-    def b()
-        print(a)
-    end
-end
-
-class C 
-    self.c
-    def a()
+    if a == 0
+        s = 1
+    elsif a == 1
         print(1)
+    elsif a == 2
+        b = 12
+    else 
+        c = 10
     end
 end
-
-class D
-    self.c.a(1)
-end
-
-arr = [1, 2, 3 ,4, 5]
-
-def printOddNumbers(arr) 
-	for i in 0..arr.size
-    if arr[i] % 2 != 0
-      print(arr[i])
-    else
-      print("*")
-    end
-	end
-end
-
-printOddNumbers(arr)

@@ -30,10 +30,13 @@ struct stmt_block_struct* create_stmt_block_struct(struct stmt_list_struct* list
 struct method_param_struct* create_method_param_struct(char* name, struct expr_struct* default_value);
 struct method_param_list* create_method_param_list(struct method_param_struct* val);
 struct method_param_list* add_to_method_param_list(struct method_param_list* list, struct method_param_struct* val);
+struct def_method_stmt_list_struct* create_def_method_list(struct def_method_stmt_struct* val);
+struct def_method_stmt_list_struct* add_to_def_method_list(struct def_method_stmt_list_struct* list, struct def_method_stmt_struct* val);
 struct program_struct* create_program_struct(struct program_item_list_struct* items);
 struct expr_struct* create_array_struct(struct expr_list_struct * items);
 struct program_item_struct* create_stmt_program_item(struct stmt_struct* stmt);
-struct program_item_struct* create_def_method_program_item(char* name, struct method_param_list* params, struct stmt_list_struct* body);
-struct class_declaration_struct* create_class_declaration(char * name, char * parent,  struct program_item_list_struct* body);
+struct program_item_struct* create_def_method_program_item(struct def_method_stmt_struct* method);
+struct program_item_struct* create_class_declaration_program_item(char * name, char * parent,  struct def_method_stmt_list_struct* body);
 struct program_item_list_struct* create_program_item_list(struct program_item_struct* val);
 struct program_item_list_struct* add_to_program_item_list(struct program_item_list_struct* list,  struct program_item_struct* val);
+struct def_method_stmt_struct* create_def_method_struct(char* name, struct method_param_list* params, struct stmt_list_struct* body);

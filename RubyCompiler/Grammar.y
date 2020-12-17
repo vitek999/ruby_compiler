@@ -37,6 +37,8 @@ struct program_struct * root;
     struct program_struct * program_un;
     struct program_item_struct * program_item_un;
     struct program_item_list_struct * program_item_list_un;
+    struct def_method_stmt_list_struct * def_method_list_un;
+    struct def_method_stmt_struct * def_method_un;
 }
 
 %type <expr_un> expr
@@ -45,9 +47,11 @@ struct program_struct * root;
 %type <stmt_un> while_stmt
 %type <stmt_un> until_stmt
 %type <stmt_un> if_stmt 
-%type <program_item_un> def_method_stmt
+%type <def_method_un> def_method_stmt
 %type <program_item_un> program_item 
 %type <program_item_un> class_declaration
+%type <def_method_list_un> def_method_list_op
+%type <def_method_list_un> def_method_list
 %type <stmt_list_un> stmt_list
 %type <stmt_list_un> stmt_list_not_empty
 %type <expr_list_un> expr_list_not_empty
@@ -192,7 +196,7 @@ program: program_items_list  { root=create_program_struct($1); puts("program"); 
     ;
 
 program_item : stmt { $$=create_stmt_program_item($1); puts("program item stmt list"); }
-    | def_method_stmt stmt_ends_op { $$=$1;  puts("def method"); }
+    | def_method_stmt { $$=create_def_method_program_item($1);  puts("def method"); }
     | class_declaration { $$=$1; puts("program item from class declaration"); }
     ;
 
@@ -268,6 +272,14 @@ stmt_ends: SEMICOLON_SYMBOL
     | NEW_LINE_SYMBOL stmt_ends
     ;
 
+new_lines_op: /* empty */
+    | new_lines
+    ;
+
+new_lines: NEW_LINE_SYMBOL
+    | NEW_LINE_SYMBOL new_lines
+    ;
+
 stmt_ends_op: /* empty */
     | stmt_ends
     ;
@@ -299,11 +311,13 @@ stmt_block: BEGIN_KEYWORD stmt_ends_op stmt_list END_KEYWORD  { $$=create_stmt_b
     ;
 
 if_start_stmt: IF_KEYWORD expr stmt_ends stmt_list { $$=create_if_part_struct($2, $4); puts("if without then"); }
-    | IF_KEYWORD expr THEN_KEYWORD stmt_ends_op stmt_list { $$=create_if_part_struct($2, $5); puts("if with then"); }
+    | IF_KEYWORD expr SEMICOLON_SYMBOL new_lines_op THEN_KEYWORD stmt_ends_op stmt_list { $$=create_if_part_struct($2, $7); puts("if with then"); }
+    | IF_KEYWORD expr new_lines_op THEN_KEYWORD stmt_ends_op stmt_list { $$=create_if_part_struct($2, $6); puts("if with then"); }
     ;
 
 elsif_stmt: ELSIF_KEYWORD expr stmt_ends stmt_list { $$=create_if_part_struct($2, $4); puts("elsif without then");  } 
-    | ELSIF_KEYWORD expr THEN_KEYWORD stmt_ends_op stmt_list { $$=create_if_part_struct($2, $5); puts("elsif with then");  } 
+    | ELSIF_KEYWORD expr new_lines_op THEN_KEYWORD stmt_ends_op stmt_list { $$=create_if_part_struct($2, $6); puts("elsif with then");  } 
+    | ELSIF_KEYWORD expr SEMICOLON_SYMBOL new_lines_op THEN_KEYWORD stmt_ends_op stmt_list { $$=create_if_part_struct($2, $7); puts("elsif with then");  } 
     ;
 
 elsif_stmt_list: elsif_stmt { $$=create_elsif_stmt_list($1); } 
@@ -342,8 +356,8 @@ method_params_list_not_empty: method_param { $$=create_method_param_list($1); }
 	| method_params_list_not_empty COMMA_SYMBOL method_param { $$=add_to_method_param_list($1, $3); }
 	;
 
-def_method_stmt: DEF_KEYWORD VAR_METHOD_NAME stmt_ends stmt_list END_KEYWORD { $$=create_def_method_program_item($2, 0, $4); }
-    | DEF_KEYWORD VAR_METHOD_NAME OPEN_ROUND_BRACKET method_params_list CLOSE_ROUND_BRACKET stmt_ends_op stmt_list END_KEYWORD { $$=create_def_method_program_item($2, $4, $7); }
+def_method_stmt: DEF_KEYWORD VAR_METHOD_NAME stmt_ends stmt_list END_KEYWORD stmt_ends_op { $$=create_def_method_struct($2, 0, $4); }
+    | DEF_KEYWORD VAR_METHOD_NAME OPEN_ROUND_BRACKET method_params_list CLOSE_ROUND_BRACKET stmt_ends_op stmt_list END_KEYWORD stmt_ends_op { $$=create_def_method_struct($2, $4, $7); }
     ;
 
 expr_list: /* empty */ { $$=0; }
@@ -354,8 +368,17 @@ expr_list_not_empty: expr { $$=create_expr_list($1); }
 	| expr_list_not_empty COMMA_SYMBOL expr { $$=add_to_expr_list($1, $3); }
 	;
 
-class_declaration: CLASS_KEYWORD CLASS_NAME stmt_ends program_items_list END_KEYWORD stmt_ends { $$=create_class_declaration_program_item($2, 0, $4); puts("class declaration"); }
-    | CLASS_KEYWORD CLASS_NAME LESS_OP CLASS_NAME stmt_ends program_items_list END_KEYWORD stmt_ends { $$=create_class_declaration_program_item($2, $4, $6); puts("class declaration"); }
+class_declaration: CLASS_KEYWORD CLASS_NAME stmt_ends def_method_list_op END_KEYWORD stmt_ends { $$=create_class_declaration_program_item($2, 0, $4); puts("class declaration"); }
+    | CLASS_KEYWORD CLASS_NAME LESS_OP CLASS_NAME stmt_ends def_method_list_op END_KEYWORD stmt_ends { $$=create_class_declaration_program_item($2, $4, $6); puts("class declaration"); }
+    ;
+
+
+def_method_list_op: /* empty */ { $$=0; }
+    | def_method_list { $$=$1; }
+    ;
+
+def_method_list: def_method_stmt { $$=create_def_method_list($1); }
+    | def_method_list def_method_stmt { $$=add_to_def_method_list($1, $2); }
     ;
 
 %%

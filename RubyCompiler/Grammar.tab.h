@@ -176,8 +176,10 @@ union YYSTYPE
     struct program_struct * program_un;
     struct program_item_struct * program_item_un;
     struct program_item_list_struct * program_item_list_un;
+    struct def_method_stmt_list_struct * def_method_list_un;
+    struct def_method_stmt_struct * def_method_un;
 
-#line 181 "Grammar.tab.h"
+#line 183 "Grammar.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

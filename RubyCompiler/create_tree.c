@@ -229,15 +229,10 @@ struct expr_struct* create_array_struct(struct expr_list_struct* items) {
     return result;
 }
 
-struct program_item_struct* create_def_method_program_item(char* name, struct method_param_list* params, struct stmt_list_struct* body) {
-    struct def_method_stmt_struct* method_def_s = (struct def_method_stmt_struct*)malloc(sizeof(struct def_method_stmt_struct));
-    method_def_s->name = name;
-    method_def_s->params = params;
-    method_def_s->body = body;
-
+struct program_item_struct* create_def_method_program_item(struct def_method_stmt_struct* method) {
     struct program_item_struct* result = (struct program_item_struct*)malloc(sizeof(struct program_item_struct));
     result->type = def_method_t;
-    result->def_method_f = method_def_s;
+    result->def_method_f = method;
     return result;
 }
 
@@ -248,7 +243,7 @@ struct program_item_struct* create_stmt_program_item(struct stmt_struct* stmt) {
     return result;
 }
 
-struct program_item_struct* create_class_declaration_program_item(char* name, char * parent, struct program_item_list_struct* body) {
+struct program_item_struct* create_class_declaration_program_item(char* name, char * parent, struct def_method_stmt_list_struct* body) {
     struct program_item_struct* result = (struct program_item_struct*)malloc(sizeof(struct program_item_struct));
     struct class_declaration_struct* class_decl = (struct class_declaration_struct*)malloc(sizeof(struct class_declaration_struct));
     
@@ -275,4 +270,27 @@ struct program_item_list_struct* add_to_program_item_list(struct program_item_li
     list->last = val;
     val->next = 0;
     return list;
+}
+
+struct def_method_stmt_list_struct* create_def_method_list(struct def_method_stmt_struct* val) {
+    struct def_method_stmt_list_struct* result = (struct def_method_stmt_list_struct*)malloc(sizeof(struct def_method_stmt_list_struct));
+    result->first = val;
+    result->last = val;
+    val->next = 0;
+    return result;
+}
+
+struct def_method_stmt_list_struct* add_to_def_method_list(struct def_method_stmt_list_struct* list, struct def_method_stmt_struct* val) {
+    list->last->next = val;
+    list->last = val;
+    val->next = 0;
+    return list;
+}
+
+struct def_method_stmt_struct* create_def_method_struct(char* name, struct method_param_list* params, struct stmt_list_struct* body) {
+    struct def_method_stmt_struct* method_def_s = (struct def_method_stmt_struct*)malloc(sizeof(struct def_method_stmt_struct));
+    method_def_s->name = name;
+    method_def_s->params = params;
+    method_def_s->body = body;
+    return method_def_s;
 }

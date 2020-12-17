@@ -86,7 +86,7 @@ enum program_item_type {
 struct class_declaration_struct {
 	char* name;
 	char* parent;
-	struct program_item_list_struct* body;
+	struct def_method_stmt_list_struct* body;
 };
 
 struct program_item_struct {
@@ -171,6 +171,12 @@ struct def_method_stmt_struct {
 	char* name;
 	struct method_param_list* params;
 	struct stmt_list_struct* body;
+	struct def_method_stmt_struct* next;
+};
+
+struct def_method_stmt_list_struct {
+	struct def_method_stmt_struct* first;
+	struct def_method_stmt_struct* last;
 };
 
 struct method_param_list {
