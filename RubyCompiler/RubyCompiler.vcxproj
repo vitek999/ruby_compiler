@@ -162,6 +162,7 @@
     </Bison>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Constant.h" />
     <ClInclude Include="create_tree.h" />
     <ClInclude Include="dot.h" />
     <ClInclude Include="Grammar.tab.h" />
