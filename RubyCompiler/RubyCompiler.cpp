@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "tree_nodes.h"
+#include "semantic.h"
 
 extern "C" FILE * yyin;
 extern "C" int yyparse();
@@ -13,6 +14,7 @@ int main(int argc, char** argv) {
     FILE* tree = fopen("tree.dot", "w");
 
     yyparse();
+    transformTree(root);
     PrintProgram(root, tree);
 
     run_dot("../dot/dot.exe", "../RubyCompiler/tree.dot");

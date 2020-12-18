@@ -50,6 +50,7 @@ enum expr_type {
 	method_call,
 	array,
 	member_access,
+	member_access_and_assign,
 	field_call,
 	object_method_call,
 	self_field_call,
@@ -65,6 +66,7 @@ struct expr_struct {
 	struct expr_struct * left;
 	struct expr_struct * right;
 	struct expr_struct * next;
+	struct expr_struct* index;
 };
 
 enum stmt_type {
@@ -92,7 +94,7 @@ struct class_declaration_struct {
 struct program_item_struct {
 	enum program_item_type type;
 	struct def_method_stmt_struct* def_method_f;
-	struct stmt_stuct * stmt_f;
+	struct stmt_struct * stmt_f;
 	struct class_declaration_struct* class_declaration_f;
 	struct program_item_struct* next;
 };

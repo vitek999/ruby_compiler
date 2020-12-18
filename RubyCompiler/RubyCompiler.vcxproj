@@ -153,6 +153,7 @@
     <ClCompile Include="lexer.flex.c" />
     <ClCompile Include="print_tree.c" />
     <ClCompile Include="RubyCompiler.cpp" />
+    <ClCompile Include="semantic.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Bison Include="Grammar.y">
@@ -167,6 +168,7 @@
     <ClInclude Include="dot.h" />
     <ClInclude Include="Grammar.tab.h" />
     <ClInclude Include="print_tree.h" />
+    <ClInclude Include="semantic.h" />
     <ClInclude Include="tree_nodes.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

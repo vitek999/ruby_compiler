@@ -578,6 +578,15 @@ void PrintExpr(struct expr_struct* expr, FILE* file) {
 		PrintExpr(expr->right, file);
 		fprintf(file, "Id%p->Id%p [label = \"method\"]\n", expr, expr->right);
 		break;
+	case member_access_and_assign:
+		fprintf(file, "Id%p [label=\"[]=\"]\n", expr);
+		PrintExpr(expr->left, file);
+		fprintf(file, "Id%p->Id%p [label = \"array\"]\n", expr, expr->left);
+		PrintExpr(expr->index, file);
+		fprintf(file, "Id%p->Id%p [label = \"index\"]\n", expr, expr->index);
+		PrintExpr(expr->right, file);
+		fprintf(file, "Id%p->Id%p [label = \"val\"]\n", expr, expr->right);
+		break;
 	default:
 		fprintf(file, "Id%p [label=\"expr\"]\n", expr);
 		break;
