@@ -15,22 +15,38 @@ struct Field {
 struct Method {
 	bool isStatic;
 	std::string name;
-	std::map<std::string, Field> local_variables;
-	stmt_struct* body;
+	std::vector<std::string> local_variables;
+	stmt_list_struct* body;
 	int number;
 };
+
+long long ID = 0;
 
 class Clazz {
 public:
 	int number;
 	int parent;
 
-	std::map<int, Constant> constants;
+	std::string name;
+
+	std::map<Constant, int> constants;
 	std::map<std::string, Method> methods;
 	std::map<std::string, Field> fields;
+
+	int pushConstant(const Constant& c) {
+		// TODO: Если константа есть, то вернуть ее.
+		if (constants[c] != NULL) {
+			++ID;
+			constants[c] = ID;
+			return ID;
+		}
+		return constants[c];
+	}
+
 };
 
 void fillTable(program_struct* program);
+void fillTable(Clazz* clazz, def_method_stmt_struct * method);
 
 void transformTree(program_struct* program);
 void transform(expr_struct* expr);

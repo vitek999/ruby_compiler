@@ -1,5 +1,74 @@
 #include "semantic.h"
 
+void fillTable(program_struct* program) {
+
+}
+
+void fillTable(Clazz* clazz, def_method_stmt_struct* method) {
+	Method * m = new Method();
+	m->name = method->name;
+	m->body = method->body;
+	
+	if (true) { // TODO: is not static (возможно им€ класса не main....)
+		m->local_variables.push_back("this");
+	}
+	
+	int params_counter = 0;
+	if (method->params != 0) {
+		method_param_struct* c = method->params->first;
+		while (c != 0) {
+			params_counter++;
+			m->local_variables.push_back(c->name);
+			// TODO: дефолтные значени€.
+			c = c->next;
+		}
+	}
+	
+	int name_id = clazz->pushConstant(Constant::Utf8(method->name));
+	int descriptor_id = clazz->pushConstant(Constant::Utf8(method_descriptor(params_counter)));
+
+	int name_and_type_id = clazz->pushConstant(Constant::NameAndType(name_id, descriptor_id));
+	int class_name_id = clazz->pushConstant(Constant::Utf8(clazz->name));
+	int class_id = clazz->pushConstant(Constant::Class(class_name_id));
+	int method_ref_id = clazz->pushConstant(Constant::MethodRef(class_id, name_and_type_id));
+	
+	m->number = method_ref_id; // TODO: ƒобавить адекватный номер
+	
+							   
+	// TODO: пройтись по телу (добавить локальные перменные в method->local_variables и пол€ класса в класс). 
+}
+
+std::string method_descriptor(int size) {
+	std::string str = "(";
+	for (int i = 0; i < size; ++i) {
+		str += "L__BASE__;";
+	}
+	str += ")L__BASE__;";
+	return str;
+}
+
+bool operator==(const Constant& l, const Constant& r) {
+	if (l.type != r.type) return false;
+	switch (l.type)
+	{
+	case Constant::Type::Utf8:
+		return l.sVal == r.sVal;
+	case Constant::Type::Integer:
+		return l.iVal == r.iVal;
+	case Constant::Type::Float:
+		return l.fVal == r.fVal;
+	case Constant::Type::String:
+	case Constant::Type::Class:
+		return l.utf8_id == r.utf8_id;
+	case Constant::Type::NameAndType:
+		return l.name_id == r.name_id && l.type_id == r.type_id;
+	case Constant::Type::Methodref:
+	case Constant::Type::Fieldref:
+		return l.name_and_type_id == r.name_and_type_id && l.class_id == r.class_id;
+	}
+	return false;
+}
+
 void transformTree(program_struct* program) {
 	if (program->items != 0) {
 		program_item_struct* c = program->items->first;

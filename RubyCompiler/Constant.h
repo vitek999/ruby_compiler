@@ -86,4 +86,6 @@ struct Constant
 		c.type_id = descriptor_utf8_id;
 		return c;
 	}
-};
+
+	friend bool operator==(const Constant& l, const Constant& r);
+};	
