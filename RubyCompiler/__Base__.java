@@ -188,6 +188,14 @@ public class __Base__ {
         throw new UnsupportedOperationException("eql isn't support operation for types: " + this.__type + " and: " + o.__type);
     }
 
+    public __Base__ __not_eql__(__Base__ o) {
+        try {
+            return new __Base__(__eql__(o).__bVal);
+        } catch(UnsupportedOperationException e) {
+            throw new UnsupportedOperationException("not_eql isn't support operation for types: " + this.__type + " and: " + o.__type);
+        }
+    }
+
     public __Base__ __les__(__Base__ o) {
         if (this.__type == INTEGER && o.__type == INTEGER) {
             return new __Base__(this.__iVal < o.__iVal);
