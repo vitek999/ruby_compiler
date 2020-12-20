@@ -32,6 +32,7 @@ void fillTable(program_struct* program) {
 
 	clazzesList[clazz->name] = clazz;
 	//TODO: Deafult constructor...
+	clazz->pushConstant(Constant::Utf8("<init>"));
 }
 
 void fillTable(class_declaration_struct* class_decl) {
@@ -61,6 +62,7 @@ void fillTable(class_declaration_struct* class_decl) {
 
 	clazzesList[clazz->name] = clazz;
 	//TODO: Deafult constructor...
+	clazz->pushConstant(Constant::Utf8("<init>"));
 }
 
 void fillTable(Clazz* clazz, def_method_stmt_struct* method) {
