@@ -80,6 +80,8 @@ private:
 inline std::map<std::string, Clazz*> clazzesList;
 
 std::string method_descriptor(int size);
+bool existsId(Clazz* clazz, Method* method, expr_struct* expr);
+bool existsIds(Clazz* clazz, Method* method, expr_list_struct* exprList);
 
 void fillTable(program_struct* program);
 void fillTable(Clazz* clazz, def_method_stmt_struct * method);

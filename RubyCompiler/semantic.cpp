@@ -110,22 +110,27 @@ void fillTable(Clazz* clazz, Method* method, stmt_struct* stmt) {
 		break;
 	case for_stmt_t:
 		method->local_variables.push_back(stmt->for_stmt_f->iterable_var);
+		existsId(clazz, method, stmt->for_stmt_f->condition);
 		fillTable(clazz, method, stmt->for_stmt_f->condition);
 		fillTable(clazz, method, stmt->for_stmt_f->body);
 		break;
 	case while_stmt_t:
+		existsId(clazz, method, stmt->while_stmt_f->condition);
 		fillTable(clazz, method, stmt->while_stmt_f->condition);
 		fillTable(clazz, method, stmt->while_stmt_f->body);
 		break;
 	case until_stmt_t:
+		existsId(clazz, method, stmt->until_stmt_f->condition);
 		fillTable(clazz, method, stmt->until_stmt_f->condition);
 		fillTable(clazz, method, stmt->until_stmt_f->body);
 		break;
 	case if_stmt_t:
 		fillTable(clazz, method, stmt->if_stmt_f->if_branch);
+		existsId(clazz, method, stmt->if_stmt_f->if_branch->condition);
 		if (stmt->if_stmt_f->elsif_branches != 0) {
 			if_part_stmt_struct* c = stmt->if_stmt_f->elsif_branches->first;
 			while (c != 0) {
+				existsId(clazz, method, c->condition);
 				fillTable(clazz, method, c);
 				c = c->next;
 			}
@@ -138,6 +143,7 @@ void fillTable(Clazz* clazz, Method* method, stmt_struct* stmt) {
 		fillTable(clazz, method, stmt->block_stmt_f->list);
 		break;
 	case return_stmt_t:
+		existsId(clazz, method, stmt->expr_f);
 		fillTable(clazz, method, stmt->expr_f);
 		break;
 	default:
@@ -172,6 +178,74 @@ void fillTable(Clazz* clazz, Method* method, expr_struct* expr) {
 	case instance_var:
 		clazz->addField(expr->str_val, "L__BASE__;");
 		break;
+	case assign:
+	case mod_assign:
+	case div_assign:
+	case sub_assign:
+	case add_assign:
+	case mul_assign:
+	case pow_assign:
+		existsId(clazz, method, expr->right);
+		break;
+	case logical_not:
+	case bin_ones_complement:
+	case unary_plus:
+	case unary_minus:
+	case defined:
+	case not_keyword:
+		existsId(clazz, method, expr->left);
+		break;
+	case pow_:
+	case mul:
+	case div_:
+	case mod:
+	case plus:
+	case minus:
+	case bin_left_shift:
+	case bin_right_shift:
+	case bin_and_op:
+	case bin_or_op:
+	case bin_xor_op:
+	case greater:
+	case less:
+	case greater_eql:
+	case comb_comprassion:
+	case equal:
+	case case_equal:
+	case not_equal:
+	case logical_and:
+	case logical_or:
+	case inclusive_range:
+	case exclusive_range:
+	case and_keyword:
+	case or_keyword:
+	case member_access:
+	case field_call:
+		existsId(clazz, method, expr->left);
+		existsId(clazz, method, expr->right);
+		break;
+	case method_call:
+		existsId(clazz, method, expr->left);
+		if (expr->list != 0) {
+			existsIds(clazz, method, expr->list);
+		}
+		break;
+	case array:
+		if (expr->list != 0) {
+			existsIds(clazz, method, expr->list);
+		}
+		break;
+	case member_access_and_assign:
+		existsId(clazz, method, expr->left);
+		existsId(clazz, method, expr->right);
+		existsId(clazz, method, expr->index);
+		break;
+	case object_method_call:
+		existsId(clazz, method, expr->left);
+		if (expr->list != 0) {
+			existsIds(clazz, method, expr->list);
+		}
+		break;
 	default:
 		break;
 	}
@@ -179,6 +253,31 @@ void fillTable(Clazz* clazz, Method* method, expr_struct* expr) {
 	if (expr->left != 0) fillTable(clazz, method, expr->left);
 	if (expr->right != 0) fillTable(clazz, method, expr->right);
 	if (expr->index != 0) fillTable(clazz, method, expr->index);
+}
+
+bool existsId(Clazz* clazz, Method* method, expr_struct* expr) {
+	if (expr != 0 && expr->type == var_or_method) {
+		if (std::find(method->local_variables.begin(), method->local_variables.end(), expr->str_val) == method->local_variables.end()) {
+			printf("SEMANTIC ERROR: local variable %s is not defined\n", expr->str_val);
+			return false;
+		}
+	}
+	if (expr != 0 && expr->type == instance_var) {
+		if (clazz->fields.find(expr->str_val) == clazz->fields.end()) {
+			printf("SEMANTIC ERROR: class field %s is not defined\n", expr->str_val);
+			return false;
+		}
+	}
+	return true;
+}
+
+bool existsIds(Clazz* clazz, Method* method, expr_list_struct* exprList) {
+	expr_struct* c = exprList->first;
+	while (c != 0) {
+		if (!existsId(clazz, method, c)) return false;
+		c = c->next;
+	}
+	return true;
 }
 
 std::string method_descriptor(int size) {
