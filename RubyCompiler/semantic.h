@@ -20,8 +20,6 @@ struct Method {
 	int number;
 };
 
-long long ID = 0;
-
 class Clazz {
 public:
 	int number;
@@ -30,20 +28,26 @@ public:
 	std::string name;
 
 	std::map<Constant, int> constants;
-	std::map<std::string, Method> methods;
+	std::map<std::string, Method *> methods;
 	std::map<std::string, Field> fields;
 
 	int pushConstant(const Constant& c) {
 		// TODO: Если константа есть, то вернуть ее.
 		if (constants[c] != NULL) {
-			++ID;
-			constants[c] = ID;
-			return ID;
+			++_ID;
+			constants[c] = _ID;
+			return _ID;
 		}
 		return constants[c];
 	}
 
+private:
+	long long _ID = 0;
 };
+
+inline std::map<std::string, Clazz*> clazzesList;
+
+std::string method_descriptor(int size);
 
 void fillTable(program_struct* program);
 void fillTable(Clazz* clazz, def_method_stmt_struct * method);
@@ -51,6 +55,7 @@ void fillTable(Clazz* clazz, Method * method, stmt_list_struct* body);
 void fillTable(Clazz* clazz, Method* method, stmt_struct* stmt);
 void fillTable(Clazz* clazz, Method* method, expr_struct* expr);
 void fillTable(Clazz* clazz, Method* method, if_part_stmt_struct * if_branch_stmt);
+void fillTable(class_declaration_struct* class_decl);
 
 void transformTree(program_struct* program);
 void transform(expr_struct* expr);

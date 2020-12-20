@@ -1,7 +1,57 @@
 #include "semantic.h"
 
 void fillTable(program_struct* program) {
+	Clazz * clazz = new Clazz();
+	clazz->name = "__PROGRAM__";
+	clazz->pushConstant(Constant::Utf8("Code"));
+	clazz->pushConstant(Constant::Class(clazz->pushConstant(Constant::Utf8(clazz->name))));
 
+	Method* mainMethod = new Method();
+	mainMethod->name = "main";
+	clazz->methods[mainMethod->name] = mainMethod;
+
+	if (program->items != 0) {
+		program_item_struct* c = program->items->first;
+		while (c != 0) {
+			switch (c->type) {
+			case def_method_t:
+				fillTable(clazz, c->def_method_f);
+				break;
+			case pi_stmt_t:
+				fillTable(clazz, mainMethod, c->stmt_f);
+				break;
+			case class_declaration_t:
+				fillTable(c->class_declaration_f);
+				break;
+			default:
+				break;
+			}
+			c = c->next;	
+		}
+	}
+
+	clazzesList[clazz->name] = clazz;
+	//TODO: Deafult constructor...
+}
+
+void fillTable(class_declaration_struct* class_decl) {
+	Clazz* clazz = new Clazz(); 
+	clazz->name = class_decl->name;
+	clazz->pushConstant(Constant::Utf8("Code"));
+	clazz->pushConstant(Constant::Class(clazz->pushConstant(Constant::Utf8(clazz->name))));
+
+	// TODO: Parent;
+
+	if (class_decl->body != 0) {
+		def_method_stmt_struct* c = class_decl->body->first;
+		while (c != 0) {
+			fillTable(clazz, c);
+			c = c->next;
+		}
+	}
+
+	clazzesList[clazz->name] = clazz;
+	//TODO: Deafult constructor...
 }
 
 void fillTable(Clazz* clazz, def_method_stmt_struct* method) {
@@ -36,6 +86,9 @@ void fillTable(Clazz* clazz, def_method_stmt_struct* method) {
 	
 	// TODO: пройтись по телу (добавить локальные перменные в method->local_variables и поля класса в класс). 
 	fillTable(clazz, m, method->body);
+
+	// Добавить методв в таблицу методов класса...
+	clazz->methods[m->name] = m;
 }
 
 void fillTable(Clazz* clazz, Method* method, stmt_list_struct* body) {
@@ -75,7 +128,9 @@ void fillTable(Clazz* clazz, Method* method, stmt_struct* stmt) {
 				c = c->next;
 			}
 		}
-		fillTable(clazz, method, stmt->if_stmt_f->else_branch);
+		if (stmt->if_stmt_f->else_branch != 0) {
+			fillTable(clazz, method, stmt->if_stmt_f->else_branch);
+		}
 		break;
 	case block_stmt_t:
 		fillTable(clazz, method, stmt->block_stmt_f->list);
@@ -104,8 +159,7 @@ void fillTable(Clazz* clazz, Method* method, expr_struct* expr) {
 		clazz->pushConstant(Constant::Float(expr->float_val));
 		break;
 	case String:
-		int utf8_id = clazz->pushConstant(Constant::Utf8(expr->str_val));
-		clazz->pushConstant(Constant::String(utf8_id));
+		clazz->pushConstant(Constant::String(clazz->pushConstant(Constant::Utf8(expr->str_val))));
 		break;
 	default:
 		break;
@@ -119,28 +173,6 @@ std::string method_descriptor(int size) {
 	}
 	str += ")L__BASE__;";
 	return str;
-}
-
-bool operator==(const Constant& l, const Constant& r) {
-	if (l.type != r.type) return false;
-	switch (l.type)
-	{
-	case Constant::Type::Utf8:
-		return l.sVal == r.sVal;
-	case Constant::Type::Integer:
-		return l.iVal == r.iVal;
-	case Constant::Type::Float:
-		return l.fVal == r.fVal;
-	case Constant::Type::String:
-	case Constant::Type::Class:
-		return l.utf8_id == r.utf8_id;
-	case Constant::Type::NameAndType:
-		return l.name_id == r.name_id && l.type_id == r.type_id;
-	case Constant::Type::Methodref:
-	case Constant::Type::Fieldref:
-		return l.name_and_type_id == r.name_and_type_id && l.class_id == r.class_id;
-	}
-	return false;
 }
 
 void transformTree(program_struct* program) {

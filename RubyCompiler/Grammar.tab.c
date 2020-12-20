@@ -2004,7 +2004,7 @@ yyreduce:
 
   case 22: /* expr: expr ARITHMETIC_DIV_OP expr  */
 #line 223 "Grammar.y"
-                                  {  (yyval.expr_un)=create_op_expr(div, (yyvsp[-2].expr_un), (yyvsp[0].expr_un)); /* puts("div"); */ }
+                                  {  (yyval.expr_un)=create_op_expr(div_, (yyvsp[-2].expr_un), (yyvsp[0].expr_un)); /* puts("div"); */ }
 #line 2009 "Grammar.tab.c"
     break;
 

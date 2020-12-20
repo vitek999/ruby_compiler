@@ -11,7 +11,7 @@ enum expr_type {
 	pow_,
 	unary_minus,
 	mul,
-	div,
+	div_,
 	mod,
 	plus,
 	minus,

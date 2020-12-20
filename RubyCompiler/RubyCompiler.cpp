@@ -16,6 +16,7 @@ int main(int argc, char** argv) {
     yyparse();
     transformTree(root);
     PrintProgram(root, tree);
+    fillTable(root);
 
     run_dot("../dot/dot.exe", "../RubyCompiler/tree.dot");
     return 0;
