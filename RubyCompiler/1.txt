@@ -1,4 +1,5 @@
 a[1] = a[2] = 3
+
 class A < B
     def printOddNumbers(arr)
         @var = 3

@@ -101,10 +101,10 @@ struct Constant
 		case Constant::Type::Class:
 			return l.utf8_id == r.utf8_id;
 		case Constant::Type::NameAndType:
-			return l.name_id == r.name_id && l.type_id == r.type_id;
+			return (l.name_id == r.name_id) && (l.type_id == r.type_id);
 		case Constant::Type::Methodref:
 		case Constant::Type::Fieldref:
-			return l.name_and_type_id == r.name_and_type_id && l.class_id == r.class_id;
+			return (l.name_and_type_id == r.name_and_type_id) && (l.class_id == r.class_id);
 		}
 		return false;
 	}
@@ -125,6 +125,8 @@ struct Constant
 				return l.utf8_id < r.utf8_id;
 			case Constant::Type::Class:
 				return l.class_name_id < r.class_name_id;
+			case Constant::Type::NameAndType:
+				return l.name_id < r.name_id || ((l.name_id == r.name_id) && (l.type_id < r.type_id));
 			case Constant::Type::Fieldref:
 			case Constant::Type::Methodref:
 				return l.class_id < r.class_id || ((l.class_id == r.class_id) && (l.name_and_type_id < r.name_and_type_id));

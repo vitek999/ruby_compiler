@@ -33,12 +33,13 @@ public:
 
 	int pushConstant(const Constant& c) {
 		// TODO: Если константа есть, то вернуть ее.
-		if (constants[c] != NULL) {
+		auto iter = constants.find(c);
+		if (iter == constants.end()) {
 			++_ID;
 			constants[c] = _ID;
 			return _ID;
 		}
-		return constants[c];
+		return iter->second;
 	}
 
 private:
