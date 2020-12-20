@@ -25,7 +25,7 @@ struct Method {
 class Clazz {
 public:
 	int number;
-	int parent;
+	Clazz * parent;
 
 	std::string name;
 

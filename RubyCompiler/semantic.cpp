@@ -41,6 +41,15 @@ void fillTable(class_declaration_struct* class_decl) {
 	clazz->pushConstant(Constant::Class(clazz->pushConstant(Constant::Utf8(clazz->name))));
 
 	// TODO: Parent;
+	if (class_decl->parent != 0) {
+		if (clazzesList.find(class_decl->parent) != clazzesList.end()) {
+			clazz->parent = clazzesList[class_decl->parent];
+		}
+		else {
+			// ERROR: class not found;
+			printf("SEMANTIC ERROR: parent class %s for class %s not found\n", class_decl->parent, class_decl->name);
+		}
+	}
 
 	if (class_decl->body != 0) {
 		def_method_stmt_struct* c = class_decl->body->first;
