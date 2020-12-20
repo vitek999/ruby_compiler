@@ -34,8 +34,82 @@ void fillTable(Clazz* clazz, def_method_stmt_struct* method) {
 	
 	m->number = method_ref_id; // TODO: Добавить адекватный номер
 	
-							   
 	// TODO: пройтись по телу (добавить локальные перменные в method->local_variables и поля класса в класс). 
+	fillTable(clazz, m, method->body);
+}
+
+void fillTable(Clazz* clazz, Method* method, stmt_list_struct* body) {
+	if (body != 0) {
+		stmt_struct* c = body->first;
+		while (c != 0) {
+			fillTable(clazz, method, c);
+			c = c->next;
+		}
+	}
+}
+
+void fillTable(Clazz* clazz, Method* method, stmt_struct* stmt) {
+	switch (stmt->type) {
+	case expr_stmt_t:
+		fillTable(clazz, method, stmt->expr_f);
+		break;
+	case for_stmt_t:
+		method->local_variables.push_back(stmt->for_stmt_f->iterable_var);
+		fillTable(clazz, method, stmt->for_stmt_f->condition);
+		fillTable(clazz, method, stmt->for_stmt_f->body);
+		break;
+	case while_stmt_t:
+		fillTable(clazz, method, stmt->while_stmt_f->condition);
+		fillTable(clazz, method, stmt->while_stmt_f->body);
+		break;
+	case until_stmt_t:
+		fillTable(clazz, method, stmt->until_stmt_f->condition);
+		fillTable(clazz, method, stmt->until_stmt_f->body);
+		break;
+	case if_stmt_t:
+		fillTable(clazz, method, stmt->if_stmt_f->if_branch);
+		if (stmt->if_stmt_f->elsif_branches != 0) {
+			if_part_stmt_struct* c = stmt->if_stmt_f->elsif_branches->first;
+			while (c != 0) {
+				fillTable(clazz, method, c);
+				c = c->next;
+			}
+		}
+		fillTable(clazz, method, stmt->if_stmt_f->else_branch);
+		break;
+	case block_stmt_t:
+		fillTable(clazz, method, stmt->block_stmt_f->list);
+		break;
+	case return_stmt_t:
+		fillTable(clazz, method, stmt->expr_f);
+		break;
+	default:
+		break;
+	}
+}
+
+void fillTable(Clazz* clazz, Method* method, if_part_stmt_struct* if_branch_stmt) {
+	fillTable(clazz, method, if_branch_stmt->condition);
+	fillTable(clazz, method, if_branch_stmt->body);
+}
+
+void fillTable(Clazz* clazz, Method* method, expr_struct* expr) {
+	switch (expr->type)
+	{
+	case Integer: 
+	case Boolean:
+		clazz->pushConstant(Constant::Integer(expr->int_val));
+		break;
+	case Float:
+		clazz->pushConstant(Constant::Float(expr->float_val));
+		break;
+	case String:
+		int utf8_id = clazz->pushConstant(Constant::Utf8(expr->str_val));
+		clazz->pushConstant(Constant::String(utf8_id));
+		break;
+	default:
+		break;
+	}
 }
 
 std::string method_descriptor(int size) {

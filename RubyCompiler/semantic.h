@@ -47,6 +47,10 @@ public:
 
 void fillTable(program_struct* program);
 void fillTable(Clazz* clazz, def_method_stmt_struct * method);
+void fillTable(Clazz* clazz, Method * method, stmt_list_struct* body);
+void fillTable(Clazz* clazz, Method* method, stmt_struct* stmt);
+void fillTable(Clazz* clazz, Method* method, expr_struct* expr);
+void fillTable(Clazz* clazz, Method* method, if_part_stmt_struct * if_branch_stmt);
 
 void transformTree(program_struct* program);
 void transform(expr_struct* expr);
