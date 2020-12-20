@@ -59,7 +59,7 @@ void fillTable(Clazz* clazz, def_method_stmt_struct* method) {
 	m->name = method->name;
 	m->body = method->body;
 	
-	if (true) { // TODO: is not static (возможно имя класса не main....)
+	if (clazz->name != "__PROGRAM__") { // not static...
 		m->local_variables.push_back("this");
 	}
 	
@@ -74,17 +74,8 @@ void fillTable(Clazz* clazz, def_method_stmt_struct* method) {
 		}
 	}
 	
-	int name_id = clazz->pushConstant(Constant::Utf8(method->name));
-	int descriptor_id = clazz->pushConstant(Constant::Utf8(method_descriptor(params_counter)));
-
-	int name_and_type_id = clazz->pushConstant(Constant::NameAndType(name_id, descriptor_id));
-	int class_name_id = clazz->pushConstant(Constant::Utf8(clazz->name));
-	int class_id = clazz->pushConstant(Constant::Class(class_name_id));
-	int method_ref_id = clazz->pushConstant(Constant::MethodRef(class_id, name_and_type_id));
+	m->number = clazz->pushOrFindMethodRef(m->name, params_counter);
 	
-	m->number = method_ref_id; // TODO: Добавить адекватный номер
-	
-	// TODO: пройтись по телу (добавить локальные перменные в method->local_variables и поля класса в класс). 
 	fillTable(clazz, m, method->body);
 
 	// Добавить методв в таблицу методов класса...
@@ -149,9 +140,10 @@ void fillTable(Clazz* clazz, Method* method, if_part_stmt_struct* if_branch_stmt
 }
 
 void fillTable(Clazz* clazz, Method* method, expr_struct* expr) {
+
 	switch (expr->type)
 	{
-	case Integer: 
+	case Integer:
 	case Boolean:
 		clazz->pushConstant(Constant::Integer(expr->int_val));
 		break;
@@ -161,9 +153,21 @@ void fillTable(Clazz* clazz, Method* method, expr_struct* expr) {
 	case String:
 		clazz->pushConstant(Constant::String(clazz->pushConstant(Constant::Utf8(expr->str_val))));
 		break;
+	case var_or_method:
+		if (std::find(method->local_variables.begin(), method->local_variables.end(), expr->str_val) == method->local_variables.end()) {
+			method->local_variables.push_back(expr->str_val);
+		}
+		break;
+	case instance_var:
+		clazz->addField(expr->str_val, "L__BASE__;");
+		break;
 	default:
 		break;
 	}
+
+	if (expr->left != 0) fillTable(clazz, method, expr->left);
+	if (expr->right != 0) fillTable(clazz, method, expr->right);
+	if (expr->index != 0) fillTable(clazz, method, expr->index);
 }
 
 std::string method_descriptor(int size) {

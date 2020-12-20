@@ -13,7 +13,9 @@ class A < B
 	    end
     end
     def some()
-        a = 2
+        @var = 2
+        @b = 3
+        @b = 4
     end
 end
 

@@ -6,6 +6,8 @@
 #include <vector>
 #include <map>
 
+std::string method_descriptor(int size);
+
 struct Field {
 	bool isStatic;
 	std::string name;
@@ -29,7 +31,7 @@ public:
 
 	std::map<Constant, int> constants;
 	std::map<std::string, Method *> methods;
-	std::map<std::string, Field> fields;
+	std::map<std::string, Field *> fields;
 
 	int pushConstant(const Constant& c) {
 		// TODO: Если константа есть, то вернуть ее.
@@ -40,6 +42,35 @@ public:
 			return _ID;
 		}
 		return iter->second;
+	}
+
+	void addField(const std::string& fieldName, const std::string& type) {
+		int id = pushOrFindFieldRef(fieldName, type);
+		if (fields.find(fieldName) == fields.end()) {
+			Field* f = new Field();
+			f->name = fieldName;
+			f->number = id;
+			fields[fieldName] = f;
+		}
+	}
+
+	int pushOrFindFieldRef(const std::string& fieldName, const std::string& type) {
+		int name_id = pushConstant(Constant::Utf8(fieldName));
+		int type_id = pushConstant(Constant::Utf8(type));
+		int name_and_type_id = pushConstant(Constant::NameAndType(name_id, type_id));
+		int class_id = pushConstant(Constant::Class(pushConstant(Constant::Utf8(this->name))));
+		int fileldref_id = pushConstant(Constant::FieldRef(class_id, name_and_type_id));	
+		return fileldref_id;
+	}
+
+	int pushOrFindMethodRef(const std::string& methodName, const int paramsCount) {
+		int name_id = pushConstant(Constant::Utf8(methodName));
+		int descriptor_id = pushConstant(Constant::Utf8(method_descriptor(paramsCount)));
+
+		int name_and_type_id = pushConstant(Constant::NameAndType(name_id, descriptor_id));
+		int class_name_id = pushConstant(Constant::Utf8(this->name));
+		int class_id = pushConstant(Constant::Class(class_name_id));
+		return pushConstant(Constant::MethodRef(class_id, name_and_type_id));
 	}
 
 private:
