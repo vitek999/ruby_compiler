@@ -3,6 +3,7 @@
 void fillTable(program_struct* program) {
 	Clazz * clazz = new Clazz();
 	clazz->name = "__PROGRAM__";
+	clazzesList[clazz->name] = clazz;
 	clazz->pushConstant(Constant::Utf8("Code"));
 	clazz->pushConstant(Constant::Class(clazz->pushConstant(Constant::Utf8(clazz->name))));
 
@@ -29,8 +30,6 @@ void fillTable(program_struct* program) {
 			c = c->next;	
 		}
 	}
-
-	clazzesList[clazz->name] = clazz;
 	//TODO: Deafult constructor...
 	clazz->pushConstant(Constant::Utf8("<init>"));
 }
@@ -38,6 +37,7 @@ void fillTable(program_struct* program) {
 void fillTable(class_declaration_struct* class_decl) {
 	Clazz* clazz = new Clazz(); 
 	clazz->name = class_decl->name;
+	clazzesList[clazz->name] = clazz;
 	clazz->pushConstant(Constant::Utf8("Code"));
 	clazz->pushConstant(Constant::Class(clazz->pushConstant(Constant::Utf8(clazz->name))));
 
@@ -60,7 +60,6 @@ void fillTable(class_declaration_struct* class_decl) {
 		}
 	}
 
-	clazzesList[clazz->name] = clazz;
 	//TODO: Deafult constructor...
 	clazz->pushConstant(Constant::Utf8("<init>"));
 }
@@ -256,8 +255,12 @@ void fillTable(Clazz* clazz, Method* method, expr_struct* expr) {
 }
 
 bool existsId(Clazz* clazz, Method* method, expr_struct* expr) {
-	if (expr != 0 && expr->type == var_or_method) {
-		if (std::find(method->local_variables.begin(), method->local_variables.end(), expr->str_val) == method->local_variables.end()) {
+	if (expr != 0 && expr->type == var_or_method) {	
+		bool inClazz = std::find(method->local_variables.begin(), method->local_variables.end(), expr->str_val) != method->local_variables.end();
+		std::vector<std::string> mainMethodLocalVars = clazzesList["__PROGRAM__"]->methods["main"]->local_variables;
+		bool inMainClazz = std::find(mainMethodLocalVars.begin(), mainMethodLocalVars.end(), expr->str_val) != mainMethodLocalVars.end();
+
+		if (!(inClazz || inMainClazz)) {
 			printf("SEMANTIC ERROR: local variable %s is not defined\n", expr->str_val);
 			return false;
 		}

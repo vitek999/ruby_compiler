@@ -1,1 +1,37 @@
-a = b
+a = 0
+k = 1
+j = "a"
+d = 10
+
+class A < B
+    def printOddNumbers(arr)
+        @var = 3
+        a = 2 + 3 / 4 * 10 - (a[0])
+      for i in 0..arr.size
+            if arr[i][j].field(1, 2)[0] % (2 + 1 % 3) != 0 then
+              print(arr[i])
+            else
+              print("*")
+            end
+      end
+    end
+    def some()
+        @var = 2
+        @b = 3
+        @b = 4
+    end
+end
+
+
+def free()
+    a = 2
+    if a == 0
+        s = 1
+    elsif a == 1
+        print(1)
+    elsif k == 2
+        b = @as
+    else 
+        c = d
+    end
+end
