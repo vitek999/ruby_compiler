@@ -63,9 +63,9 @@ public:
 		return fileldref_id;
 	}
 
-	int pushOrFindMethodRef(const std::string& methodName, const int paramsCount) {
+	int pushOrFindMethodRef(const std::string& methodName, const std::string& descriptor) {
 		int name_id = pushConstant(Constant::Utf8(methodName));
-		int descriptor_id = pushConstant(Constant::Utf8(method_descriptor(paramsCount)));
+		int descriptor_id = pushConstant(Constant::Utf8(descriptor));
 
 		int name_and_type_id = pushConstant(Constant::NameAndType(name_id, descriptor_id));
 		int class_name_id = pushConstant(Constant::Utf8(this->name));

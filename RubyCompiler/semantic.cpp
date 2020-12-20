@@ -84,7 +84,7 @@ void fillTable(Clazz* clazz, def_method_stmt_struct* method) {
 		}
 	}
 	
-	m->number = clazz->pushOrFindMethodRef(m->name, params_counter);
+	m->number = clazz->pushOrFindMethodRef(m->name, method_descriptor(params_counter));
 	
 	fillTable(clazz, m, method->body);
 
@@ -194,24 +194,70 @@ void fillTable(Clazz* clazz, Method* method, expr_struct* expr) {
 	case not_keyword:
 		existsId(clazz, method, expr->left);
 		break;
-	case pow_:
 	case mul:
+		clazz->pushOrFindMethodRef("__mul__", "(L__BASE__;)L__BASE__;");
+		existsId(clazz, method, expr->left);
+		existsId(clazz, method, expr->right);
+		break;
 	case div_:
-	case mod:
+		clazz->pushOrFindMethodRef("__div__", "(L__BASE__;)L__BASE__;");
+		existsId(clazz, method, expr->left);
+		existsId(clazz, method, expr->right);
+		break;
 	case plus:
+		clazz->pushOrFindMethodRef("__add__", "(L__BASE__;)L__BASE__;");
+		existsId(clazz, method, expr->left);
+		existsId(clazz, method, expr->right);
+		break;
 	case minus:
+		clazz->pushOrFindMethodRef("__sub__", "(L__BASE__;)L__BASE__;");
+		existsId(clazz, method, expr->left);
+		existsId(clazz, method, expr->right);
+		break;
+	case mod:
+		clazz->pushOrFindMethodRef("__mod__", "(L__BASE__;)L__BASE__;");
+		existsId(clazz, method, expr->left);
+		existsId(clazz, method, expr->right);
+		break;
+	case equal:
+		clazz->pushOrFindMethodRef("__eql__", "(L__BASE__;)L__BASE__;");
+		existsId(clazz, method, expr->left);
+		existsId(clazz, method, expr->right);
+		break;
+	case not_equal:
+		clazz->pushOrFindMethodRef("__not_eql__", "(L__BASE__;)L__BASE__;");
+		existsId(clazz, method, expr->left);
+		existsId(clazz, method, expr->right);
+		break;
+	case less:
+		clazz->pushOrFindMethodRef("__les__", "(L__BASE__;)L__BASE__;");
+		existsId(clazz, method, expr->left);
+		existsId(clazz, method, expr->right);
+		break;
+	case greater:
+		clazz->pushOrFindMethodRef("__greater__", "(L__BASE__;)L__BASE__;");
+		existsId(clazz, method, expr->left);
+		existsId(clazz, method, expr->right);
+		break;
+	case greater_eql:
+		clazz->pushOrFindMethodRef("__greater_or_eql__", "(L__BASE__;)L__BASE__;");
+		existsId(clazz, method, expr->left);
+		existsId(clazz, method, expr->right);
+		break;
+	case less_eql:
+		clazz->pushOrFindMethodRef("__les_or_eql__", "(L__BASE__;)L__BASE__;");
+		existsId(clazz, method, expr->left);
+		existsId(clazz, method, expr->right);
+		break;
+		break;
+	case pow_:
 	case bin_left_shift:
 	case bin_right_shift:
 	case bin_and_op:
 	case bin_or_op:
 	case bin_xor_op:
-	case greater:
-	case less:
-	case greater_eql:
 	case comb_comprassion:
-	case equal:
 	case case_equal:
-	case not_equal:
 	case logical_and:
 	case logical_or:
 	case inclusive_range:
