@@ -249,7 +249,6 @@ void fillTable(Clazz* clazz, Method* method, expr_struct* expr) {
 		existsId(clazz, method, expr->left);
 		existsId(clazz, method, expr->right);
 		break;
-		break;
 	case pow_:
 	case bin_left_shift:
 	case bin_right_shift:
