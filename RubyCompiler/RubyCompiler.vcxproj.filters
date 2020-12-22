@@ -41,6 +41,9 @@
     <ClCompile Include="semantic.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="generate.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Bison Include="Grammar.y">
@@ -67,6 +70,9 @@
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="semantic.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="generate.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
