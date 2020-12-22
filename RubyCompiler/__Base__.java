@@ -1,8 +1,5 @@
-package com.company;
-
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.stream.Collectors;
 
 public class __Base__ {
     private static final int INTEGER = 0;
@@ -340,10 +337,16 @@ public class __Base__ {
         if (this.__type == BOOLEAN)
             s += this.__bVal;
         if (this.__type == ARRAY) {
-            for (int i = 0; i < this.__aVal.size(); i++) {
-                s += this.__aVal.get(i).toString();
-            }
+            s += "[" + __aVal.stream().map(__Base__::toString).collect(Collectors.joining(", ")) + "]";
         }
         return s;
+    }
+
+    public static void print(__Base__ value) {
+        System.out.print(value.toString());
+    }
+
+    public static void println(__Base__ value) {
+        System.out.println(value.toString());
     }
 }
