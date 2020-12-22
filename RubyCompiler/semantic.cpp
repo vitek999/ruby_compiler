@@ -179,15 +179,19 @@ void fillTable(Clazz* clazz, Method* method, expr_struct* expr) {
 		expr->id = clazz->pushOrFindMethodRef("__BASE__", "<init>", "(Ljava/lang/String;)V");
 		break;
 	case var_or_method:
-		if (std::find(method->local_variables.begin(), method->local_variables.end(), expr->str_val) == method->local_variables.end()) {
-			method->local_variables.push_back(expr->str_val);
-			expr->local_var_num = method->local_variables.size() - 1;
+		if (contains(method->local_variables, expr->str_val)) {
+			expr->local_var_num = std::find(method->local_variables.begin(), method->local_variables.end(), expr->str_val) - method->local_variables.begin();
 		}
 		break;
 	case instance_var:
 		clazz->addField(expr->str_val, "L__BASE__;");
 		break;
 	case assign:
+		if (expr->left->type == var_or_method && std::find(method->local_variables.begin(), method->local_variables.end(), expr->left->str_val) == method->local_variables.end()) {
+			method->local_variables.push_back(expr->left->str_val);
+		}
+		existsId(clazz, method, expr->right);
+		break;
 	case mod_assign:
 	case div_assign:
 	case sub_assign:
@@ -274,6 +278,10 @@ void fillTable(Clazz* clazz, Method* method, expr_struct* expr) {
 		existsId(clazz, method, expr->left);
 		existsId(clazz, method, expr->right);
 		break;
+	case member_access:
+		existsId(clazz, method, expr->left);
+		existsId(clazz, method, expr->index);
+		break;
 	case bin_left_shift:
 	case bin_right_shift:
 	case bin_and_op:
@@ -285,7 +293,6 @@ void fillTable(Clazz* clazz, Method* method, expr_struct* expr) {
 	case exclusive_range:
 	case and_keyword:
 	case or_keyword:
-	case member_access:
 	case field_call:
 		existsId(clazz, method, expr->left);
 		existsId(clazz, method, expr->right);
