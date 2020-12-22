@@ -1,14 +1,22 @@
+package com.company;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+
 public class __Base__ {
     private static final int INTEGER = 0;
     private static final int BOOLEAN = 1;
     private static final int FLOAT = 2;
     private static final int STRING = 3;
     private static final int NIL = 4;
+    private static final int ARRAY = 5;
 
     public int __iVal;
     public boolean __bVal;
     public float __fVal;
     public String __sVal;
+    public ArrayList<__Base__> __aVal;
 
     public int __type = -1;
 
@@ -34,6 +42,12 @@ public class __Base__ {
     public __Base__(String value) {
         this.__sVal = value;
         this.__type = STRING;
+    }
+
+    public __Base__(ArrayList<__Base__> value) {
+        this.__aVal = new ArrayList<>();
+        this.__aVal = value;
+        this.__type = ARRAY;
     }
 
     public __Base__ __add__(__Base__ o) {
@@ -108,6 +122,34 @@ public class __Base__ {
             if (val < 0) throw new IllegalArgumentException("Argument is zero");
             if (val == 0) return new __Base__("");
             return new __Base__(new String(new char[val]).replace("\0", this.__sVal));
+        }
+
+        if (this.__type == ARRAY && o.__type == INTEGER) {
+            if (o.__iVal < 0) throw new IllegalArgumentException("Argument is zero");
+            if (o.__iVal == 0) return new __Base__(new ArrayList<>());
+            int value = o.__iVal;
+            ArrayList<__Base__> arrayList = new ArrayList<>();
+            for (int i = 0; i < value; i++)
+                arrayList.addAll(this.__aVal);
+            return new __Base__(arrayList);
+        }
+
+        if (this.__type == ARRAY && o.__type == FLOAT) {
+            int val = (int) Math.floor(o.__fVal);
+            if (val < 0) throw new IllegalArgumentException("Argument is zero");
+            if (val == 0) return new __Base__(new ArrayList<>());
+            ArrayList<__Base__> arrayList = new ArrayList<>();
+            for (int i = 0; i < val; i++)
+                arrayList.addAll(this.__aVal);
+            return new __Base__(arrayList);
+        }
+
+        if (this.__type == ARRAY && o.__type == STRING) {
+            String str = this.__aVal.get(0).toString();
+            for (__Base__ base__ : this.__aVal) {
+                str += (new __Base__(o.__sVal)).toString() + base__.toString();
+            }
+            return new __Base__(str);
         }
 
         throw new UnsupportedOperationException("mul isn't support operation for types: " + this.__type + " and: " + o.__type);
@@ -249,5 +291,59 @@ public class __Base__ {
         if (this.__type == NIL) return new __Base__(true);
         if (this.__type == BOOLEAN) return new __Base__(!this.__bVal);
         return new __Base__(false);
+    }
+
+    public __Base__ __logical_and__(__Base__ o) {
+        if (this.__type == BOOLEAN && o.__type == BOOLEAN)
+            return new __Base__(this.__bVal && o.__bVal);
+        if (this.__type == BOOLEAN)
+            return new __Base__(this.__bVal);
+        if (o.__type == BOOLEAN)
+            return new __Base__(o.__bVal);
+        return new __Base__(true);
+    }
+
+    public __Base__ __logical_or__(__Base__ o) {
+        if (this.__type == BOOLEAN && o.__type == BOOLEAN)
+            return new __Base__(this.__bVal || o.__bVal);
+        return new __Base__(true);
+    }
+
+    public __Base__ __pow__(__Base__ o) {
+        if (this.__type == INTEGER && o.__type == INTEGER) {
+            return new __Base__((int)Math.pow(this.__iVal, o.__iVal));
+        }
+
+        if (this.__type == INTEGER && o.__type == FLOAT) {
+            return new __Base__((float) Math.pow(this.__iVal, o.__iVal));
+        }
+
+        if (this.__type == FLOAT && o.__type == INTEGER) {
+            return new __Base__((float) Math.pow(this.__iVal, o.__iVal));
+        }
+
+        if (this.__type == FLOAT && o.__type == FLOAT) {
+            return new __Base__((float) Math.pow(this.__iVal, o.__iVal));
+        }
+
+        throw new UnsupportedOperationException("pow isn't support operation for types: " + this.__type + " and: " + o.__type);
+    }
+
+    public String toString() {
+        String s = "";
+        if (this.__type == INTEGER)
+            s += this.__iVal;
+        if (this.__type == FLOAT)
+            s += this.__fVal;
+        if (this.__type == STRING)
+            s += this.__sVal;
+        if (this.__type == BOOLEAN)
+            s += this.__bVal;
+        if (this.__type == ARRAY) {
+            for (int i = 0; i < this.__aVal.size(); i++) {
+                s += this.__aVal.get(i).toString();
+            }
+        }
+        return s;
     }
 }
