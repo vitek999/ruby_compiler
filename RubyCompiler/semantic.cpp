@@ -86,6 +86,7 @@ void fillTable(Clazz* clazz, def_method_stmt_struct* method) {
 	}
 	
 	m->number = clazz->pushOrFindMethodRef(m->name, method_descriptor(params_counter));
+	method->id = m->number;
 	
 	fillTable(clazz, m, method->body);
 
@@ -291,7 +292,13 @@ void fillTable(Clazz* clazz, Method* method, expr_struct* expr) {
 		break;
 	case method_call:
 		if (expr->list != 0) {
-			existsIds(clazz, method, expr->list);
+			expr_struct* c = expr->list->first;
+			while (c != 0) {
+				if (existsId(clazz, method, c) && c->type == var_or_method) {
+					c->local_var_num = std::find(method->local_variables.begin(), method->local_variables.end(), c->str_val) - method->local_variables.begin();
+				}
+				c = c->next;
+			}
 		}
 
 		if (strcmp(expr->str_val,"print") == 0) {
@@ -329,6 +336,13 @@ void fillTable(Clazz* clazz, Method* method, expr_struct* expr) {
 	if (expr->left != 0) fillTable(clazz, method, expr->left);
 	if (expr->right != 0) fillTable(clazz, method, expr->right);
 	if (expr->index != 0) fillTable(clazz, method, expr->index);
+	if (expr->list != 0) {
+		expr_struct* c = expr->list->first;
+		while (c != 0) {
+			fillTable(clazz, method, c);
+			c = c->next;
+		}
+	}
 }
 
 bool existsId(Clazz* clazz, Method* method, expr_struct* expr) {

@@ -185,6 +185,9 @@ struct def_method_stmt_struct {
 	struct method_param_list* params;
 	struct stmt_list_struct* body;
 	struct def_method_stmt_struct* next;
+
+	// semantic
+	int id;
 };
 
 struct def_method_stmt_list_struct {
