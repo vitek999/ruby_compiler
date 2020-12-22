@@ -293,8 +293,18 @@ void fillTable(Clazz* clazz, Method* method, expr_struct* expr) {
 		if (expr->list != 0) {
 			existsIds(clazz, method, expr->list);
 		}
-		existsMethod(expr->str_val);
-		expr->id = clazz->pushOrFindMethodRef(expr->str_val, method_descriptor(count_exprs(expr->list)));
+
+		if (strcmp(expr->str_val,"print") == 0) {
+			expr->id = clazz->pushOrFindMethodRef("__BASE__", "print", "(L__BASE__;)V");
+		}
+		else if (strcmp(expr->str_val, "println") == 0) {
+			expr->id = clazz->pushOrFindMethodRef("__BASE__", "println", "(L__BASE__;)V");
+		}
+		else {
+			existsMethod(expr->str_val);
+			expr->id = clazz->pushOrFindMethodRef(expr->str_val, method_descriptor(count_exprs(expr->list)));
+		}
+
 		break;
 	case array:
 		if (expr->list != 0) {
