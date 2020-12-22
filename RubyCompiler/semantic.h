@@ -64,11 +64,15 @@ public:
 	}
 
 	int pushOrFindMethodRef(const std::string& methodName, const std::string& descriptor) {
+		return pushOrFindMethodRef(this->name, methodName, descriptor);
+	}
+
+	int pushOrFindMethodRef(const std::string & className, const std::string& methodName, const std::string& descriptor) {
 		int name_id = pushConstant(Constant::Utf8(methodName));
 		int descriptor_id = pushConstant(Constant::Utf8(descriptor));
 
 		int name_and_type_id = pushConstant(Constant::NameAndType(name_id, descriptor_id));
-		int class_name_id = pushConstant(Constant::Utf8(this->name));
+		int class_name_id = pushConstant(Constant::Utf8(className));
 		int class_id = pushConstant(Constant::Class(class_name_id));
 		return pushConstant(Constant::MethodRef(class_id, name_and_type_id));
 	}

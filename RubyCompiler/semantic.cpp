@@ -160,14 +160,20 @@ void fillTable(Clazz* clazz, Method* method, expr_struct* expr) {
 	switch (expr->type)
 	{
 	case Integer:
+		clazz->pushConstant(Constant::Integer(expr->int_val));
+		clazz->pushOrFindMethodRef("__BASE__", "<init>", "(I)V");
+		break;
 	case Boolean:
 		clazz->pushConstant(Constant::Integer(expr->int_val));
+		clazz->pushOrFindMethodRef("__BASE__", "<init>", "(Z)V");
 		break;
 	case Float:
 		clazz->pushConstant(Constant::Float(expr->float_val));
+		clazz->pushOrFindMethodRef("__BASE__", "<init>", "(F)V");
 		break;
 	case String:
 		clazz->pushConstant(Constant::String(clazz->pushConstant(Constant::Utf8(expr->str_val))));
+		clazz->pushOrFindMethodRef("__BASE__", "<init>", "(Ljava/lang/String;)V");
 		break;
 	case var_or_method:
 		if (std::find(method->local_variables.begin(), method->local_variables.end(), expr->str_val) == method->local_variables.end()) {
