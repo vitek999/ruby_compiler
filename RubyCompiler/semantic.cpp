@@ -483,3 +483,14 @@ void transform(expr_struct* expr) {
 	if (expr->right != 0) transform(expr->right);
 	if (expr->index != 0) transform(expr->index);	
 }
+
+int count_exprs(expr_list_struct* params) {
+	if (params == 0) return 0;
+	int count = 0;
+	expr_struct* c = params->first;
+	while (c != 0) {
+		count++;
+		c = c->next;
+	}
+	return count;
+}
