@@ -79,6 +79,7 @@ void fillTable(Clazz* clazz, def_method_stmt_struct* method) {
 		while (c != 0) {
 			params_counter++;
 			m->local_variables.push_back(c->name);
+			c->local_var_num = m->local_variables.size() - 1;
 			// TODO: дефолтные значения.
 			c = c->next;
 		}
@@ -109,6 +110,7 @@ void fillTable(Clazz* clazz, Method* method, stmt_struct* stmt) {
 		break;
 	case for_stmt_t:
 		method->local_variables.push_back(stmt->for_stmt_f->iterable_var);
+		stmt->for_stmt_f->iterable_var_local_num = method->local_variables.size() - 1;
 		existsId(clazz, method, stmt->for_stmt_f->condition);
 		fillTable(clazz, method, stmt->for_stmt_f->condition);
 		fillTable(clazz, method, stmt->for_stmt_f->body);
@@ -160,24 +162,25 @@ void fillTable(Clazz* clazz, Method* method, expr_struct* expr) {
 	switch (expr->type)
 	{
 	case Integer:
-		clazz->pushConstant(Constant::Integer(expr->int_val));
-		clazz->pushOrFindMethodRef("__BASE__", "<init>", "(I)V");
+		expr->value_id = clazz->pushConstant(Constant::Integer(expr->int_val));
+		expr->id = clazz->pushOrFindMethodRef("__BASE__", "<init>", "(I)V");
 		break;
 	case Boolean:
-		clazz->pushConstant(Constant::Integer(expr->int_val));
-		clazz->pushOrFindMethodRef("__BASE__", "<init>", "(Z)V");
+		expr->value_id = clazz->pushConstant(Constant::Integer(expr->int_val));
+		expr->id = clazz->pushOrFindMethodRef("__BASE__", "<init>", "(Z)V");
 		break;
 	case Float:
-		clazz->pushConstant(Constant::Float(expr->float_val));
-		clazz->pushOrFindMethodRef("__BASE__", "<init>", "(F)V");
+		expr->value_id = clazz->pushConstant(Constant::Float(expr->float_val));
+		expr->id = clazz->pushOrFindMethodRef("__BASE__", "<init>", "(F)V");
 		break;
 	case String:
-		clazz->pushConstant(Constant::String(clazz->pushConstant(Constant::Utf8(expr->str_val))));
-		clazz->pushOrFindMethodRef("__BASE__", "<init>", "(Ljava/lang/String;)V");
+		expr->value_id = clazz->pushConstant(Constant::String(clazz->pushConstant(Constant::Utf8(expr->str_val))));
+		expr->id = clazz->pushOrFindMethodRef("__BASE__", "<init>", "(Ljava/lang/String;)V");
 		break;
 	case var_or_method:
 		if (std::find(method->local_variables.begin(), method->local_variables.end(), expr->str_val) == method->local_variables.end()) {
 			method->local_variables.push_back(expr->str_val);
+			expr->local_var_num = method->local_variables.size() - 1;
 		}
 		break;
 	case instance_var:
@@ -201,72 +204,72 @@ void fillTable(Clazz* clazz, Method* method, expr_struct* expr) {
 		existsId(clazz, method, expr->left);
 		break;
 	case mul:
-		clazz->pushOrFindMethodRef("__mul__", "(L__BASE__;)L__BASE__;");
+		expr->id = clazz->pushOrFindMethodRef("__mul__", "(L__BASE__;)L__BASE__;");
 		existsId(clazz, method, expr->left);
 		existsId(clazz, method, expr->right);
 		break;
 	case div_:
-		clazz->pushOrFindMethodRef("__div__", "(L__BASE__;)L__BASE__;");
+		expr->id = clazz->pushOrFindMethodRef("__div__", "(L__BASE__;)L__BASE__;");
 		existsId(clazz, method, expr->left);
 		existsId(clazz, method, expr->right);
 		break;
 	case plus:
-		clazz->pushOrFindMethodRef("__add__", "(L__BASE__;)L__BASE__;");
+		expr->id = clazz->pushOrFindMethodRef("__add__", "(L__BASE__;)L__BASE__;");
 		existsId(clazz, method, expr->left);
 		existsId(clazz, method, expr->right);
 		break;
 	case minus:
-		clazz->pushOrFindMethodRef("__sub__", "(L__BASE__;)L__BASE__;");
+		expr->id = clazz->pushOrFindMethodRef("__sub__", "(L__BASE__;)L__BASE__;");
 		existsId(clazz, method, expr->left);
 		existsId(clazz, method, expr->right);
 		break;
 	case mod:
-		clazz->pushOrFindMethodRef("__mod__", "(L__BASE__;)L__BASE__;");
+		expr->id = clazz->pushOrFindMethodRef("__mod__", "(L__BASE__;)L__BASE__;");
 		existsId(clazz, method, expr->left);
 		existsId(clazz, method, expr->right);
 		break;
 	case equal:
-		clazz->pushOrFindMethodRef("__eql__", "(L__BASE__;)L__BASE__;");
+		expr->id = clazz->pushOrFindMethodRef("__eql__", "(L__BASE__;)L__BASE__;");
 		existsId(clazz, method, expr->left);
 		existsId(clazz, method, expr->right);
 		break;
 	case not_equal:
-		clazz->pushOrFindMethodRef("__not_eql__", "(L__BASE__;)L__BASE__;");
+		expr->id = clazz->pushOrFindMethodRef("__not_eql__", "(L__BASE__;)L__BASE__;");
 		existsId(clazz, method, expr->left);
 		existsId(clazz, method, expr->right);
 		break;
 	case less:
-		clazz->pushOrFindMethodRef("__les__", "(L__BASE__;)L__BASE__;");
+		expr->id = clazz->pushOrFindMethodRef("__les__", "(L__BASE__;)L__BASE__;");
 		existsId(clazz, method, expr->left);
 		existsId(clazz, method, expr->right);
 		break;
 	case greater:
-		clazz->pushOrFindMethodRef("__greater__", "(L__BASE__;)L__BASE__;");
+		expr->id = clazz->pushOrFindMethodRef("__greater__", "(L__BASE__;)L__BASE__;");
 		existsId(clazz, method, expr->left);
 		existsId(clazz, method, expr->right);
 		break;
 	case greater_eql:
-		clazz->pushOrFindMethodRef("__greater_or_eql__", "(L__BASE__;)L__BASE__;");
+		expr->id = clazz->pushOrFindMethodRef("__greater_or_eql__", "(L__BASE__;)L__BASE__;");
 		existsId(clazz, method, expr->left);
 		existsId(clazz, method, expr->right);
 		break;
 	case less_eql:
-		clazz->pushOrFindMethodRef("__les_or_eql__", "(L__BASE__;)L__BASE__;");
+		expr->id = clazz->pushOrFindMethodRef("__les_or_eql__", "(L__BASE__;)L__BASE__;");
 		existsId(clazz, method, expr->left);
 		existsId(clazz, method, expr->right);
 		break;
 	case pow_:
-		clazz->pushOrFindMethodRef("__pow__", "(L__BASE__;)L__BASE__;");
+		expr->id = clazz->pushOrFindMethodRef("__pow__", "(L__BASE__;)L__BASE__;");
 		existsId(clazz, method, expr->left);
 		existsId(clazz, method, expr->right);
 		break;
 	case logical_and:
-		clazz->pushOrFindMethodRef("__logical_and__", "(L__BASE__;)L__BASE__;");
+		expr->id = clazz->pushOrFindMethodRef("__logical_and__", "(L__BASE__;)L__BASE__;");
 		existsId(clazz, method, expr->left);
 		existsId(clazz, method, expr->right);
 		break;
 	case logical_or:
-		clazz->pushOrFindMethodRef("__logical_or__", "(L__BASE__;)L__BASE__;");
+		expr->id = clazz->pushOrFindMethodRef("__logical_or__", "(L__BASE__;)L__BASE__;");
 		existsId(clazz, method, expr->left);
 		existsId(clazz, method, expr->right);
 		break;
@@ -291,7 +294,7 @@ void fillTable(Clazz* clazz, Method* method, expr_struct* expr) {
 			existsIds(clazz, method, expr->list);
 		}
 		existsMethod(expr->str_val);
-		clazz->pushOrFindMethodRef(expr->str_val, method_descriptor(count_exprs(expr->list)));
+		expr->id = clazz->pushOrFindMethodRef(expr->str_val, method_descriptor(count_exprs(expr->list)));
 		break;
 	case array:
 		if (expr->list != 0) {

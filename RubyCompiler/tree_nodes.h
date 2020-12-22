@@ -67,6 +67,11 @@ struct expr_struct {
 	struct expr_struct * right;
 	struct expr_struct * next;
 	struct expr_struct* index;
+
+	// semantic
+	int id;
+	int value_id;
+	int local_var_num;
 };
 
 enum stmt_type {
@@ -130,6 +135,9 @@ struct for_stmt_struct {
 	char * iterable_var;
 	struct expr_struct * condition;
 	struct stmt_list_struct* body;
+
+	// semantic
+	int iterable_var_local_num;
 };
 
 struct while_stmt_struct {
@@ -167,6 +175,9 @@ struct method_param_struct {
 	char * name;
 	struct expr_struct * default_value;
 	struct method_param_struct * next;
+
+	// semantic
+	int local_var_num;
 };
 
 struct def_method_stmt_struct {
