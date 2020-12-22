@@ -269,10 +269,10 @@ void fillTable(Clazz* clazz, Method* method, expr_struct* expr) {
 		existsId(clazz, method, expr->right);
 		break;
 	case method_call:
-		existsId(clazz, method, expr->left);
 		if (expr->list != 0) {
 			existsIds(clazz, method, expr->list);
 		}
+		existsMethod(expr->str_val);
 		break;
 	case array:
 		if (expr->list != 0) {
@@ -326,6 +326,16 @@ bool existsIds(Clazz* clazz, Method* method, expr_list_struct* exprList) {
 		c = c->next;
 	}
 	return true;
+}
+
+bool existsMethod(const std::string& methodName) {
+	for (auto i : clazzesList) {
+		if (i.second->methods.find(methodName) != i.second->methods.end()) {
+			return true;
+		}
+	}
+	printf("SEMANTIC ERROR: method %s is not defined\n", methodName.c_str());
+	return false;
 }
 
 std::string method_descriptor(int size) {

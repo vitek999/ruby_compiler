@@ -82,6 +82,7 @@ inline std::map<std::string, Clazz*> clazzesList;
 std::string method_descriptor(int size);
 bool existsId(Clazz* clazz, Method* method, expr_struct* expr);
 bool existsIds(Clazz* clazz, Method* method, expr_list_struct* exprList);
+bool existsMethod(const std::string& methodName);
 
 void fillTable(program_struct* program);
 void fillTable(Clazz* clazz, def_method_stmt_struct * method);
@@ -99,3 +100,9 @@ void transform(if_stmt_struct* stmt);
 void transform(program_item_struct* item);
 void transform(def_method_stmt_struct* def_method);
 void transform(class_declaration_struct* cls);
+
+template <typename Container, typename T>
+bool contains(const Container& c, T const& value)
+{
+	return std::find(c.begin(), c.end(), value) != c.end();
+}
