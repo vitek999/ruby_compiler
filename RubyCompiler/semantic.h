@@ -106,3 +106,14 @@ bool contains(const Container& c, T const& value)
 {
 	return std::find(c.begin(), c.end(), value) != c.end();
 }
+
+int count_exprs(expr_list_struct* params) {
+	if (params == 0) return 0;
+	int count = 0;
+	expr_struct * c = params->first;
+	while (c != 0) {
+		count++;
+		c = c->next;
+	}
+	return count;
+}

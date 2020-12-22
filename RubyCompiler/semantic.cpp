@@ -273,6 +273,7 @@ void fillTable(Clazz* clazz, Method* method, expr_struct* expr) {
 			existsIds(clazz, method, expr->list);
 		}
 		existsMethod(expr->str_val);
+		clazz->pushOrFindMethodRef(expr->str_val, method_descriptor(count_exprs(expr->list)));
 		break;
 	case array:
 		if (expr->list != 0) {
