@@ -68,6 +68,12 @@ public class __Base__ {
             return new __Base__(this.__sVal + o.__sVal);
         }
 
+        if (this.__type == ARRAY && o.__type == ARRAY){
+            ArrayList<__Base__> base__s = (new ArrayList<>(this.__aVal));
+            base__s.addAll(o.__aVal);
+            return new __Base__(base__s);
+        }
+
         throw new UnsupportedOperationException("add isn't support operation for types: " + this.__type + " and: " + o.__type);
     }
 
@@ -86,6 +92,12 @@ public class __Base__ {
 
         if (this.__type == FLOAT && o.__type == FLOAT) {
             return new __Base__(this.__fVal - o.__fVal);
+        }
+
+        if (this.__type == ARRAY && o.__type == ARRAY){
+            ArrayList<__Base__> t = new ArrayList<>(this.__aVal);
+            t.removeAll(o.__aVal);
+            return new __Base__(new ArrayList<>(t));
         }
 
         throw new UnsupportedOperationException("sub isn't support operation for types: " + this.__type + " and: " + o.__type);
@@ -326,6 +338,27 @@ public class __Base__ {
         throw new UnsupportedOperationException("pow isn't support operation for types: " + this.__type + " and: " + o.__type);
     }
 
+    public __Base__ __member_access__(__Base__ index) {
+        if(index.__type != INTEGER) throw new IllegalArgumentException("index must be integer");
+
+        if(this.__type == ARRAY) {
+            return this.__aVal.get(index.__iVal);
+        }
+
+        throw new UnsupportedOperationException("member_access isn't support operation for type: " + this.__type);
+    }
+
+    public __Base__ __member_access_assign__(__Base__ index, __Base__ value) {
+        if(index.__type != INTEGER) throw new IllegalArgumentException("index must be integer");
+
+        if(this.__type == ARRAY) {
+            this.__aVal.set(index.__iVal, value);
+            return value;
+        }
+
+        throw new UnsupportedOperationException("member_access_assign isn't support operation for type: " + this.__type);
+    }
+
     public String toString() {
         String s = "";
         if (this.__type == INTEGER)
@@ -337,9 +370,14 @@ public class __Base__ {
         if (this.__type == BOOLEAN)
             s += this.__bVal;
         if (this.__type == ARRAY) {
-            s += "[" + __aVal.stream().map(__Base__::toString).collect(Collectors.joining(", ")) + "]";
+            s += "[" + __aVal.stream().map(__Base__::toStringForArray).collect(Collectors.joining(", ")) + "]";
         }
         return s;
+    }
+
+    private String toStringForArray() {
+        if(this.__type == STRING) return "\"" + this.__sVal +"\"";
+        return toString();
     }
 
     public static void print(__Base__ value) {
@@ -348,5 +386,43 @@ public class __Base__ {
 
     public static void println(__Base__ value) {
         System.out.println(value.toString());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        __Base__ o = (__Base__) obj;
+        return __eql__(o).__bVal;
+    }
+
+    public __Base__ __unary_minus__() {
+        if (this.__type == INTEGER) {
+            return new __Base__((this.__iVal * -1));
+        }
+
+        if (this.__type == FLOAT) {
+            return new __Base__((this.__fVal * -1));
+        }
+
+        if (this.__type == STRING) {
+            return new __Base__(this.__sVal);
+        }
+
+        throw new UnsupportedOperationException("unary_minus isn't support operation for type: " + this.__type);
+    }
+
+    public __Base__ __unary_plus__() {
+        if (this.__type == INTEGER) {
+            return new __Base__(this.__iVal);
+        }
+
+        if (this.__type == FLOAT) {
+            return new __Base__(this.__fVal);
+        }
+
+        if (this.__type == STRING) {
+            return new __Base__(this.__sVal);
+        }
+
+        throw new UnsupportedOperationException("unary_plus isn't support operation for type: " + this.__type);
     }
 }

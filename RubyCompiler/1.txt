@@ -6,6 +6,7 @@ end
 d = 2
 for i in 1..2
 	print(a[i])
+	a[i] = i
 end
 b = 1
 print(aasd(b,a), 2, a)

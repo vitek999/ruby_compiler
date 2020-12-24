@@ -200,7 +200,7 @@ void PrintUntil(struct until_stmt_struct* until_s, FILE* file) {
 void PrintFor(struct for_stmt_struct* for_s, FILE* file) {
 	fprintf(file, "Id%p [label=\"for\"]\n", for_s);
 	fprintf(file, "IdItersName%p [label=\"%s\"]\n", for_s, for_s->iterable_var);
-	fprintf(file, "Id%p->IdItersName%p  [label=\"iterable var\"]\n", for_s, for_s);
+	fprintf(file, "Id%p->IdItersName%p  [label=\"iterable var\\n localnum = %d\"]\n", for_s, for_s, for_s->iterable_var_local_num);
 	PrintExpr(for_s->condition, file);
 	fprintf(file, "Id%p->Id%p  [label=\"condition\"]\n", for_s, for_s->condition);
 	fprintf(file, "IdBody%p [label=\"body\"]\n", for_s);
@@ -548,7 +548,7 @@ void PrintExpr(struct expr_struct* expr, FILE* file) {
 		}
 		break;
 	case member_access:
-		fprintf(file, "Id%p [label = \"member access\"]\n", expr);
+		fprintf(file, "Id%p [label = \"member access\\n mref = #%d\"]\n", expr, expr->id);
 		PrintExpr(expr->left, file);
 		PrintExpr(expr->right, file);
 		fprintf(file, "Id%p->Id%p [label = \"array\"]\n", expr, expr->left);
@@ -579,7 +579,7 @@ void PrintExpr(struct expr_struct* expr, FILE* file) {
 		fprintf(file, "Id%p->Id%p [label = \"method\"]\n", expr, expr->right);
 		break;
 	case member_access_and_assign:
-		fprintf(file, "Id%p [label=\"[]=\"]\n", expr);
+		fprintf(file, "Id%p [label=\"[]=\\nmref = #%d\"]\n", expr, expr->id);
 		PrintExpr(expr->left, file);
 		fprintf(file, "Id%p->Id%p [label = \"array\"]\n", expr, expr->left);
 		PrintExpr(expr->index, file);

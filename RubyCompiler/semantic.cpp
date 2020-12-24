@@ -192,6 +192,18 @@ void fillTable(Clazz* clazz, Method* method, expr_struct* expr) {
 		}
 		existsId(clazz, method, expr->right);
 		break;
+	case logical_not:
+		expr->id = clazz->pushOrFindMethodRef("__not__", ("(L__BASE__;)L__BASE__;"));
+		existsId(clazz, method, expr->left);
+		break;
+	case unary_plus:
+		expr->id = clazz->pushOrFindMethodRef("__unary_plus__", "()L__BASE__;");
+		existsId(clazz, method, expr->left);
+		break;
+	case unary_minus:
+		expr->id = clazz->pushOrFindMethodRef("__unary_minus__", "()L__BASE__;");
+		existsId(clazz, method, expr->left);
+		break;
 	case mod_assign:
 	case div_assign:
 	case sub_assign:
@@ -200,10 +212,7 @@ void fillTable(Clazz* clazz, Method* method, expr_struct* expr) {
 	case pow_assign:
 		existsId(clazz, method, expr->right);
 		break;
-	case logical_not:
 	case bin_ones_complement:
-	case unary_plus:
-	case unary_minus:
 	case defined:
 	case not_keyword:
 		existsId(clazz, method, expr->left);
@@ -279,8 +288,9 @@ void fillTable(Clazz* clazz, Method* method, expr_struct* expr) {
 		existsId(clazz, method, expr->right);
 		break;
 	case member_access:
+		expr->id = clazz->pushOrFindMethodRef("__member_access__", "(L__BASE__;)L__BASE__;");
 		existsId(clazz, method, expr->left);
-		existsId(clazz, method, expr->index);
+		existsId(clazz, method, expr->right);
 		break;
 	case bin_left_shift:
 	case bin_right_shift:
@@ -326,6 +336,7 @@ void fillTable(Clazz* clazz, Method* method, expr_struct* expr) {
 		}
 		break;
 	case member_access_and_assign:
+		expr->id = clazz->pushOrFindMethodRef("__member_access_assign__", "(L__BASE__;L__BASE__;)L__BASE__;");
 		existsId(clazz, method, expr->left);
 		existsId(clazz, method, expr->right);
 		existsId(clazz, method, expr->index);
