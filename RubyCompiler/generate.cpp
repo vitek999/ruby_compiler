@@ -38,7 +38,7 @@ void generate(program_struct* program, const std::map<std::string, Clazz*>& claz
 		cout << (char)0x00 << (char)0x00;
 		cout << (char)0x00 << (char)0x00;
 		// methods count
-		bytes = intToBytes(1); // TODO: FIX!!! intToBytes(clazz.second->methods.size());
+		bytes = intToBytes(clazz.second->methods.size());
 		cout << bytes[2] << bytes[3];
 		
 		// !!!!!!!!! METHODS !!!!!!
@@ -68,8 +68,84 @@ void generate(program_struct* program, const std::map<std::string, Clazz*>& claz
 			cout << i;
 		}
 
+		for (auto i : clazz.second->methods) {
+			if (i.first != "<init>") {
+				generate(i.second);
+			}
+		}
+
 		// atributes
 		cout << (char)0x00 << (char)0x00;
+	}
+}
+
+void generate(Method* method) {
+	vector<char> bytes;
+	// public 
+	if (method->isStatic) {
+		cout << (char)0x00 << (char)0x09;
+	}
+	else {
+		cout << (char)0x00 << (char)0x01;
+	}
+	// init name
+	bytes = intToBytes(method->nameNumber);
+	cout << bytes[2] << bytes[3];
+	// init descriptor ()V
+	bytes = intToBytes(method->descriptorNumber);
+	cout << bytes[2] << bytes[3];
+	
+	// method atributes count (01)
+	cout << (char)0x00 << (char)0x01;
+	// method atribute (Code - 0x01)
+	cout << (char)0x00 << (char)0x01;
+
+	vector<char> result_bytes = vector<char>();
+
+	// size of operands stack
+	vector<char> tmp_bytes = intToBytes(1000);
+	result_bytes.push_back(tmp_bytes[2]);
+	result_bytes.push_back(tmp_bytes[3]);
+
+	// size of local variables
+	tmp_bytes = intToBytes(method->local_variables.size());
+	result_bytes.push_back(tmp_bytes[2]);
+	result_bytes.push_back(tmp_bytes[3]);
+
+	vector<char> code_bytes = vector<char>();
+
+	// generate code.
+
+	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!TODO!!!!!!!!
+
+	code_bytes.push_back((char)Command::return_);
+
+	// size of code
+	tmp_bytes = intToBytes(code_bytes.size());
+	for (auto i : tmp_bytes) {
+		result_bytes.push_back(i);
+	}
+
+	// code from code_bytes
+	for (auto i : code_bytes) {
+		result_bytes.push_back(i);
+	}
+
+	// exception table 
+	result_bytes.push_back((char)0x00);
+	result_bytes.push_back((char)0x00);
+
+	// attrs table
+	result_bytes.push_back((char)0x00);
+	result_bytes.push_back((char)0x00);
+
+	bytes = intToBytes(result_bytes.size());
+	for (auto i : bytes) {
+		cout << i;
+	}
+
+	for (auto i : result_bytes) {
+		cout << i;
 	}
 }
 

@@ -12,6 +12,7 @@
 
 void generate(program_struct* program, const std::map<std::string, Clazz *> & clazzList);
 void generate(Constant constant);
+void generate(Method* method);
 std::vector<char> generateConstructor(Method * m);
 
 std::vector <char> intToBytes(int value);

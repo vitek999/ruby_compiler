@@ -12,6 +12,10 @@ void fillTable(program_struct* program) {
 
 	Method* mainMethod = new Method();
 	mainMethod->name = "main";
+	mainMethod->nameNumber = clazz->pushConstant(Constant::Utf8(mainMethod->name));
+	mainMethod->descriptorNumber = clazz->pushConstant(Constant::Utf8("([Ljava/lang/String;)V"));
+	mainMethod->number = clazz->pushOrFindMethodRef(clazz->name , mainMethod->name, "([Ljava/lang/String;)V");
+	mainMethod->isStatic = true;
 	clazz->methods[mainMethod->name] = mainMethod;
 	mainMethod->body = 0;
 
