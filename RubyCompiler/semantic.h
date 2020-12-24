@@ -23,11 +23,15 @@ struct Method {
 	std::vector<std::string> local_variables;
 	stmt_list_struct* body;
 	int number;
+	int nameNumber;
+	int descriptorNumber;
+	int self_method_ref;
 };
 
 class Clazz {
 public:
 	int number;
+	int parend_number;
 	Clazz * parent;
 
 	std::string name;

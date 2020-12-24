@@ -3,7 +3,120 @@
 using namespace std;
 
 void generate(program_struct* program, const std::map<std::string, Clazz*>& clazzList) {
+	for (auto clazz : clazzesList) {
+		freopen("generated.class", "wb", stdout);
+		vector<char> len = intToBytes(clazz.second->constants.size() + 1);
+		// CAFEBABE
+		cout << (char)0xCA << (char)0xFE << (char)0xBA << (char)0xBE;
+		// JAVA 8 (version 52.0 (0x34))
+		cout << (char)0x00 << (char)0x00 << (char)0x00 << (char)0x34;
+		// constants count
+		cout << len[2] << len[3];
 
+		//constants table
+		vector<pair<Constant, int>> constants_v;
+
+		for (auto& it : clazz.second->constants) {
+			constants_v.push_back(it);
+		}
+		
+		sort(constants_v.begin(), constants_v.end(), cmp);
+
+		for (auto i : constants_v) {
+			generate(i.first);
+		}
+
+		// Flags 
+		cout << (char)0x00 << (char)0x21;
+		// This class constant
+		vector<char> bytes = intToBytes(clazz.second->number);
+		cout << bytes[2] << bytes[3];
+		// Parent class constant
+		bytes = intToBytes(clazz.second->parend_number);
+		cout << bytes[2] << bytes[3];
+		// Interfaces table
+		cout << (char)0x00 << (char)0x00;
+		cout << (char)0x00 << (char)0x00;
+		// methods count
+		bytes = intToBytes(1); // TODO: FIX!!! intToBytes(clazz.second->methods.size());
+		cout << bytes[2] << bytes[3];
+		
+		// !!!!!!!!! METHODS !!!!!!
+		
+		// public 
+		cout << (char)0x00 << (char)0x01;
+		// init name
+		bytes = intToBytes(clazz.second->methods["<init>"]->nameNumber);
+		cout << bytes[2] << bytes[3];
+		// init descriptor ()V
+		bytes = intToBytes(clazz.second->methods["<init>"]->descriptorNumber);
+		cout << bytes[2] << bytes[3];
+		// method atributes count (01)
+		cout << (char)0x00 << (char)0x01;
+		// method atribute (Code - 0x01)
+		cout << (char)0x00 << (char)0x01;
+
+		// method code
+		vector<char> method_code_bytes = generateConstructor(clazz.second->methods["<init>"]);
+		// size of code
+		bytes = intToBytes(method_code_bytes.size());
+		for (auto i : bytes) {
+			cout << i;
+		}
+
+		for (auto i : method_code_bytes) {
+			cout << i;
+		}
+
+		// atributes
+		cout << (char)0x00 << (char)0x00;
+	}
+}
+
+std::vector<char> generateConstructor(Method* m) {
+	vector<char> result_bytes = vector<char>();
+
+	// size of operands stack
+	vector<char> tmp_bytes = intToBytes(1000);
+	result_bytes.push_back(tmp_bytes[2]);
+	result_bytes.push_back(tmp_bytes[3]);
+
+	// size of local variables
+	tmp_bytes = intToBytes(m->local_variables.size());
+	result_bytes.push_back(tmp_bytes[2]);
+	result_bytes.push_back(tmp_bytes[3]);
+
+	vector<char> code_bytes = vector<char>();
+	code_bytes.push_back((char)0x2A);  // aload_0
+	code_bytes.push_back((char)Command::invokespecial); // invoke special 
+	
+	// java/lang/Object.<init>()V					
+	tmp_bytes = intToBytes(m->self_method_ref);
+	code_bytes.push_back(tmp_bytes[2]);
+	code_bytes.push_back(tmp_bytes[3]);
+	
+	code_bytes.push_back((char)Command::return_); 	// return
+	
+	// size of code
+	tmp_bytes = intToBytes(code_bytes.size());
+	for (auto i : tmp_bytes) {
+		result_bytes.push_back(i);
+	}
+
+	// code from code_bytes
+	for (auto i : code_bytes) {
+		result_bytes.push_back(i);
+	}
+
+	// exception table 
+	result_bytes.push_back((char)0x00);
+	result_bytes.push_back((char)0x00);
+
+	// attrs table
+	result_bytes.push_back((char)0x00);
+	result_bytes.push_back((char)0x00);
+
+	return result_bytes;
 }
 
 void generate(Constant constant) {
@@ -35,7 +148,7 @@ void generate(Constant constant) {
 	// Class
 	if (constant.type == Constant::Type::Class) {
 		cout << (char)Constant::Type::Class;
-		vector<char> len = intToBytes(constant.utf8_id);	
+		vector<char> len = intToBytes(constant.class_name_id);	
 		cout << len[2] << len[3];
 	}
 
@@ -89,4 +202,8 @@ std::vector<char> flToBytes(float value)
 	for (int i = 0; i < sizeof(float); ++i)
 		arrayOfByte[3 - i] = ((char*)&value)[i];
 	return arrayOfByte;
+}
+
+bool cmp(std::pair<Constant, int>& a, std::pair<Constant, int>& b) {
+	return a.second < b.second;
 }

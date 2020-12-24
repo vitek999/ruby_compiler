@@ -1,12 +1,1 @@
 a = 2 - 1
-def aasd(b, d)
-	c = 1
-	e = 2
-end
-d = 2
-for i in 1..2
-	print(a[i])
-	a[i] = i
-end
-b = 1
-print(aasd(b,a), 2, a)
