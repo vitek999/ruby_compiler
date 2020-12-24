@@ -165,6 +165,7 @@
     </Bison>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Commands.h" />
     <ClInclude Include="Constant.h" />
     <ClInclude Include="create_tree.h" />
     <ClInclude Include="dot.h" />
