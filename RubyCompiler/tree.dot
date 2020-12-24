@@ -1,21 +1,15 @@
 digraph G {
-Id01788B88 [label="program"]
-Id01793DA0 [label="stmt"]
-Id01793D40 [label="="]
-Id01793BC0 [label="var or method\n localnum = 0"]
-IdVal01793BC0 [label="a"]
-Id01793BC0->IdVal01793BC0
-Id01793CE0 [label="-\n mref = #13"]
-Id01793C20 [label="INT\n mref = #20\n val_id = #14"]
-IdVal01793C20 [label="2"]
-Id01793C20->IdVal01793C20
-Id01793C80 [label="INT\n mref = #20\n val_id = #21"]
-IdVal01793C80 [label="1"]
-Id01793C80->IdVal01793C80
-Id01793CE0->Id01793C20
-Id01793CE0->Id01793C80
-Id01793D40->Id01793BC0
-Id01793D40->Id01793CE0
-Id01793DA0->Id01793D40
-Id01788B88->Id01793DA0
+Id011C8DC0 [label="program"]
+Id011D3CF8 [label="stmt"]
+Id011D3C98 [label="="]
+Id011D3BD8 [label="var or method\n localnum = 0"]
+IdVal011D3BD8 [label="a"]
+Id011D3BD8->IdVal011D3BD8
+Id011D3C38 [label="INT\n mref = #16\n val_id = #10"]
+IdVal011D3C38 [label="2"]
+Id011D3C38->IdVal011D3C38
+Id011D3C98->Id011D3BD8
+Id011D3C98->Id011D3C38
+Id011D3CF8->Id011D3C98
+Id011C8DC0->Id011D3CF8
 }

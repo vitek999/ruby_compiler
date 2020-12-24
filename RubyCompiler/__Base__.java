@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-public class __Base__ {
+public class __BASE__ {
     private static final int INTEGER = 0;
     private static final int BOOLEAN = 1;
     private static final int FLOAT = 2;
@@ -13,332 +13,332 @@ public class __Base__ {
     public boolean __bVal;
     public float __fVal;
     public String __sVal;
-    public ArrayList<__Base__> __aVal;
+    public ArrayList<__BASE__> __aVal;
 
     public int __type = -1;
 
-    public __Base__() {
+    public __BASE__() {
         __type = NIL;
     }
 
-    public __Base__(int value) {
+    public __BASE__(int value) {
         this.__iVal = value;
         this.__type = INTEGER;
     }
 
-    public __Base__(boolean value) {
+    public __BASE__(boolean value) {
         this.__bVal = value;
         this.__type = BOOLEAN;
     }
 
-    public __Base__(float value) {
+    public __BASE__(float value) {
         this.__fVal = value;
         this.__type = FLOAT;
     }
 
-    public __Base__(String value) {
+    public __BASE__(String value) {
         this.__sVal = value;
         this.__type = STRING;
     }
 
-    public __Base__(ArrayList<__Base__> value) {
+    public __BASE__(ArrayList<__BASE__> value) {
         this.__aVal = new ArrayList<>();
         this.__aVal = value;
         this.__type = ARRAY;
     }
 
-    public __Base__ __add__(__Base__ o) {
+    public __BASE__ __add__(__BASE__ o) {
         if (this.__type == INTEGER && o.__type == INTEGER) {
-            return new __Base__(this.__iVal + o.__iVal);
+            return new __BASE__(this.__iVal + o.__iVal);
         }
 
         if (this.__type == INTEGER && o.__type == FLOAT) {
-            return new __Base__(this.__iVal + o.__fVal);
+            return new __BASE__(this.__iVal + o.__fVal);
         }
 
         if (this.__type == FLOAT && o.__type == INTEGER) {
-            return new __Base__(this.__fVal + o.__iVal);
+            return new __BASE__(this.__fVal + o.__iVal);
         }
 
         if (this.__type == FLOAT && o.__type == FLOAT) {
-            return new __Base__(this.__fVal + o.__fVal);
+            return new __BASE__(this.__fVal + o.__fVal);
         }
 
         if (this.__type == STRING && o.__type == STRING) {
-            return new __Base__(this.__sVal + o.__sVal);
+            return new __BASE__(this.__sVal + o.__sVal);
         }
 
         if (this.__type == ARRAY && o.__type == ARRAY){
-            ArrayList<__Base__> base__s = (new ArrayList<>(this.__aVal));
+            ArrayList<__BASE__> base__s = (new ArrayList<>(this.__aVal));
             base__s.addAll(o.__aVal);
-            return new __Base__(base__s);
+            return new __BASE__(base__s);
         }
 
         throw new UnsupportedOperationException("add isn't support operation for types: " + this.__type + " and: " + o.__type);
     }
 
-    public __Base__ __sub__(__Base__ o) {
+    public __BASE__ __sub__(__BASE__ o) {
         if (this.__type == INTEGER && o.__type == INTEGER) {
-            return new __Base__(this.__iVal - o.__iVal);
+            return new __BASE__(this.__iVal - o.__iVal);
         }
 
         if (this.__type == INTEGER && o.__type == FLOAT) {
-            return new __Base__(this.__iVal - o.__fVal);
+            return new __BASE__(this.__iVal - o.__fVal);
         }
 
         if (this.__type == FLOAT && o.__type == INTEGER) {
-            return new __Base__(this.__fVal - o.__iVal);
+            return new __BASE__(this.__fVal - o.__iVal);
         }
 
         if (this.__type == FLOAT && o.__type == FLOAT) {
-            return new __Base__(this.__fVal - o.__fVal);
+            return new __BASE__(this.__fVal - o.__fVal);
         }
 
         if (this.__type == ARRAY && o.__type == ARRAY){
-            ArrayList<__Base__> t = new ArrayList<>(this.__aVal);
+            ArrayList<__BASE__> t = new ArrayList<>(this.__aVal);
             t.removeAll(o.__aVal);
-            return new __Base__(new ArrayList<>(t));
+            return new __BASE__(new ArrayList<>(t));
         }
 
         throw new UnsupportedOperationException("sub isn't support operation for types: " + this.__type + " and: " + o.__type);
     }
 
-    public __Base__ __mul__(__Base__ o) {
+    public __BASE__ __mul__(__BASE__ o) {
         if (this.__type == INTEGER && o.__type == INTEGER) {
-            return new __Base__(this.__iVal * o.__iVal);
+            return new __BASE__(this.__iVal * o.__iVal);
         }
 
         if (this.__type == INTEGER && o.__type == FLOAT) {
-            return new __Base__(this.__iVal * o.__fVal);
+            return new __BASE__(this.__iVal * o.__fVal);
         }
 
         if (this.__type == FLOAT && o.__type == INTEGER) {
-            return new __Base__(this.__fVal * o.__iVal);
+            return new __BASE__(this.__fVal * o.__iVal);
         }
 
         if (this.__type == FLOAT && o.__type == FLOAT) {
-            return new __Base__(this.__fVal * o.__fVal);
+            return new __BASE__(this.__fVal * o.__fVal);
         }
 
         if (this.__type == STRING && o.__type == INTEGER) {
             if (o.__iVal < 0) throw new IllegalArgumentException("Argument is zero");
-            if (o.__iVal == 0) return new __Base__("");
-            return new __Base__(new String(new char[o.__iVal]).replace("\0", this.__sVal));
+            if (o.__iVal == 0) return new __BASE__("");
+            return new __BASE__(new String(new char[o.__iVal]).replace("\0", this.__sVal));
         }
 
         if (this.__type == STRING && o.__type == FLOAT) {
             int val = (int) o.__fVal;
             if (val < 0) throw new IllegalArgumentException("Argument is zero");
-            if (val == 0) return new __Base__("");
-            return new __Base__(new String(new char[val]).replace("\0", this.__sVal));
+            if (val == 0) return new __BASE__("");
+            return new __BASE__(new String(new char[val]).replace("\0", this.__sVal));
         }
 
         if (this.__type == ARRAY && o.__type == INTEGER) {
             if (o.__iVal < 0) throw new IllegalArgumentException("Argument is zero");
-            if (o.__iVal == 0) return new __Base__(new ArrayList<>());
+            if (o.__iVal == 0) return new __BASE__(new ArrayList<>());
             int value = o.__iVal;
-            ArrayList<__Base__> arrayList = new ArrayList<>();
+            ArrayList<__BASE__> arrayList = new ArrayList<>();
             for (int i = 0; i < value; i++)
                 arrayList.addAll(this.__aVal);
-            return new __Base__(arrayList);
+            return new __BASE__(arrayList);
         }
 
         if (this.__type == ARRAY && o.__type == FLOAT) {
             int val = (int) Math.floor(o.__fVal);
             if (val < 0) throw new IllegalArgumentException("Argument is zero");
-            if (val == 0) return new __Base__(new ArrayList<>());
-            ArrayList<__Base__> arrayList = new ArrayList<>();
+            if (val == 0) return new __BASE__(new ArrayList<>());
+            ArrayList<__BASE__> arrayList = new ArrayList<>();
             for (int i = 0; i < val; i++)
                 arrayList.addAll(this.__aVal);
-            return new __Base__(arrayList);
+            return new __BASE__(arrayList);
         }
 
         if (this.__type == ARRAY && o.__type == STRING) {
             String str = this.__aVal.get(0).toString();
-            for (__Base__ base__ : this.__aVal) {
-                str += (new __Base__(o.__sVal)).toString() + base__.toString();
+            for (__BASE__ base__ : this.__aVal) {
+                str += (new __BASE__(o.__sVal)).toString() + base__.toString();
             }
-            return new __Base__(str);
+            return new __BASE__(str);
         }
 
         throw new UnsupportedOperationException("mul isn't support operation for types: " + this.__type + " and: " + o.__type);
     }
 
-    public __Base__ __div__(__Base__ o) {
+    public __BASE__ __div__(__BASE__ o) {
         if (this.__type == INTEGER && o.__type == INTEGER) {
-            return new __Base__(this.__iVal / o.__iVal);
+            return new __BASE__(this.__iVal / o.__iVal);
         }
 
         if (this.__type == INTEGER && o.__type == FLOAT) {
-            return new __Base__(this.__iVal / o.__fVal);
+            return new __BASE__(this.__iVal / o.__fVal);
         }
 
         if (this.__type == FLOAT && o.__type == INTEGER) {
-            return new __Base__(this.__fVal / o.__iVal);
+            return new __BASE__(this.__fVal / o.__iVal);
         }
 
         if (this.__type == FLOAT && o.__type == FLOAT) {
-            return new __Base__(this.__fVal / o.__fVal);
+            return new __BASE__(this.__fVal / o.__fVal);
         }
 
         throw new UnsupportedOperationException("div isn't support operation for types: " + this.__type + " and: " + o.__type);
     }
 
-    public __Base__ __mod__(__Base__ o) {
+    public __BASE__ __mod__(__BASE__ o) {
         if (this.__type == INTEGER && o.__type == INTEGER) {
-            return new __Base__(this.__iVal % o.__iVal);
+            return new __BASE__(this.__iVal % o.__iVal);
         }
 
         if (this.__type == INTEGER && o.__type == FLOAT) {
-            return new __Base__(this.__iVal % o.__fVal);
+            return new __BASE__(this.__iVal % o.__fVal);
         }
 
         if (this.__type == FLOAT && o.__type == INTEGER) {
-            return new __Base__(this.__fVal % o.__iVal);
+            return new __BASE__(this.__fVal % o.__iVal);
         }
 
         if (this.__type == FLOAT && o.__type == FLOAT) {
-            return new __Base__(this.__fVal % o.__fVal);
+            return new __BASE__(this.__fVal % o.__fVal);
         }
 
-        if (this.__type == STRING) return new __Base__(this.__sVal);
+        if (this.__type == STRING) return new __BASE__(this.__sVal);
 
         throw new UnsupportedOperationException("div isn't support operation for types: " + this.__type + " and: " + o.__type);
     }
 
-    public __Base__ __eql__(__Base__ o) {
-        if (this.__type == NIL && o.__type == NIL) return new __Base__(true);
-        if (this.__type == NIL || o.__type == NIL) return new __Base__(false);
+    public __BASE__ __eql__(__BASE__ o) {
+        if (this.__type == NIL && o.__type == NIL) return new __BASE__(true);
+        if (this.__type == NIL || o.__type == NIL) return new __BASE__(false);
 
         if (this.__type == INTEGER && o.__type == INTEGER) {
-            return new __Base__(this.__iVal == o.__iVal);
+            return new __BASE__(this.__iVal == o.__iVal);
         }
 
         if (this.__type == INTEGER && o.__type == FLOAT) {
-            return new __Base__(this.__iVal == o.__fVal);
+            return new __BASE__(this.__iVal == o.__fVal);
         }
 
         if (this.__type == FLOAT && o.__type == INTEGER) {
-            return new __Base__(this.__fVal == o.__iVal);
+            return new __BASE__(this.__fVal == o.__iVal);
         }
 
         if (this.__type == FLOAT && o.__type == FLOAT) {
-            return new __Base__(this.__fVal == o.__fVal);
+            return new __BASE__(this.__fVal == o.__fVal);
         }
 
         if (this.__type == STRING && o.__type == STRING) {
-            return new __Base__(this.__sVal.equals(o.__sVal));
+            return new __BASE__(this.__sVal.equals(o.__sVal));
         }
 
         if (this.__type == BOOLEAN && o.__type == BOOLEAN) {
-            return new __Base__(this.__bVal == o.__bVal);
+            return new __BASE__(this.__bVal == o.__bVal);
         }
 
-        if (this.__type != o.__type) return new __Base__(false);
+        if (this.__type != o.__type) return new __BASE__(false);
 
         throw new UnsupportedOperationException("eql isn't support operation for types: " + this.__type + " and: " + o.__type);
     }
 
-    public __Base__ __not_eql__(__Base__ o) {
+    public __BASE__ __not_eql__(__BASE__ o) {
         try {
-            return new __Base__(__eql__(o).__bVal);
+            return new __BASE__(__eql__(o).__bVal);
         } catch(UnsupportedOperationException e) {
             throw new UnsupportedOperationException("not_eql isn't support operation for types: " + this.__type + " and: " + o.__type);
         }
     }
 
-    public __Base__ __les__(__Base__ o) {
+    public __BASE__ __les__(__BASE__ o) {
         if (this.__type == INTEGER && o.__type == INTEGER) {
-            return new __Base__(this.__iVal < o.__iVal);
+            return new __BASE__(this.__iVal < o.__iVal);
         }
 
         if (this.__type == INTEGER && o.__type == FLOAT) {
-            return new __Base__(this.__iVal < o.__fVal);
+            return new __BASE__(this.__iVal < o.__fVal);
         }
 
         if (this.__type == FLOAT && o.__type == INTEGER) {
-            return new __Base__(this.__fVal < o.__iVal);
+            return new __BASE__(this.__fVal < o.__iVal);
         }
 
         if (this.__type == FLOAT && o.__type == FLOAT) {
-            return new __Base__(this.__fVal < o.__fVal);
+            return new __BASE__(this.__fVal < o.__fVal);
         }
 
         if (this.__type == STRING && o.__type == STRING) {
             int compared = this.__sVal.compareTo(o.__sVal);
-            return new __Base__(compared < 0);
+            return new __BASE__(compared < 0);
         }
 
         throw new UnsupportedOperationException("less isn't support operation for types: " + this.__type + " and: " + o.__type);
     }
 
-    public __Base__ __les_or_eql__(__Base__ o) {
+    public __BASE__ __les_or_eql__(__BASE__ o) {
         try {
-            return new __Base__(__eql__(o).__bVal || __les__(o).__bVal);
+            return new __BASE__(__eql__(o).__bVal || __les__(o).__bVal);
         } catch (UnsupportedOperationException e) {
             throw new UnsupportedOperationException("less_or_eqls isn't support operation for types: " + this.__type + " and: " + o.__type);
         }
     }
 
-    public __Base__ __greater__(__Base__ o) {
+    public __BASE__ __greater__(__BASE__ o) {
         try {
-            return new __Base__(!__les_or_eql__(o).__bVal);
+            return new __BASE__(!__les_or_eql__(o).__bVal);
         } catch (UnsupportedOperationException e) {
             throw new UnsupportedOperationException("greater isn't support operation for types: " + this.__type + " and: " + o.__type);
         }
     }
 
-    public __Base__ __greater_or_eql__(__Base__ o) {
+    public __BASE__ __greater_or_eql__(__BASE__ o) {
         try {
-            return new __Base__(!__les__(o).__bVal);
+            return new __BASE__(!__les__(o).__bVal);
         } catch (UnsupportedOperationException e) {
             throw new UnsupportedOperationException("greater_or_eql isn't support operation for types: " + this.__type + " and: " + o.__type);
         }
     }
 
-    public __Base__ __not__() {
-        if (this.__type == NIL) return new __Base__(true);
-        if (this.__type == BOOLEAN) return new __Base__(!this.__bVal);
-        return new __Base__(false);
+    public __BASE__ __not__() {
+        if (this.__type == NIL) return new __BASE__(true);
+        if (this.__type == BOOLEAN) return new __BASE__(!this.__bVal);
+        return new __BASE__(false);
     }
 
-    public __Base__ __logical_and__(__Base__ o) {
+    public __BASE__ __logical_and__(__BASE__ o) {
         if (this.__type == BOOLEAN && o.__type == BOOLEAN)
-            return new __Base__(this.__bVal && o.__bVal);
+            return new __BASE__(this.__bVal && o.__bVal);
         if (this.__type == BOOLEAN)
-            return new __Base__(this.__bVal);
+            return new __BASE__(this.__bVal);
         if (o.__type == BOOLEAN)
-            return new __Base__(o.__bVal);
-        return new __Base__(true);
+            return new __BASE__(o.__bVal);
+        return new __BASE__(true);
     }
 
-    public __Base__ __logical_or__(__Base__ o) {
+    public __BASE__ __logical_or__(__BASE__ o) {
         if (this.__type == BOOLEAN && o.__type == BOOLEAN)
-            return new __Base__(this.__bVal || o.__bVal);
-        return new __Base__(true);
+            return new __BASE__(this.__bVal || o.__bVal);
+        return new __BASE__(true);
     }
 
-    public __Base__ __pow__(__Base__ o) {
+    public __BASE__ __pow__(__BASE__ o) {
         if (this.__type == INTEGER && o.__type == INTEGER) {
-            return new __Base__((int)Math.pow(this.__iVal, o.__iVal));
+            return new __BASE__((int)Math.pow(this.__iVal, o.__iVal));
         }
 
         if (this.__type == INTEGER && o.__type == FLOAT) {
-            return new __Base__((float) Math.pow(this.__iVal, o.__iVal));
+            return new __BASE__((float) Math.pow(this.__iVal, o.__iVal));
         }
 
         if (this.__type == FLOAT && o.__type == INTEGER) {
-            return new __Base__((float) Math.pow(this.__iVal, o.__iVal));
+            return new __BASE__((float) Math.pow(this.__iVal, o.__iVal));
         }
 
         if (this.__type == FLOAT && o.__type == FLOAT) {
-            return new __Base__((float) Math.pow(this.__iVal, o.__iVal));
+            return new __BASE__((float) Math.pow(this.__iVal, o.__iVal));
         }
 
         throw new UnsupportedOperationException("pow isn't support operation for types: " + this.__type + " and: " + o.__type);
     }
 
-    public __Base__ __member_access__(__Base__ index) {
+    public __BASE__ __member_access__(__BASE__ index) {
         if(index.__type != INTEGER) throw new IllegalArgumentException("index must be integer");
 
         if(this.__type == ARRAY) {
@@ -348,7 +348,7 @@ public class __Base__ {
         throw new UnsupportedOperationException("member_access isn't support operation for type: " + this.__type);
     }
 
-    public __Base__ __member_access_assign__(__Base__ index, __Base__ value) {
+    public __BASE__ __member_access_assign__(__BASE__ index, __BASE__ value) {
         if(index.__type != INTEGER) throw new IllegalArgumentException("index must be integer");
 
         if(this.__type == ARRAY) {
@@ -370,7 +370,7 @@ public class __Base__ {
         if (this.__type == BOOLEAN)
             s += this.__bVal;
         if (this.__type == ARRAY) {
-            s += "[" + __aVal.stream().map(__Base__::toStringForArray).collect(Collectors.joining(", ")) + "]";
+            s += "[" + __aVal.stream().map(__BASE__::toStringForArray).collect(Collectors.joining(", ")) + "]";
         }
         return s;
     }
@@ -380,47 +380,47 @@ public class __Base__ {
         return toString();
     }
 
-    public static void print(__Base__ value) {
+    public static void print(__BASE__ value) {
         System.out.print(value.toString());
     }
 
-    public static void println(__Base__ value) {
+    public static void println(__BASE__ value) {
         System.out.println(value.toString());
     }
 
     @Override
     public boolean equals(Object obj) {
-        __Base__ o = (__Base__) obj;
+        __BASE__ o = (__BASE__) obj;
         return __eql__(o).__bVal;
     }
 
-    public __Base__ __unary_minus__() {
+    public __BASE__ __unary_minus__() {
         if (this.__type == INTEGER) {
-            return new __Base__((this.__iVal * -1));
+            return new __BASE__((this.__iVal * -1));
         }
 
         if (this.__type == FLOAT) {
-            return new __Base__((this.__fVal * -1));
+            return new __BASE__((this.__fVal * -1));
         }
 
         if (this.__type == STRING) {
-            return new __Base__(this.__sVal);
+            return new __BASE__(this.__sVal);
         }
 
         throw new UnsupportedOperationException("unary_minus isn't support operation for type: " + this.__type);
     }
 
-    public __Base__ __unary_plus__() {
+    public __BASE__ __unary_plus__() {
         if (this.__type == INTEGER) {
-            return new __Base__(this.__iVal);
+            return new __BASE__(this.__iVal);
         }
 
         if (this.__type == FLOAT) {
-            return new __Base__(this.__fVal);
+            return new __BASE__(this.__fVal);
         }
 
         if (this.__type == STRING) {
-            return new __Base__(this.__sVal);
+            return new __BASE__(this.__sVal);
         }
 
         throw new UnsupportedOperationException("unary_plus isn't support operation for type: " + this.__type);

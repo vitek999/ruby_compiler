@@ -187,6 +187,7 @@ void fillTable(Clazz* clazz, Method* method, expr_struct* expr) {
 	case Integer:
 		expr->value_id = clazz->pushConstant(Constant::Integer(expr->int_val));
 		expr->id = clazz->pushOrFindMethodRef("__BASE__", "<init>", "(I)V");
+		expr->class_id = clazz->pushConstant(Constant::Class(clazz->pushConstant(Constant::Utf8("__BASE__"))));
 		break;
 	case Boolean:
 		expr->value_id = clazz->pushConstant(Constant::Integer(expr->int_val));

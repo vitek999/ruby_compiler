@@ -72,6 +72,7 @@ struct expr_struct {
 	int id;
 	int value_id;
 	int local_var_num;
+	int class_id;
 };
 
 enum stmt_type {

@@ -117,6 +117,10 @@ void generate(Method* method) {
 	// generate code.
 
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!TODO!!!!!!!!
+	if (method != 0 && method->body != 0) {
+		tmp_bytes = generate(method->body);
+		code_bytes.insert(code_bytes.end(), tmp_bytes.begin(), tmp_bytes.end());
+	}
 
 	code_bytes.push_back((char)Command::return_);
 
@@ -261,6 +265,61 @@ void generate(Constant constant) {
 		len = intToBytes(constant.type_id);
 		cout << len[2] << len[3];
 	}
+}
+
+std::vector<char> generate(expr_struct* expr) {
+	vector<char> resultCode = vector<char>();
+	vector<char> tmp = vector<char>();
+
+	switch (expr->type)
+	{
+	case Integer:
+		resultCode.push_back((char)Command::new_);
+		tmp = intToBytes(expr->class_id);
+		resultCode.push_back(tmp[2]);
+		resultCode.push_back(tmp[3]);
+		resultCode.push_back((char)Command::dup);
+		tmp = intToBytes(expr->int_val);
+		resultCode.push_back((char)Command::sipush);
+		resultCode.push_back(tmp[2]);
+		resultCode.push_back(tmp[3]);
+		resultCode.push_back((char)Command::invokespecial);
+		tmp = intToBytes(expr->id);
+		resultCode.push_back(tmp[2]);
+		resultCode.push_back(tmp[3]);
+		break;
+	case assign:
+		tmp = generate(expr->left);
+		resultCode.insert(resultCode.end(), tmp.begin(), tmp.end());
+		tmp = generate(expr->right);
+		resultCode.insert(resultCode.end(), tmp.begin(), tmp.end());
+		break;
+	default:
+		break;
+	}
+
+	return resultCode;
+}
+
+std::vector<char> generate(stmt_list_struct* list) {
+	vector<char> resultCode = vector<char>();
+	vector<char> tmp = vector<char>();
+
+	stmt_struct* c = list->first;
+	while (c != 0) {
+		switch (c->type)
+		{
+		case expr_stmt_t:
+			tmp = generate(c->expr_f);
+			resultCode.insert(resultCode.end(), tmp.begin(), tmp.end());
+			break;
+		default:
+			break;
+		}
+		c = c->next;
+	}
+
+	return resultCode;
 }
 
 std::vector <char> intToBytes(int value) {
