@@ -10,6 +10,7 @@ void fillTable(program_struct* program) {
 	Method* mainMethod = new Method();
 	mainMethod->name = "main";
 	clazz->methods[mainMethod->name] = mainMethod;
+	mainMethod->body = 0;
 
 	if (program->items != 0) {
 		program_item_struct* c = program->items->first;
@@ -19,6 +20,12 @@ void fillTable(program_struct* program) {
 				fillTable(clazz, c->def_method_f);
 				break;
 			case pi_stmt_t:
+				if (mainMethod->body == 0) {
+					mainMethod->body = create_stmt_list(c->stmt_f);
+				}
+				else {
+					add_to_stmt_list(mainMethod->body, c->stmt_f);
+				}
 				fillTable(clazz, mainMethod, c->stmt_f);
 				break;
 			case class_declaration_t:

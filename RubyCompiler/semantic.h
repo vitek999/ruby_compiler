@@ -6,6 +6,9 @@
 #include <vector>
 #include <map>
 
+extern "C" struct stmt_list_struct* create_stmt_list(struct stmt_struct* val);
+extern "C" struct stmt_list_struct* add_to_stmt_list(struct stmt_list_struct* list, struct stmt_struct* val);
+
 std::string method_descriptor(int size);
 
 struct Field {
