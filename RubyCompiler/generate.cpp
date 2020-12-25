@@ -321,10 +321,11 @@ std::vector<char> generate(expr_struct* expr) {
 		resultCode.push_back(tmp[3]);
 		break;
 	case assign:
-		tmp = generate(expr->left);
-		resultCode.insert(resultCode.end(), tmp.begin(), tmp.end());
+		// TODO: Improve! (Now works only when left expression is localvar)
 		tmp = generate(expr->right);
 		resultCode.insert(resultCode.end(), tmp.begin(), tmp.end());
+		resultCode.push_back((char)Command::astore);
+		resultCode.push_back(intToBytes(expr->left->local_var_num)[3]);
 		break;
 	default:
 		break;
