@@ -1822,8 +1822,8 @@ YY_RULE_SETUP
 #line 233 "lexer.l"
 {
                                                                  remove_char_from_str(yytext,temp1,'_');
-                                                                 //real_num = ;
-                                                                 yylval.float_un = atof(temp1);
+                                                                 real_num = atof(temp1);
+                                                                 yylval.float_un = real_num;
                                                                  return FLOAT_NUMBER; 
                                                             }
 	YY_BREAK

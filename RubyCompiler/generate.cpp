@@ -120,7 +120,22 @@ void generate(Method* method) {
 		code_bytes.insert(code_bytes.end(), tmp_bytes.begin(), tmp_bytes.end());
 	}
 
-	code_bytes.push_back((char)Command::return_);
+	if (method->name == "main") {
+		code_bytes.push_back((char)Command::return_);
+	}
+	else {
+		code_bytes.push_back((char)Command::new_);
+		tmp_bytes = intToBytes(method->nill_class_id);
+		code_bytes.push_back(tmp_bytes[2]);
+		code_bytes.push_back(tmp_bytes[3]);
+		code_bytes.push_back((char)Command::dup);
+		code_bytes.push_back((char)Command::invokespecial);
+		tmp_bytes = intToBytes(method->nill_constructor_mr);
+		code_bytes.push_back(tmp_bytes[2]);
+		code_bytes.push_back(tmp_bytes[3]);
+		code_bytes.push_back((char)Command::areturn);
+	}
+	
 
 	// size of code
 	tmp_bytes = intToBytes(code_bytes.size());

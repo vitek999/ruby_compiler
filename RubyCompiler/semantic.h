@@ -26,6 +26,8 @@ struct Method {
 	int nameNumber;
 	int descriptorNumber;
 	int self_method_ref;
+	int nill_class_id;
+	int nill_constructor_mr;
 };
 
 class Clazz {
