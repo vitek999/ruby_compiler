@@ -1,9 +1,6 @@
-a = [1, 2, 3]
-println(a * "a")
-
-def some()
-	println("Hello")
-	return 5
+a = 0
+while a < 4
+	println(a)
+	a = a + 1
 end
-
-println(some())
+println(123)

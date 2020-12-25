@@ -143,6 +143,7 @@ void fillTable(Clazz* clazz, Method* method, stmt_struct* stmt) {
 		existsId(clazz, method, stmt->while_stmt_f->condition);
 		fillTable(clazz, method, stmt->while_stmt_f->condition);
 		fillTable(clazz, method, stmt->while_stmt_f->body);
+		stmt->while_stmt_f->bool_field_mr = clazz->pushOrFindFieldRef("__BASE__", "__bVal", "Z");
 		break;
 	case until_stmt_t:
 		existsId(clazz, method, stmt->until_stmt_f->condition);
