@@ -4,7 +4,7 @@ using namespace std;
 
 void generate(program_struct* program, const std::map<std::string, Clazz*>& clazzList) {
 	for (auto clazz : clazzesList) {
-		freopen("generated.class", "wb", stdout);
+		freopen("__PROGRAM__.class", "wb", stdout);
 		vector<char> len = intToBytes(clazz.second->constants.size() + 1);
 		// CAFEBABE
 		cout << (char)0xCA << (char)0xFE << (char)0xBA << (char)0xBE;
@@ -270,6 +270,7 @@ void generate(Constant constant) {
 std::vector<char> generate(expr_struct* expr) {
 	vector<char> resultCode = vector<char>();
 	vector<char> tmp = vector<char>();
+	expr_struct* c = 0;
 
 	switch (expr->type)
 	{
@@ -326,6 +327,25 @@ std::vector<char> generate(expr_struct* expr) {
 		resultCode.insert(resultCode.end(), tmp.begin(), tmp.end());
 		resultCode.push_back((char)Command::astore);
 		resultCode.push_back(intToBytes(expr->left->local_var_num)[3]);
+		break;
+	case var_or_method:
+		resultCode.push_back((char)Command::aload);
+		resultCode.push_back(intToBytes(expr->local_var_num)[3]);
+		break;
+	case method_call:
+		// TODO: Improve! (Now works only with static methods)
+		if (expr->list != 0) {
+			c = expr->list->first;
+			while (c != 0) {
+				tmp = generate(c);
+				resultCode.insert(resultCode.end(), tmp.begin(), tmp.end());
+				c = c->next;
+			}
+		}
+		resultCode.push_back((char)Command::invokestatic);
+		tmp = intToBytes(expr->id);
+		resultCode.push_back(tmp[2]);
+		resultCode.push_back(tmp[3]);
 		break;
 	default:
 		break;

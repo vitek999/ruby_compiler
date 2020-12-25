@@ -1,27 +1,39 @@
 digraph G {
-Id012E4788 [label="program"]
-Id012E3D90 [label="stmt"]
-Id012E3D30 [label="="]
-Id012D51E8 [label="var or method\n localnum = 0"]
-IdVal012D51E8 [label="a"]
-Id012D51E8->IdVal012D51E8
-Id012E3CD0 [label="BOOLEAN\n mref = #16\n val_id = #10"]
-IdVal012E3CD0 [label="false"]
-Id012E3CD0->IdVal012E3CD0
-Id012E3D30->Id012D51E8
-Id012E3D30->Id012E3CD0
-Id012E3D90->Id012E3D30
-Id012E4788->Id012E3D90
-Id012E3FB8 [label="stmt"]
-Id012E3EE0 [label="="]
-Id012E3E20 [label="var or method\n localnum = 1"]
-IdVal012E3E20 [label="b"]
-Id012E3E20->IdVal012E3E20
-Id012E3E80 [label="INT\n mref = #20\n val_id = #17"]
-IdVal012E3E80 [label="1"]
-Id012E3E80->IdVal012E3E80
-Id012E3EE0->Id012E3E20
-Id012E3EE0->Id012E3E80
-Id012E3FB8->Id012E3EE0
-Id012E4788->Id012E3FB8
+Id01104798 [label="program"]
+Id01103CE0 [label="stmt"]
+Id01103C80 [label="="]
+Id01103BC0 [label="var or method\n localnum = 0"]
+IdVal01103BC0 [label="a"]
+Id01103BC0->IdVal01103BC0
+Id01103C20 [label="BOOLEAN\n mref = #16\n val_id = #10"]
+IdVal01103C20 [label="false"]
+Id01103C20->IdVal01103C20
+Id01103C80->Id01103BC0
+Id01103C80->Id01103C20
+Id01103CE0->Id01103C80
+Id01104798->Id01103CE0
+Id011045F8 [label="stmt"]
+Id01103DF0 [label="="]
+Id01103D30 [label="var or method\n localnum = 1"]
+IdVal01103D30 [label="b"]
+Id01103D30->IdVal01103D30
+Id01103D90 [label="INT\n mref = #20\n val_id = #17"]
+IdVal01103D90 [label="1"]
+Id01103D90->IdVal01103D90
+Id01103DF0->Id01103D30
+Id01103DF0->Id01103D90
+Id011045F8->Id01103DF0
+Id01104798->Id011045F8
+Id011040F8 [label="stmt"]
+Id011046F8 [label="method_call\n mref = #24"]
+IdMethodNameVal011046F8 [label="println"]
+Id011046F8->IdMethodNameVal011046F8 [label="name"]
+Id010FE250 [label="params"]
+Id011046F8->Id010FE250
+Id01104698 [label="STRING\n mref = #29\n val_id = #26"]
+IdVal01104698 [label="Hello world!"]
+Id01104698->IdVal01104698
+Id010FE250->Id01104698
+Id011040F8->Id011046F8
+Id01104798->Id011040F8
 }
