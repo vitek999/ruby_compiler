@@ -289,6 +289,7 @@ std::vector<char> generate(expr_struct* expr) {
 		resultCode.push_back(tmp[3]);
 		break;
 	case String: 
+	case Float:
 		resultCode.push_back((char)Command::new_);
 		tmp = intToBytes(expr->class_id);
 		resultCode.push_back(tmp[2]);

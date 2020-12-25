@@ -232,6 +232,7 @@ yield		{ return YIELD_KEYWORD; }
 (0|[1-9](_?{DIGIT})*)(\.{DIGIT}+(_{DIGIT}+)*)?({EXPONENT})?  {
                                                                  remove_char_from_str(yytext,temp1,'_');
                                                                  real_num = atof(temp1);
+                                                                 yylval.float_un = real_num;
                                                                  return FLOAT_NUMBER; 
                                                             }
 
