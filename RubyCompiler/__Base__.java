@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 
 public class __BASE__ {
@@ -388,6 +389,68 @@ public class __BASE__ {
         System.out.println(value.toString());
     }
 
+    public static __BASE__  __gets__() {
+        Scanner scanner = new Scanner(System.in);
+        return new __BASE__(scanner.nextLine());
+    }
+
+    public __BASE__ __to_i__() {
+        if (this.__type == INTEGER)
+            return new __BASE__(this.__iVal);
+        if (this.__type == FLOAT)
+            return new __BASE__((int)this.__fVal);
+        if (this.__type == STRING) {
+            String str = "";
+            int value = 0;
+            for (int i = 0; i < this.__sVal.length() && Character.isDigit(this.__sVal.charAt(i)); i++) {
+                str += this.__sVal.charAt(i);
+            }
+            if (!str.isEmpty())
+                value = Integer.parseInt(str);
+            return new __BASE__(value);
+        }
+        throw new UnsupportedOperationException("to_i() isn't support operation for type: " + this.__type);
+    }
+
+    public __BASE__ __to_f__() {
+        if (this.__type == INTEGER)
+            return new __BASE__((float)this.__iVal);
+        if (this.__type == FLOAT)
+            return new __BASE__(this.__fVal);
+        if (this.__type == STRING) {
+            String str = "";
+            int value = 0;
+            for (int i = 0; i < this.__sVal.length() && (Character.isDigit(this.__sVal.charAt(i)) || this.__sVal.charAt(i) == '.'); i++) {
+                if (!str.contains("."))
+                    str += this.__sVal.charAt(i);
+                else
+                    return new __BASE__((float)value);
+            }
+            if (!str.isEmpty())
+                value = Integer.parseInt(str);
+            return new __BASE__((float)value);
+        }
+        throw new UnsupportedOperationException("to_f() isn't support operation for type: " + this.__type);
+    }
+
+    public __BASE__ __to_s__() {
+        return new __BASE__(this.toString());
+    }
+
+    public __BASE__ __split__() {
+        if (this.__type == STRING) {
+            String str = this.__sVal;
+            String[] strs = str.split(" ");
+            ArrayList<__BASE__> base__s = new ArrayList<>();
+
+            for (String s : strs) {
+                base__s.add(new __BASE__(s));
+            }
+            return new __BASE__(base__s);
+        }
+
+        throw new UnsupportedOperationException("split() isn't support operation for type: " + this.__type);
+    }
     @Override
     public boolean equals(Object obj) {
         __BASE__ o = (__BASE__) obj;
