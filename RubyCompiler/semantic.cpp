@@ -361,6 +361,11 @@ void fillTable(Clazz* clazz, Method* method, expr_struct* expr) {
 		if (expr->list != 0) {
 			existsIds(clazz, method, expr->list);
 		}
+		expr->array_list_class_id = clazz->pushConstant(Constant::Class(clazz->pushConstant(Constant::Utf8("java/util/ArrayList"))));
+		expr->array_list_constructor_mr = clazz->pushOrFindMethodRef("java/util/ArrayList", "<init>", "(Ljava/util/Collection;)V");
+		expr->list_constructor_mr = clazz->pushOrFindMethodRef("java/util/Arrays", "asList", "([Ljava/lang/Object;)Ljava/util/List;");
+		expr->id = clazz->pushOrFindMethodRef("__BASE__", "<init>", "(Ljava/util/ArrayList;)V");
+		expr->class_id = clazz->pushConstant(Constant::Class(clazz->pushConstant(Constant::Utf8("__BASE__"))));
 		break;
 	case member_access_and_assign:
 		expr->id = clazz->pushOrFindMethodRef("__member_access_assign__", "(L__BASE__;L__BASE__;)L__BASE__;");

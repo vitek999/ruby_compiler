@@ -269,6 +269,7 @@ std::vector<char> generate(expr_struct* expr) {
 	std::vector<char> resultCode = std::vector<char>();
 	std::vector<char> tmp = std::vector<char>();
 	expr_struct* c = 0;
+	int counter = 0;
 
 	switch (expr->type)
 	{
@@ -368,6 +369,60 @@ std::vector<char> generate(expr_struct* expr) {
 		tmp = intToBytes(expr->id);
 		resultCode.push_back(tmp[2]);
 		resultCode.push_back(tmp[3]);
+		break;
+	case array:
+		resultCode.push_back((char)Command::new_);
+		tmp = intToBytes(expr->class_id);
+		resultCode.push_back(tmp[2]);
+		resultCode.push_back(tmp[3]);
+		resultCode.push_back((char)Command::dup);
+		resultCode.push_back((char)Command::new_);
+		tmp = intToBytes(expr->array_list_class_id);
+		resultCode.push_back(tmp[2]);
+		resultCode.push_back(tmp[3]);
+		resultCode.push_back((char)Command::dup);
+		tmp = intToBytes(count_exprs(expr->list));
+		resultCode.push_back((char)Command::sipush);
+		resultCode.push_back(tmp[2]);
+		resultCode.push_back(tmp[3]);
+		resultCode.push_back((char)Command::anewarray);
+		tmp = intToBytes(expr->class_id);
+		resultCode.push_back(tmp[2]);
+		resultCode.push_back(tmp[3]);
+		resultCode.push_back((char)Command::dup);
+
+		// Add elements
+		c = expr->list->first;
+		while (c != 0) {
+			tmp = intToBytes(counter);
+			resultCode.push_back((char)Command::sipush);
+			resultCode.push_back(tmp[2]);
+			resultCode.push_back(tmp[3]);
+			tmp = generate(c);
+			resultCode.insert(resultCode.end(), tmp.begin(), tmp.end());
+			resultCode.push_back((char)Command::aastore);
+			resultCode.push_back((char)Command::dup);
+			++counter;
+			c = c->next;
+		}
+		// because after last element we dup data.
+		resultCode.push_back((char)Command::pop);
+		// call Arrays.asList
+		resultCode.push_back((char)Command::invokestatic);
+		tmp = intToBytes(expr->list_constructor_mr);
+		resultCode.push_back(tmp[2]);
+		resultCode.push_back(tmp[3]);
+		
+		// create ArrayList
+		resultCode.push_back((char)Command::invokespecial);
+		tmp = intToBytes(expr->array_list_constructor_mr);
+		resultCode.push_back(tmp[2]);
+		resultCode.push_back(tmp[3]);
+		resultCode.push_back((char)Command::invokespecial);
+		tmp = intToBytes(expr->id);
+		resultCode.push_back(tmp[2]);
+		resultCode.push_back(tmp[3]);
+		//resultCode.push_back((char)Command::pop);
 		break;
 	default:
 		break;

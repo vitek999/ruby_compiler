@@ -1,5 +1,3 @@
-a = 1
-b = 2
-c = a + b
-d = c * c
-println("23" + "asd")
+a = [1, "123", true]
+a[1] = 2
+println(a)
