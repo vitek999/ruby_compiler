@@ -1,9 +1,9 @@
 a = [1, 2, 3]
 println(a * "a")
 
-def some(arr)
- arr = arr + [4]
+def some()
+	println("Hello")
+	return 5
 end
 
-some(a)
-println(a)
+println(some())

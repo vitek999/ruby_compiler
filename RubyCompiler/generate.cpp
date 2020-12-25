@@ -124,16 +124,18 @@ void generate(Method* method) {
 		code_bytes.push_back((char)Command::return_);
 	}
 	else {
-		code_bytes.push_back((char)Command::new_);
-		tmp_bytes = intToBytes(method->nill_class_id);
-		code_bytes.push_back(tmp_bytes[2]);
-		code_bytes.push_back(tmp_bytes[3]);
-		code_bytes.push_back((char)Command::dup);
-		code_bytes.push_back((char)Command::invokespecial);
-		tmp_bytes = intToBytes(method->nill_constructor_mr);
-		code_bytes.push_back(tmp_bytes[2]);
-		code_bytes.push_back(tmp_bytes[3]);
-		code_bytes.push_back((char)Command::areturn);
+		if (code_bytes.back() != ((char)Command::areturn)) {
+			code_bytes.push_back((char)Command::new_);
+			tmp_bytes = intToBytes(method->nill_class_id);
+			code_bytes.push_back(tmp_bytes[2]);
+			code_bytes.push_back(tmp_bytes[3]);
+			code_bytes.push_back((char)Command::dup);
+			code_bytes.push_back((char)Command::invokespecial);
+			tmp_bytes = intToBytes(method->nill_constructor_mr);
+			code_bytes.push_back(tmp_bytes[2]);
+			code_bytes.push_back(tmp_bytes[3]);
+			code_bytes.push_back((char)Command::areturn);
+		}
 	}
 	
 
@@ -469,6 +471,11 @@ std::vector<char> generate(stmt_list_struct* list) {
 		case expr_stmt_t:
 			tmp = generate(c->expr_f);
 			resultCode.insert(resultCode.end(), tmp.begin(), tmp.end());
+			break;
+		case return_stmt_t:
+			tmp = generate(c->expr_f);
+			resultCode.insert(resultCode.end(), tmp.begin(), tmp.end());
+			resultCode.push_back((char)Command::areturn);
 			break;
 		default:
 			break;
