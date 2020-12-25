@@ -1,0 +1,15 @@
+digraph G {
+Id00E45248 [label="program"]
+Id00E53D90 [label="stmt"]
+Id00E53D30 [label="="]
+Id00E451E8 [label="var or method\n localnum = 0"]
+IdVal00E451E8 [label="a"]
+Id00E451E8->IdVal00E451E8
+Id00E53CD0 [label="BOOLEAN\n mref = #16\n val_id = #10"]
+IdVal00E53CD0 [label="false"]
+Id00E53CD0->IdVal00E53CD0
+Id00E53D30->Id00E451E8
+Id00E53D30->Id00E53CD0
+Id00E53D90->Id00E53D30
+Id00E45248->Id00E53D90
+}
