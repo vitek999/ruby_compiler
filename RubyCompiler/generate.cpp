@@ -288,6 +288,21 @@ std::vector<char> generate(expr_struct* expr) {
 		resultCode.push_back(tmp[2]);
 		resultCode.push_back(tmp[3]);
 		break;
+	case String: 
+		resultCode.push_back((char)Command::new_);
+		tmp = intToBytes(expr->class_id);
+		resultCode.push_back(tmp[2]);
+		resultCode.push_back(tmp[3]);
+		resultCode.push_back((char)Command::dup);
+		resultCode.push_back((char)Command::ldc_w);
+		tmp = intToBytes(expr->value_id);
+		resultCode.push_back(tmp[2]);
+		resultCode.push_back(tmp[3]);
+		resultCode.push_back((char)Command::invokespecial);
+		tmp = intToBytes(expr->id);
+		resultCode.push_back(tmp[2]);
+		resultCode.push_back(tmp[3]);
+		break;
 	case assign:
 		tmp = generate(expr->left);
 		resultCode.insert(resultCode.end(), tmp.begin(), tmp.end());
