@@ -1,3 +1,5 @@
-a = false
-b = 1
-println("Hello world!")
+a = 1
+b = 2
+c = a + b
+d = c * c
+println("23" + "asd")
