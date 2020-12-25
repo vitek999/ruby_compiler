@@ -424,6 +424,18 @@ std::vector<char> generate(expr_struct* expr) {
 		resultCode.push_back(tmp[3]);
 		//resultCode.push_back((char)Command::pop);
 		break;
+	case member_access_and_assign: 
+		tmp = generate(expr->left);
+		resultCode.insert(resultCode.end(), tmp.begin(), tmp.end());
+		tmp = generate(expr->index);
+		resultCode.insert(resultCode.end(), tmp.begin(), tmp.end());
+		tmp = generate(expr->right);
+		resultCode.insert(resultCode.end(), tmp.begin(), tmp.end());
+		resultCode.push_back((char)Command::invokevirtual);
+		tmp = intToBytes(expr->id);
+		resultCode.push_back(tmp[2]);
+		resultCode.push_back(tmp[3]);
+		break;
 	default:
 		break;
 	}

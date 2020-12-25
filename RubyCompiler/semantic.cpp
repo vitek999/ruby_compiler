@@ -368,7 +368,7 @@ void fillTable(Clazz* clazz, Method* method, expr_struct* expr) {
 		expr->class_id = clazz->pushConstant(Constant::Class(clazz->pushConstant(Constant::Utf8("__BASE__"))));
 		break;
 	case member_access_and_assign:
-		expr->id = clazz->pushOrFindMethodRef("__member_access_assign__", "(L__BASE__;L__BASE__;)L__BASE__;");
+		expr->id = clazz->pushOrFindMethodRef("__BASE__", "__member_access_assign__", "(L__BASE__;L__BASE__;)L__BASE__;");
 		existsId(clazz, method, expr->left);
 		existsId(clazz, method, expr->right);
 		existsId(clazz, method, expr->index);
