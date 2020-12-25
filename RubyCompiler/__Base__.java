@@ -154,10 +154,10 @@ public class __BASE__ {
             return new __BASE__(arrayList);
         }
 
-        if (this.__type == ARRAY && o.__type == STRING) {
+       if (this.__type == ARRAY && o.__type == STRING) {
             String str = this.__aVal.get(0).toString();
-            for (__BASE__ base__ : this.__aVal) {
-                str += (new __BASE__(o.__sVal)).toString() + base__.toString();
+            for (int i = 1; i < this.__aVal.size(); i++) {
+                str += (new __BASE__(o.__sVal)).toString() + this.__aVal.get(i).toString();
             }
             return new __BASE__(str);
         }
