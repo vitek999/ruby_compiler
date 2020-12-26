@@ -465,18 +465,20 @@ std::vector<char> generate(expr_struct* expr) {
 		resultCode.push_back((char)Command::dup);
 
 		// Add elements
-		c = expr->list->first;
-		while (c != 0) {
-			tmp = intToBytes(counter);
-			resultCode.push_back((char)Command::sipush);
-			resultCode.push_back(tmp[2]);
-			resultCode.push_back(tmp[3]);
-			tmp = generate(c);
-			resultCode.insert(resultCode.end(), tmp.begin(), tmp.end());
-			resultCode.push_back((char)Command::aastore);
-			resultCode.push_back((char)Command::dup);
-			++counter;
-			c = c->next;
+		if (expr->list != 0) {
+			c = expr->list->first;
+			while (c != 0) {
+				tmp = intToBytes(counter);
+				resultCode.push_back((char)Command::sipush);
+				resultCode.push_back(tmp[2]);
+				resultCode.push_back(tmp[3]);
+				tmp = generate(c);
+				resultCode.insert(resultCode.end(), tmp.begin(), tmp.end());
+				resultCode.push_back((char)Command::aastore);
+				resultCode.push_back((char)Command::dup);
+				++counter;
+				c = c->next;
+			}
 		}
 		// because after last element we dup data.
 		resultCode.push_back((char)Command::pop);
