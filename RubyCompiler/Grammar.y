@@ -256,8 +256,8 @@ expr: INTEGER_NUMBER { $$=create_const_integer_expr(Integer, $1); /* puts("integ
     | expr OR_KEYWORD expr { $$=create_op_expr(or_keyword, $1, $3); /* puts("OR_KEYWORD"); */ }
     | OPEN_ROUND_BRACKET expr CLOSE_ROUND_BRACKET { $$=$2; /* puts(" expr in round brackets "); */ }
 	| expr OPEN_SQUARE_BRACKET expr CLOSE_SQUARE_BRACKET { $$=create_op_expr(member_access, $1, $3); puts(" expr in square brackets "); }
-    | OPEN_SQUARE_BRACKET expr_list CLOSE_SQUARE_BRACKET { $$=create_array_struct($2);puts(" expr list"); }
-    | VAR_METHOD_NAME OPEN_ROUND_BRACKET expr_list CLOSE_ROUND_BRACKET { $$=create_method_call_expr($1, $3); puts("method call");}
+    | OPEN_SQUARE_BRACKET new_lines_op expr_list CLOSE_SQUARE_BRACKET { $$=create_array_struct($3);puts(" expr list"); }
+    | VAR_METHOD_NAME OPEN_ROUND_BRACKET new_lines_op expr_list CLOSE_ROUND_BRACKET { $$=create_method_call_expr($1, $4); puts("method call");}
     | VAR_METHOD_NAME { $$=create_const_string_expr(var_or_method, $1); /* puts("var"); */ }     
     | INSTANCE_VAR_NAME { $$=create_const_string_expr(instance_var, $1); /* puts("instance var"); */ }
     | expr DOT_SYMBOL VAR_METHOD_NAME { $$=create_field_call_expr($1, $3); puts("object field call"); }
@@ -364,8 +364,8 @@ expr_list: /* empty */ { $$=0; }
 	| expr_list_not_empty {$$=$1; }
 	;
 
-expr_list_not_empty: expr { $$=create_expr_list($1); }
-	| expr_list_not_empty COMMA_SYMBOL expr { $$=add_to_expr_list($1, $3); }
+expr_list_not_empty: expr new_lines_op { $$=create_expr_list($1); }
+	| expr_list_not_empty COMMA_SYMBOL new_lines_op expr new_lines_op { $$=add_to_expr_list($1, $4); }
 	;
 
 class_declaration: CLASS_KEYWORD CLASS_NAME stmt_ends def_method_list_op END_KEYWORD stmt_ends { $$=create_class_declaration_program_item($2, 0, $4); puts("class declaration"); }
