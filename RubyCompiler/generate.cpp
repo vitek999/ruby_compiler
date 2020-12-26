@@ -535,6 +535,16 @@ std::vector<char> generate(expr_struct* expr) {
 		resultCode.push_back(tmp[2]);
 		resultCode.push_back(tmp[3]);
 		break;
+	case logical_not:
+	case unary_plus:
+	case unary_minus:
+		tmp = generate(expr->left);
+		resultCode.insert(resultCode.end(), tmp.begin(), tmp.end());
+		resultCode.push_back((char)Command::invokevirtual);
+		tmp = intToBytes(expr->id);
+		resultCode.push_back(tmp[2]);
+		resultCode.push_back(tmp[3]);
+		break;
 	default:
 		break;
 	}

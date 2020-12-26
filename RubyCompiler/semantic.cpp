@@ -223,15 +223,15 @@ void fillTable(Clazz* clazz, Method* method, expr_struct* expr) {
 		existsId(clazz, method, expr->right);
 		break;
 	case logical_not:
-		expr->id = clazz->pushOrFindMethodRef("__not__", ("(L__BASE__;)L__BASE__;"));
+		expr->id = clazz->pushOrFindMethodRef("__BASE__", "__not__", ("()L__BASE__;"));
 		existsId(clazz, method, expr->left);
 		break;
 	case unary_plus:
-		expr->id = clazz->pushOrFindMethodRef("__unary_plus__", "()L__BASE__;");
+		expr->id = clazz->pushOrFindMethodRef("__BASE__", "__unary_plus__", "()L__BASE__;");
 		existsId(clazz, method, expr->left);
 		break;
 	case unary_minus:
-		expr->id = clazz->pushOrFindMethodRef("__unary_minus__", "()L__BASE__;");
+		expr->id = clazz->pushOrFindMethodRef("__BASE__", "__unary_minus__", "()L__BASE__;");
 		existsId(clazz, method, expr->left);
 		break;
 	case mod_assign:
@@ -354,7 +354,10 @@ void fillTable(Clazz* clazz, Method* method, expr_struct* expr) {
 		else if (strcmp(expr->str_val, "println") == 0) {
 			expr->id = clazz->pushOrFindMethodRef("__BASE__", "println", "(L__BASE__;)V");
 		}
-		else {
+		else if (strcmp(expr->str_val, "gets") == 0) {
+			expr->id = clazz->pushOrFindMethodRef("__BASE__", "__gets__", "()L__BASE__;");
+		}
+		else{
 			existsMethod(expr->str_val);
 			expr->id = clazz->pushOrFindMethodRef(expr->str_val, method_descriptor(count_exprs(expr->list)));
 		}
