@@ -168,6 +168,30 @@ void generate(Method* method) {
 	}
 }
 
+std::vector<char> generate(until_stmt_struct* until_s) {
+	std::vector<char> resultCode = std::vector<char>();
+	std::vector<char> tmp = std::vector<char>();
+	std::vector<char> code = generate(until_s->body);
+
+	tmp = generate(until_s->condition);
+	resultCode.insert(resultCode.end(), tmp.begin(), tmp.end());
+	resultCode.push_back((char)Command::getfield);
+	tmp = intToBytes(until_s->bool_field_mr);
+	resultCode.push_back(tmp[2]);
+	resultCode.push_back(tmp[3]);
+	resultCode.push_back((char)Command::ifne);
+	tmp = intToBytes(code.size() + 6);
+	resultCode.push_back(tmp[2]);
+	resultCode.push_back(tmp[3]);
+	resultCode.insert(resultCode.end(), code.begin(), code.end());
+	tmp = intToBytes(-1 * resultCode.size());
+	resultCode.push_back((char)Command::goto_);
+	resultCode.push_back(tmp[2]);
+	resultCode.push_back(tmp[3]);
+
+	return resultCode;
+}
+
 std::vector<char> generate(while_stmt_struct* while_s) {
 	std::vector<char> resultCode = std::vector<char>();
 	std::vector<char> tmp = std::vector<char>();
@@ -541,6 +565,10 @@ std::vector<char> generate(stmt_list_struct* list) {
 			break;
 		case if_stmt_t:
 			tmp = generate(c->if_stmt_f);
+			resultCode.insert(resultCode.end(), tmp.begin(), tmp.end());
+			break;
+		case until_stmt_t:
+			tmp = generate(c->until_stmt_f);
 			resultCode.insert(resultCode.end(), tmp.begin(), tmp.end());
 			break;
 		default:
