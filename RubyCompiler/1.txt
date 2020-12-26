@@ -28,23 +28,23 @@ println(a)
 
 def paint(array, curX, curY, maxX, maxY)
   if(curX > maxX)
-    return 0
+    return
   end
 
   if (curX < 0)
-    return 0
+    return
   end
 
   if(curY > maxY)
-    return 0
+    return
   end
 
   if(curY < 0)
-    return 0
+    return
   end
 
   if(array[curX][curY]==1)
-    return 0 
+    return
   end
 
   array[curX][curY]=1
@@ -52,7 +52,7 @@ def paint(array, curX, curY, maxX, maxY)
   paint(array, curX, curY-1, maxX, maxY)
   paint(array, curX+1, curY, maxX, maxY)
   paint(array, curX, curY+1, maxX, maxY)
-  return 0
+  return
 end
 
 arr = [
@@ -146,7 +146,11 @@ def some1(a)
 end
 c = 3
 a = false && some1(1)
-
+def anothersome()
+  return vitya = "code"
+end
+println(yarik = anothersome())
+println(yarik)
 
 
 

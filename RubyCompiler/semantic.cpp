@@ -172,7 +172,7 @@ void fillTable(Clazz* clazz, Method* method, stmt_struct* stmt) {
 		break;
 	case return_stmt_t:
 		existsId(clazz, method, stmt->expr_f);
-		fillTable(clazz, method, stmt->expr_f);
+		if(stmt->expr_f != 0) fillTable(clazz, method, stmt->expr_f);
 		break;
 	default:
 		break;

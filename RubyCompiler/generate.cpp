@@ -421,6 +421,7 @@ std::vector<char> generate(expr_struct* expr) {
 		// TODO: Improve! (Now works only when left expression is localvar)
 		tmp = generate(expr->right);
 		resultCode.insert(resultCode.end(), tmp.begin(), tmp.end());
+		resultCode.push_back((char)Command::dup);
 		resultCode.push_back((char)Command::astore);
 		resultCode.push_back(intToBytes(expr->left->local_var_num)[3]);
 		break;
@@ -565,9 +566,14 @@ std::vector<char> generate(stmt_list_struct* list) {
 			resultCode.insert(resultCode.end(), tmp.begin(), tmp.end());
 			break;
 		case return_stmt_t:
-			tmp = generate(c->expr_f);
-			resultCode.insert(resultCode.end(), tmp.begin(), tmp.end());
-			resultCode.push_back((char)Command::areturn);
+			if (c->expr_f != 0) {
+				tmp = generate(c->expr_f);
+				resultCode.insert(resultCode.end(), tmp.begin(), tmp.end());
+				resultCode.push_back((char)Command::areturn);
+			} else {
+				resultCode.push_back((char)Command::return_);
+			}
+			
 			break;
 		case while_stmt_t:
 			tmp = generate(c->while_stmt_f);
