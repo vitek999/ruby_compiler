@@ -1,6 +1,11 @@
+some_array = ["first", 2, true, [4]]
+
 a = 0
-while a < 4
+b = 2
+
+if a < b
+	a = "123"
 	println(a)
-	a = a + 1
 end
-println(123)
+
+println("end")

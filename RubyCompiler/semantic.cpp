@@ -164,6 +164,7 @@ void fillTable(Clazz* clazz, Method* method, stmt_struct* stmt) {
 		if (stmt->if_stmt_f->else_branch != 0) {
 			fillTable(clazz, method, stmt->if_stmt_f->else_branch);
 		}
+		stmt->if_stmt_f->bool_field_mr = clazz->pushOrFindFieldRef("__BASE__", "__bVal", "Z");
 		break;
 	case block_stmt_t:
 		fillTable(clazz, method, stmt->block_stmt_f->list);

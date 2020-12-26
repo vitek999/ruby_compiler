@@ -192,6 +192,38 @@ std::vector<char> generate(while_stmt_struct* while_s) {
 	return resultCode;
 }
 
+std::vector<char> generate(if_stmt_struct* if_s) {
+	std::vector<char> resultCode = std::vector<char>();
+	std::vector<char> tmp = std::vector<char>();
+
+	std::vector<char> trueCondition = generate(if_s->if_branch->condition);
+	std::vector<char> trueBranch = generate(if_s->if_branch->body);
+	std::vector<char> elseBranch = std::vector<char>(); // generate(if_s->else_branch);
+
+	if (if_s->else_branch != 0) {
+		elseBranch = generate(if_s->else_branch);
+		trueBranch.push_back((char)Command::goto_);
+		tmp = intToBytes(elseBranch.size() + 3);
+		trueBranch.push_back(tmp[2]);
+		trueBranch.push_back(tmp[3]);
+	}
+
+	trueCondition.push_back((char)Command::getfield);
+	tmp = intToBytes(if_s->bool_field_mr);
+	trueCondition.push_back(tmp[2]);
+	trueCondition.push_back(tmp[3]);	
+	trueCondition.push_back((char)Command::ifeq);
+	tmp = intToBytes(trueBranch.size() + 3);
+	trueCondition.push_back(tmp[2]);
+	trueCondition.push_back(tmp[3]);
+
+	resultCode.insert(resultCode.end(), trueCondition.begin(), trueCondition.end());
+	resultCode.insert(resultCode.end(), trueBranch.begin(), trueBranch.end());
+	resultCode.insert(resultCode.end(), elseBranch.begin(), elseBranch.end());
+
+	return resultCode;
+}
+
 std::vector<char> generateConstructor(Method* m) {
 	std::vector<char> result_bytes = std::vector<char>();
 
@@ -503,6 +535,10 @@ std::vector<char> generate(stmt_list_struct* list) {
 			break;
 		case while_stmt_t:
 			tmp = generate(c->while_stmt_f);
+			resultCode.insert(resultCode.end(), tmp.begin(), tmp.end());
+			break;
+		case if_stmt_t:
+			tmp = generate(c->if_stmt_f);
 			resultCode.insert(resultCode.end(), tmp.begin(), tmp.end());
 			break;
 		default:
