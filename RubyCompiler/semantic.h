@@ -26,6 +26,8 @@ struct Method {
 	int nameNumber;
 	int descriptorNumber;
 	int self_method_ref;
+	int nill_class_id;
+	int nill_constructor_mr;
 };
 
 class Clazz {
@@ -68,6 +70,14 @@ public:
 		int class_id = pushConstant(Constant::Class(pushConstant(Constant::Utf8(this->name))));
 		int fileldref_id = pushConstant(Constant::FieldRef(class_id, name_and_type_id));	
 		return fileldref_id;
+	}
+
+	int pushOrFindFieldRef(const std::string& className, const std::string& fieldName, const std::string& type) {
+		int name_id = pushConstant(Constant::Utf8(fieldName));
+		int type_id = pushConstant(Constant::Utf8(type));
+		int name_and_type_id = pushConstant(Constant::NameAndType(name_id, type_id));
+		int class_id = pushConstant(Constant::Class(pushConstant(Constant::Utf8(className)))); 
+		return pushConstant(Constant::FieldRef(class_id, name_and_type_id));
 	}
 
 	int pushOrFindMethodRef(const std::string& methodName, const std::string& descriptor) {

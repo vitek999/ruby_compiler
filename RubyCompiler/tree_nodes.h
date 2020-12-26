@@ -147,6 +147,9 @@ struct for_stmt_struct {
 struct while_stmt_struct {
 	struct expr_struct * condition;
 	struct stmt_list_struct* body;
+
+	// semantic 
+	int bool_field_mr;
 };
 
 struct until_stmt_struct {
@@ -169,6 +172,9 @@ struct if_stmt_struct {
 	struct if_part_stmt_struct* if_branch;
 	struct elsif_stmt_list* elsif_branches;
 	struct stmt_list_struct* else_branch;
+
+	// semantic 
+	int bool_field_mr;
 };
 
 struct stmt_block_struct {

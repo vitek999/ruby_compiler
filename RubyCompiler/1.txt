@@ -1,2 +1,24 @@
-a = [1, 2, 3]
-println(a * "a")
+def sort (arr, size)
+  i = 0
+  j = 0
+  while i < size - 1
+    while j < size - 1
+
+      if arr[j+1] < arr[j]
+        tmp = arr[j + 1]
+        arr[j + 1] = arr[j]
+        arr[j] = tmp
+      end
+
+      j = j + 1 
+    end
+    i = i + 1
+    j = 0
+  end
+end
+
+a = [2, 1, 4, 3]
+
+sort(a, 4)
+
+println(a)

@@ -120,7 +120,24 @@ void generate(Method* method) {
 		code_bytes.insert(code_bytes.end(), tmp_bytes.begin(), tmp_bytes.end());
 	}
 
-	code_bytes.push_back((char)Command::return_);
+	if (method->name == "main") {
+		code_bytes.push_back((char)Command::return_);
+	}
+	else {
+		if (code_bytes.back() != ((char)Command::areturn)) {
+			code_bytes.push_back((char)Command::new_);
+			tmp_bytes = intToBytes(method->nill_class_id);
+			code_bytes.push_back(tmp_bytes[2]);
+			code_bytes.push_back(tmp_bytes[3]);
+			code_bytes.push_back((char)Command::dup);
+			code_bytes.push_back((char)Command::invokespecial);
+			tmp_bytes = intToBytes(method->nill_constructor_mr);
+			code_bytes.push_back(tmp_bytes[2]);
+			code_bytes.push_back(tmp_bytes[3]);
+			code_bytes.push_back((char)Command::areturn);
+		}
+	}
+	
 
 	// size of code
 	tmp_bytes = intToBytes(code_bytes.size());
@@ -149,6 +166,62 @@ void generate(Method* method) {
 	for (auto i : result_bytes) {
 		std::cout << i;
 	}
+}
+
+std::vector<char> generate(while_stmt_struct* while_s) {
+	std::vector<char> resultCode = std::vector<char>();
+	std::vector<char> tmp = std::vector<char>();
+	std::vector<char> code = generate(while_s->body);
+	
+	tmp = generate(while_s->condition);
+	resultCode.insert(resultCode.end(), tmp.begin(), tmp.end());
+	resultCode.push_back((char)Command::getfield);
+	tmp = intToBytes(while_s->bool_field_mr);
+	resultCode.push_back(tmp[2]);
+	resultCode.push_back(tmp[3]);
+	resultCode.push_back((char)Command::ifeq);
+	tmp = intToBytes(code.size() + 6);
+	resultCode.push_back(tmp[2]);
+	resultCode.push_back(tmp[3]);
+	resultCode.insert(resultCode.end(), code.begin(), code.end());
+	tmp = intToBytes(-1 * resultCode.size());
+	resultCode.push_back((char)Command::goto_);
+	resultCode.push_back(tmp[2]);
+	resultCode.push_back(tmp[3]);
+
+	return resultCode;
+}
+
+std::vector<char> generate(if_stmt_struct* if_s) {
+	std::vector<char> resultCode = std::vector<char>();
+	std::vector<char> tmp = std::vector<char>();
+
+	std::vector<char> trueCondition = generate(if_s->if_branch->condition);
+	std::vector<char> trueBranch = generate(if_s->if_branch->body);
+	std::vector<char> elseBranch = std::vector<char>(); // generate(if_s->else_branch);
+
+	if (if_s->else_branch != 0) {
+		elseBranch = generate(if_s->else_branch);
+		trueBranch.push_back((char)Command::goto_);
+		tmp = intToBytes(elseBranch.size() + 3);
+		trueBranch.push_back(tmp[2]);
+		trueBranch.push_back(tmp[3]);
+	}
+
+	trueCondition.push_back((char)Command::getfield);
+	tmp = intToBytes(if_s->bool_field_mr);
+	trueCondition.push_back(tmp[2]);
+	trueCondition.push_back(tmp[3]);	
+	trueCondition.push_back((char)Command::ifeq);
+	tmp = intToBytes(trueBranch.size() + 3);
+	trueCondition.push_back(tmp[2]);
+	trueCondition.push_back(tmp[3]);
+
+	resultCode.insert(resultCode.end(), trueCondition.begin(), trueCondition.end());
+	resultCode.insert(resultCode.end(), trueBranch.begin(), trueBranch.end());
+	resultCode.insert(resultCode.end(), elseBranch.begin(), elseBranch.end());
+
+	return resultCode;
 }
 
 std::vector<char> generateConstructor(Method* m) {
@@ -392,18 +465,20 @@ std::vector<char> generate(expr_struct* expr) {
 		resultCode.push_back((char)Command::dup);
 
 		// Add elements
-		c = expr->list->first;
-		while (c != 0) {
-			tmp = intToBytes(counter);
-			resultCode.push_back((char)Command::sipush);
-			resultCode.push_back(tmp[2]);
-			resultCode.push_back(tmp[3]);
-			tmp = generate(c);
-			resultCode.insert(resultCode.end(), tmp.begin(), tmp.end());
-			resultCode.push_back((char)Command::aastore);
-			resultCode.push_back((char)Command::dup);
-			++counter;
-			c = c->next;
+		if (expr->list != 0) {
+			c = expr->list->first;
+			while (c != 0) {
+				tmp = intToBytes(counter);
+				resultCode.push_back((char)Command::sipush);
+				resultCode.push_back(tmp[2]);
+				resultCode.push_back(tmp[3]);
+				tmp = generate(c);
+				resultCode.insert(resultCode.end(), tmp.begin(), tmp.end());
+				resultCode.push_back((char)Command::aastore);
+				resultCode.push_back((char)Command::dup);
+				++counter;
+				c = c->next;
+			}
 		}
 		// because after last element we dup data.
 		resultCode.push_back((char)Command::pop);
@@ -453,6 +528,19 @@ std::vector<char> generate(stmt_list_struct* list) {
 		{
 		case expr_stmt_t:
 			tmp = generate(c->expr_f);
+			resultCode.insert(resultCode.end(), tmp.begin(), tmp.end());
+			break;
+		case return_stmt_t:
+			tmp = generate(c->expr_f);
+			resultCode.insert(resultCode.end(), tmp.begin(), tmp.end());
+			resultCode.push_back((char)Command::areturn);
+			break;
+		case while_stmt_t:
+			tmp = generate(c->while_stmt_f);
+			resultCode.insert(resultCode.end(), tmp.begin(), tmp.end());
+			break;
+		case if_stmt_t:
+			tmp = generate(c->if_stmt_f);
 			resultCode.insert(resultCode.end(), tmp.begin(), tmp.end());
 			break;
 		default:

@@ -16,6 +16,8 @@ void generate(Method* method);
 std::vector<char> generateConstructor(Method * m);
 std::vector<char> generate(expr_struct * expr);
 std::vector<char> generate(stmt_list_struct* list);
+std::vector<char> generate(while_stmt_struct* while_s);
+std::vector<char> generate(if_stmt_struct* if_s);
 
 std::vector <char> intToBytes(int value);
 

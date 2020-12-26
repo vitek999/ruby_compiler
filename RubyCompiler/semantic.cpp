@@ -90,12 +90,9 @@ void fillTable(class_declaration_struct* class_decl) {
 void fillTable(Clazz* clazz, def_method_stmt_struct* method) {
 	Method * m = new Method();
 	m->name = method->name;
-	m->body = method->body;
-	
-	if (clazz->name != "__PROGRAM__") { // not static...
-		m->local_variables.push_back("this");
-	}
-	
+	m->nameNumber = clazz->pushConstant(Constant::Utf8(m->name));
+	m->isStatic = true;
+
 	int params_counter = 0;
 	if (method->params != 0) {
 		method_param_struct* c = method->params->first;
@@ -107,14 +104,17 @@ void fillTable(Clazz* clazz, def_method_stmt_struct* method) {
 			c = c->next;
 		}
 	}
-	
-	m->number = clazz->pushOrFindMethodRef(m->name, method_descriptor(params_counter));
+	std::string m_d = method_descriptor(params_counter);
+	m->descriptorNumber = clazz->pushConstant(Constant::Utf8(m_d));
+	m->number = clazz->pushOrFindMethodRef(clazz->name, m->name, m_d);
 	method->id = m->number;
+	m->body = method->body;
+	m->nill_class_id = clazz->pushConstant(Constant::Class(clazz->pushConstant(Constant::Utf8("__BASE__"))));
+	m->nill_constructor_mr = clazz->pushOrFindMethodRef("__BASE__", "<init>", "()V");
+	clazz->methods[m->name] = m;
 	
 	fillTable(clazz, m, method->body);
-
-	// ƒобавить методв в таблицу методов класса...
-	clazz->methods[m->name] = m;
+	
 }
 
 void fillTable(Clazz* clazz, Method* method, stmt_list_struct* body) {
@@ -143,6 +143,7 @@ void fillTable(Clazz* clazz, Method* method, stmt_struct* stmt) {
 		existsId(clazz, method, stmt->while_stmt_f->condition);
 		fillTable(clazz, method, stmt->while_stmt_f->condition);
 		fillTable(clazz, method, stmt->while_stmt_f->body);
+		stmt->while_stmt_f->bool_field_mr = clazz->pushOrFindFieldRef("__BASE__", "__bVal", "Z");
 		break;
 	case until_stmt_t:
 		existsId(clazz, method, stmt->until_stmt_f->condition);
@@ -163,6 +164,7 @@ void fillTable(Clazz* clazz, Method* method, stmt_struct* stmt) {
 		if (stmt->if_stmt_f->else_branch != 0) {
 			fillTable(clazz, method, stmt->if_stmt_f->else_branch);
 		}
+		stmt->if_stmt_f->bool_field_mr = clazz->pushOrFindFieldRef("__BASE__", "__bVal", "Z");
 		break;
 	case block_stmt_t:
 		fillTable(clazz, method, stmt->block_stmt_f->list);
@@ -439,7 +441,7 @@ std::string method_descriptor(int size) {
 	for (int i = 0; i < size; ++i) {
 		str += "L__BASE__;";
 	}
-	str += ")L__BASE__;";
+	str += ")L__BASE__;"; //!!!!!!!!!!!!!!!!!!!! TODO: FIX IT!!!!!!!!!!!!!!!!!
 	return str;
 }
 

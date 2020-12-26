@@ -343,6 +343,7 @@ public class __BASE__ {
         if(index.__type != INTEGER) throw new IllegalArgumentException("index must be integer");
 
         if(this.__type == ARRAY) {
+            if(index.__iVal >= this.__aVal.size()) return new __BASE__();
             return this.__aVal.get(index.__iVal);
         }
 
@@ -353,7 +354,17 @@ public class __BASE__ {
         if(index.__type != INTEGER) throw new IllegalArgumentException("index must be integer");
 
         if(this.__type == ARRAY) {
-            this.__aVal.set(index.__iVal, value);
+            if(index.__iVal >= this.__aVal.size()) {
+                ArrayList<__BASE__> a = new ArrayList<>();
+                for(int i = 0; i < index.__iVal; ++i) {
+                    a.add(__member_access__(new __BASE__(i)));
+                }
+                a.add(value);
+                this.__aVal = a;
+            }else {
+                this.__aVal.set(index.__iVal, value);
+            }
+
             return value;
         }
 
