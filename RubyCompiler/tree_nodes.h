@@ -155,6 +155,9 @@ struct while_stmt_struct {
 struct until_stmt_struct {
 	struct expr_struct* condition;
 	struct stmt_list_struct* body;
+
+	// semantic 
+	int bool_field_mr;
 };
 
 struct if_part_stmt_struct {
