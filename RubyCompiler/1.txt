@@ -29,19 +29,13 @@ println(a)
 
 
 def paint(array, curX, curY, maxX, maxY)
-  if(curX > maxX)
+  if curX > maxX
     return
-  end
-
-  if (curX < 0)
+  elsif curX < 0
     return
-  end
-
-  if(curY > maxY)
+  elsif curY > maxY
     return
-  end
-
-  if(curY < 0)
+  elsif curY < 0
     return
   end
 
@@ -154,6 +148,5 @@ def anothersome()
 end
 println(yarik = anothersome())
 println(yarik)
-
 
 

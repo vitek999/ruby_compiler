@@ -224,26 +224,68 @@ std::vector<char> generate(if_stmt_struct* if_s) {
 	std::vector<char> trueBranch = generate(if_s->if_branch->body);
 	std::vector<char> elseBranch = std::vector<char>(); // generate(if_s->else_branch);
 
-	if (if_s->else_branch != 0) {
-		elseBranch = generate(if_s->else_branch);
-		trueBranch.push_back((char)Command::goto_);
-		tmp = intToBytes(elseBranch.size() + 3);
-		trueBranch.push_back(tmp[2]);
-		trueBranch.push_back(tmp[3]);
+	std::vector<std::vector<char>> elsifBodys = std::vector<std::vector<char>>();
+	std::vector<std::vector<char>> elsifConditions = std::vector<std::vector<char>>();
+
+	elsifConditions.push_back(trueCondition);
+	elsifBodys.push_back(trueBranch);
+
+	// fill elsif conditions and bodys
+	if (if_s->elsif_branches != 0) {
+		if_part_stmt_struct* c = if_s->elsif_branches->first;
+		while (c != 0) {
+			elsifConditions.push_back(generate(c->condition));
+			elsifBodys.push_back(generate(c->body));
+			c = c->next;
+		}
 	}
 
-	trueCondition.push_back((char)Command::getfield);
-	tmp = intToBytes(if_s->bool_field_mr);
-	trueCondition.push_back(tmp[2]);
-	trueCondition.push_back(tmp[3]);	
-	trueCondition.push_back((char)Command::ifeq);
-	tmp = intToBytes(trueBranch.size() + 3);
-	trueCondition.push_back(tmp[2]);
-	trueCondition.push_back(tmp[3]);
+	if (if_s->else_branch != 0) {
+		elseBranch = generate(if_s->else_branch);
+	}
 
-	resultCode.insert(resultCode.end(), trueCondition.begin(), trueCondition.end());
-	resultCode.insert(resultCode.end(), trueBranch.begin(), trueBranch.end());
-	resultCode.insert(resultCode.end(), elseBranch.begin(), elseBranch.end());
+	resultCode.insert(resultCode.begin(), elseBranch.begin(), elseBranch.end());
+
+	for (int i = elsifConditions.size() - 1; i >= 0; --i) {
+		if (resultCode.size() != 0) {
+			elsifBodys[i].push_back((char)Command::goto_);
+			tmp = intToBytes(resultCode.size() + 3);
+			elsifBodys[i].push_back(tmp[2]);
+			elsifBodys[i].push_back(tmp[3]);
+		}
+
+		elsifConditions[i].push_back((char)Command::getfield);
+		tmp = intToBytes(if_s->bool_field_mr);
+		elsifConditions[i].push_back(tmp[2]);
+		elsifConditions[i].push_back(tmp[3]);
+		elsifConditions[i].push_back((char)Command::ifeq);
+		tmp = intToBytes(elsifBodys[i].size() + 3);
+		elsifConditions[i].push_back(tmp[2]);
+		elsifConditions[i].push_back(tmp[3]);
+		resultCode.insert(resultCode.begin(), elsifBodys[i].begin(), elsifBodys[i].end());
+		resultCode.insert(resultCode.begin(), elsifConditions[i].begin(), elsifConditions[i].end());
+	}
+
+	//if (if_s->else_branch != 0) {
+	//	elseBranch = generate(if_s->else_branch);
+	//	trueBranch.push_back((char)Command::goto_);
+	//	tmp = intToBytes(elseBranch.size() + 3);
+	//	trueBranch.push_back(tmp[2]);
+	//	trueBranch.push_back(tmp[3]);
+	//}
+
+	//trueCondition.push_back((char)Command::getfield);
+	//tmp = intToBytes(if_s->bool_field_mr);
+	//trueCondition.push_back(tmp[2]);
+	//trueCondition.push_back(tmp[3]);	
+	//trueCondition.push_back((char)Command::ifeq);
+	//tmp = intToBytes(trueBranch.size() + 3);
+	//trueCondition.push_back(tmp[2]);
+	//trueCondition.push_back(tmp[3]);
+
+	//resultCode.insert(resultCode.end(), trueCondition.begin(), trueCondition.end());
+	//resultCode.insert(resultCode.end(), trueBranch.begin(), trueBranch.end());
+	//resultCode.insert(resultCode.end(), elseBranch.begin(), elseBranch.end());
 
 	return resultCode;
 }
