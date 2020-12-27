@@ -11,7 +11,7 @@ struct expr_struct* create_const_integer_expr(enum expr_type type, int val) {
     return result;
 }
 
-struct expr_struct* create_const_float_expr(float val) {
+struct expr_struct* create_const_float_expr(double val) {
     struct expr_struct* result = (struct expr_struct*)malloc(sizeof(struct expr_struct));
     result->list = 0;
     result->type = Float;
