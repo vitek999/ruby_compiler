@@ -365,6 +365,8 @@ void generate(Constant constant) {
 std::vector<char> generate(expr_struct* expr) {
 	std::vector<char> resultCode = std::vector<char>();
 	std::vector<char> tmp = std::vector<char>();
+	std::vector<char> tmp1 = std::vector<char>();
+
 	expr_struct* c = 0;
 	int counter = 0;
 
@@ -429,6 +431,72 @@ std::vector<char> generate(expr_struct* expr) {
 		resultCode.push_back((char)Command::aload);
 		resultCode.push_back(intToBytes(expr->local_var_num)[3]);
 		break;
+	case logical_and:
+		tmp = generate(expr->left);
+		tmp1 = generate(expr->right);
+		resultCode.insert(resultCode.end(), tmp.begin(), tmp.end());
+		resultCode.push_back((char)Command::dup);
+		resultCode.push_back((char)Command::getfield);
+		tmp = intToBytes(expr->boolean_fr);
+		resultCode.push_back(tmp[2]);
+		resultCode.push_back(tmp[3]);
+		resultCode.push_back((char)Command::ifne);
+		tmp = intToBytes(14);
+		resultCode.push_back(tmp[2]);
+		resultCode.push_back(tmp[3]);
+		resultCode.push_back((char)Command::new_);
+		tmp = intToBytes(expr->class_id);
+		resultCode.push_back(tmp[2]);
+		resultCode.push_back(tmp[3]);
+		resultCode.push_back((char)Command::dup);
+		resultCode.push_back((char)Command::iconst_0);
+		resultCode.push_back((char)Command::invokespecial);
+		tmp = intToBytes(expr->boolean_init_mr);
+		resultCode.push_back(tmp[2]);
+		resultCode.push_back(tmp[3]);
+		resultCode.push_back((char)Command::goto_);
+		tmp = intToBytes(tmp1.size() + 6);
+		resultCode.push_back(tmp[2]);
+		resultCode.push_back(tmp[3]);
+		resultCode.insert(resultCode.end(), tmp1.begin(), tmp1.end());
+		resultCode.push_back((char)Command::invokevirtual);
+		tmp = intToBytes(expr->id);
+		resultCode.push_back(tmp[2]);
+		resultCode.push_back(tmp[3]);
+		break;
+	case logical_or:
+		tmp = generate(expr->left);
+		tmp1 = generate(expr->right);
+		resultCode.insert(resultCode.end(), tmp.begin(), tmp.end());
+		resultCode.push_back((char)Command::dup);
+		resultCode.push_back((char)Command::getfield);
+		tmp = intToBytes(expr->boolean_fr);
+		resultCode.push_back(tmp[2]);
+		resultCode.push_back(tmp[3]);
+		resultCode.push_back((char)Command::ifeq);
+		tmp = intToBytes(14);
+		resultCode.push_back(tmp[2]);
+		resultCode.push_back(tmp[3]);
+		resultCode.push_back((char)Command::new_);
+		tmp = intToBytes(expr->class_id);
+		resultCode.push_back(tmp[2]);
+		resultCode.push_back(tmp[3]);
+		resultCode.push_back((char)Command::dup);
+		resultCode.push_back((char)Command::iconst_1);
+		resultCode.push_back((char)Command::invokespecial);
+		tmp = intToBytes(expr->boolean_init_mr);
+		resultCode.push_back(tmp[2]);
+		resultCode.push_back(tmp[3]);
+		resultCode.push_back((char)Command::goto_);
+		tmp = intToBytes(tmp1.size() + 6);
+		resultCode.push_back(tmp[2]);
+		resultCode.push_back(tmp[3]);
+		resultCode.insert(resultCode.end(), tmp1.begin(), tmp1.end());
+		resultCode.push_back((char)Command::invokevirtual);
+		tmp = intToBytes(expr->id);
+		resultCode.push_back(tmp[2]);
+		resultCode.push_back(tmp[3]);
+		break;
 	case plus:
 	case minus:
 	case mul:
@@ -441,8 +509,6 @@ std::vector<char> generate(expr_struct* expr) {
 	case greater_eql:
 	case less_eql:
 	case pow_:
-	case logical_and:
-	case logical_or:
 	case member_access:
 		tmp = generate(expr->left);
 		resultCode.insert(resultCode.end(), tmp.begin(), tmp.end());

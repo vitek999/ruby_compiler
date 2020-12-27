@@ -76,6 +76,8 @@ struct expr_struct {
 	int array_list_class_id;
 	int array_list_constructor_mr;
 	int list_constructor_mr;
+	int boolean_init_mr;
+	int boolean_fr;
 };
 
 enum stmt_type {

@@ -309,11 +309,17 @@ void fillTable(Clazz* clazz, Method* method, expr_struct* expr) {
 		break;
 	case logical_and:
 		expr->id = clazz->pushOrFindMethodRef("__BASE__", "__logical_and__", "(L__BASE__;)L__BASE__;");
+		expr->class_id = clazz->pushConstant(Constant::Class(clazz->pushConstant(Constant::Utf8("__BASE__"))));
+		expr->boolean_fr = clazz->pushOrFindFieldRef("__BASE__", "__bVal", "Z");
+		expr->boolean_init_mr = clazz->pushOrFindMethodRef("__BASE__", "<init>", "(Z)V");
 		existsId(clazz, method, expr->left);
 		existsId(clazz, method, expr->right);
 		break;
 	case logical_or:
 		expr->id = clazz->pushOrFindMethodRef("__BASE__", "__logical_or__", "(L__BASE__;)L__BASE__;");
+		expr->class_id = clazz->pushConstant(Constant::Class(clazz->pushConstant(Constant::Utf8("__BASE__"))));
+		expr->boolean_fr = clazz->pushOrFindFieldRef("__BASE__", "__bVal", "Z");
+		expr->boolean_init_mr = clazz->pushOrFindMethodRef("__BASE__", "<init>", "(Z)V");
 		existsId(clazz, method, expr->left);
 		existsId(clazz, method, expr->right);
 		break;

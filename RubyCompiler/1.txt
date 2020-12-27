@@ -147,7 +147,8 @@ def some1(a)
   return a
 end
 c = 3
-a = false && some1(1)
+a = false && some1(true)
+println(a)
 def anothersome()
   return vitya = "code"
 end
