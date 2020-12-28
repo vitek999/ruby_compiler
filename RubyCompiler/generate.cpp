@@ -421,9 +421,16 @@ std::vector<char> generate(expr_struct* expr) {
 		resultCode.push_back(tmp[3]);
 		resultCode.push_back((char)Command::dup);
 		tmp = intToBytes(expr->int_val);
-		resultCode.push_back((char)Command::sipush);
-		resultCode.push_back(tmp[2]);
-		resultCode.push_back(tmp[3]);
+		if (expr->int_val >= -32768 && expr->int_val <= 32767) {
+			resultCode.push_back((char)Command::sipush);
+			resultCode.push_back(tmp[2]);
+			resultCode.push_back(tmp[3]);
+		} else {
+			resultCode.push_back((char)Command::ldc_w);
+			tmp = intToBytes(expr->value_id);
+			resultCode.push_back(tmp[2]);
+			resultCode.push_back(tmp[3]);
+		}
 		resultCode.push_back((char)Command::invokespecial);
 		tmp = intToBytes(expr->id);
 		resultCode.push_back(tmp[2]);

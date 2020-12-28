@@ -1,5 +1,3 @@
-asdasds = 12.12 + 3 + 10.21 / 2.0
-println(asdasds)
 def sort (arr, size)
   i = 0
   j = 0
