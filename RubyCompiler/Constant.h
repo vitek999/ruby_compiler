@@ -39,7 +39,7 @@ struct Constant
 		Constant c;
 		c.type = Type::Integer;
 		c.iVal = val;
-		return;
+		return c;
 	}
 
 	static Constant Float(float val) {
@@ -86,4 +86,54 @@ struct Constant
 		c.type_id = descriptor_utf8_id;
 		return c;
 	}
-};
+
+	friend bool operator==(const Constant& l, const Constant& r) {
+		if (l.type != r.type) return false;
+		switch (l.type)
+		{
+		case Constant::Type::Utf8:
+			return l.sVal == r.sVal;
+		case Constant::Type::Integer:
+			return l.iVal == r.iVal;
+		case Constant::Type::Float:
+			return l.fVal == r.fVal;
+		case Constant::Type::String:
+		case Constant::Type::Class:
+			return l.utf8_id == r.utf8_id;
+		case Constant::Type::NameAndType:
+			return (l.name_id == r.name_id) && (l.type_id == r.type_id);
+		case Constant::Type::Methodref:
+		case Constant::Type::Fieldref:
+			return (l.name_and_type_id == r.name_and_type_id) && (l.class_id == r.class_id);
+		}
+		return false;
+	}
+
+	friend bool operator<(const Constant l, const Constant r) {
+		if (l.type < r.type) {
+			return true;
+		}
+		else if (l .type == r.type) {
+			switch (l.type) {
+			case Constant::Type::Utf8:
+				return l.sVal < r.sVal;
+			case Constant::Type::Float:
+				return l.fVal < r.fVal;
+			case Constant::Type::Integer:
+				return l.iVal < r.iVal;
+			case Constant::Type::String:
+				return l.utf8_id < r.utf8_id;
+			case Constant::Type::Class:
+				return l.class_name_id < r.class_name_id;
+			case Constant::Type::NameAndType:
+				return l.name_id < r.name_id || ((l.name_id == r.name_id) && (l.type_id < r.type_id));
+			case Constant::Type::Fieldref:
+			case Constant::Type::Methodref:
+				return l.class_id < r.class_id || ((l.class_id == r.class_id) && (l.name_and_type_id < r.name_and_type_id));
+			}
+
+		}
+
+		return false;
+	}
+};	

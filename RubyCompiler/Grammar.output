@@ -89,8 +89,8 @@ Grammar
    54     | expr OR_KEYWORD expr
    55     | OPEN_ROUND_BRACKET expr CLOSE_ROUND_BRACKET
    56     | expr OPEN_SQUARE_BRACKET expr CLOSE_SQUARE_BRACKET
-   57     | OPEN_SQUARE_BRACKET expr_list CLOSE_SQUARE_BRACKET
-   58     | VAR_METHOD_NAME OPEN_ROUND_BRACKET expr_list CLOSE_ROUND_BRACKET
+   57     | OPEN_SQUARE_BRACKET new_lines_op expr_list CLOSE_SQUARE_BRACKET
+   58     | VAR_METHOD_NAME OPEN_ROUND_BRACKET new_lines_op expr_list CLOSE_ROUND_BRACKET
    59     | VAR_METHOD_NAME
    60     | INSTANCE_VAR_NAME
    61     | expr DOT_SYMBOL VAR_METHOD_NAME
@@ -176,8 +176,8 @@ Grammar
   121 expr_list: %empty
   122          | expr_list_not_empty
 
-  123 expr_list_not_empty: expr
-  124                    | expr_list_not_empty COMMA_SYMBOL expr
+  123 expr_list_not_empty: expr new_lines_op
+  124                    | expr_list_not_empty COMMA_SYMBOL new_lines_op expr new_lines_op
 
   125 class_declaration: CLASS_KEYWORD CLASS_NAME stmt_ends def_method_list_op END_KEYWORD stmt_ends
   126                  | CLASS_KEYWORD CLASS_NAME LESS_OP CLASS_NAME stmt_ends def_method_list_op END_KEYWORD stmt_ends
@@ -312,7 +312,7 @@ Nonterminals, with rules where they appear
         on right: 67 68 74 75 77 79 81 83 85 86 87 93 96 105 106 109 111 119 125 126
     new_lines_op (103)
         on left: 69 70
-        on right: 94 95 97 98
+        on right: 57 58 94 95 97 98 123 124
     new_lines (104)
         on left: 71 72
         on right: 70 72
@@ -783,31 +783,14 @@ State 19
 
 State 20
 
-   57 expr: OPEN_SQUARE_BRACKET . expr_list CLOSE_SQUARE_BRACKET
+   57 expr: OPEN_SQUARE_BRACKET . new_lines_op expr_list CLOSE_SQUARE_BRACKET
 
-    DEFINED_KEYWORD         shift, and go to state 4
-    FALSE_KEYWORD           shift, and go to state 6
-    NIL_KEYWORD             shift, and go to state 8
-    NOT_KEYWORD             shift, and go to state 9
-    SELF_KEYWORD            shift, and go to state 11
-    TRUE_KEYWORD            shift, and go to state 12
-    ARITHMETIC_PLUS_OP      shift, and go to state 15
-    ARITHMETIC_MINUS_OP     shift, and go to state 16
-    BIN_ONES_COMPLEMENT_OP  shift, and go to state 17
-    LOGICAL_NOT_OP          shift, and go to state 18
-    OPEN_ROUND_BRACKET      shift, and go to state 19
-    OPEN_SQUARE_BRACKET     shift, and go to state 20
-    STR                     shift, and go to state 21
-    INTEGER_NUMBER          shift, and go to state 22
-    FLOAT_NUMBER            shift, and go to state 23
-    VAR_METHOD_NAME         shift, and go to state 24
-    INSTANCE_VAR_NAME       shift, and go to state 25
+    NEW_LINE_SYMBOL  shift, and go to state 61
 
-    $default  reduce using rule 121 (expr_list)
+    $default  reduce using rule 69 (new_lines_op)
 
-    expr                 go to state 61
-    expr_list            go to state 62
-    expr_list_not_empty  go to state 63
+    new_lines_op  go to state 62
+    new_lines     go to state 63
 
 
 State 21
@@ -833,7 +816,7 @@ State 23
 
 State 24
 
-   58 expr: VAR_METHOD_NAME . OPEN_ROUND_BRACKET expr_list CLOSE_ROUND_BRACKET
+   58 expr: VAR_METHOD_NAME . OPEN_ROUND_BRACKET new_lines_op expr_list CLOSE_ROUND_BRACKET
    59     | VAR_METHOD_NAME .
 
     OPEN_ROUND_BRACKET  shift, and go to state 64
@@ -1361,7 +1344,7 @@ State 47
 
     stmt_ends     go to state 125
     new_lines_op  go to state 126
-    new_lines     go to state 127
+    new_lines     go to state 63
 
 
 State 48
@@ -1369,7 +1352,7 @@ State 48
   105 for_stmt: FOR_KEYWORD VAR_METHOD_NAME . IN_KEYWORD expr stmt_ends stmt_list END_KEYWORD
   107         | FOR_KEYWORD VAR_METHOD_NAME . IN_KEYWORD expr DO_KEYWORD stmt_ends_op stmt_list END_KEYWORD
 
-    IN_KEYWORD  shift, and go to state 128
+    IN_KEYWORD  shift, and go to state 127
 
 
 State 49
@@ -1377,7 +1360,7 @@ State 49
   106 for_stmt: FOR_KEYWORD INSTANCE_VAR_NAME . IN_KEYWORD expr stmt_ends stmt_list END_KEYWORD
   108         | FOR_KEYWORD INSTANCE_VAR_NAME . IN_KEYWORD expr DO_KEYWORD stmt_ends_op stmt_list END_KEYWORD
 
-    IN_KEYWORD  shift, and go to state 129
+    IN_KEYWORD  shift, and go to state 128
 
 
 State 50
@@ -1537,7 +1520,7 @@ State 51
     SEMICOLON_SYMBOL     shift, and go to state 40
     NEW_LINE_SYMBOL      shift, and go to state 41
 
-    stmt_ends  go to state 130
+    stmt_ends  go to state 129
 
 
 State 52
@@ -1552,7 +1535,7 @@ State 53
    63 expr: SELF_KEYWORD DOT_SYMBOL . VAR_METHOD_NAME
    64     | SELF_KEYWORD DOT_SYMBOL . VAR_METHOD_NAME OPEN_ROUND_BRACKET expr_list CLOSE_ROUND_BRACKET
 
-    VAR_METHOD_NAME  shift, and go to state 131
+    VAR_METHOD_NAME  shift, and go to state 130
 
 
 State 54
@@ -1598,7 +1581,7 @@ State 54
   112           | UNTIL_KEYWORD expr . DO_KEYWORD stmt_ends_op stmt_list END_KEYWORD
 
     AND_KEYWORD          shift, and go to state 67
-    DO_KEYWORD           shift, and go to state 132
+    DO_KEYWORD           shift, and go to state 131
     OR_KEYWORD           shift, and go to state 68
     UNTIL_KEYWORD        shift, and go to state 69
     WHILE_KEYWORD        shift, and go to state 70
@@ -1637,7 +1620,7 @@ State 54
     SEMICOLON_SYMBOL     shift, and go to state 40
     NEW_LINE_SYMBOL      shift, and go to state 41
 
-    stmt_ends  go to state 133
+    stmt_ends  go to state 132
 
 
 State 55
@@ -1683,7 +1666,7 @@ State 55
   110           | WHILE_KEYWORD expr . DO_KEYWORD stmt_ends_op stmt_list END_KEYWORD
 
     AND_KEYWORD          shift, and go to state 67
-    DO_KEYWORD           shift, and go to state 134
+    DO_KEYWORD           shift, and go to state 133
     OR_KEYWORD           shift, and go to state 68
     UNTIL_KEYWORD        shift, and go to state 69
     WHILE_KEYWORD        shift, and go to state 70
@@ -1722,7 +1705,7 @@ State 55
     SEMICOLON_SYMBOL     shift, and go to state 40
     NEW_LINE_SYMBOL      shift, and go to state 41
 
-    stmt_ends  go to state 135
+    stmt_ends  go to state 134
 
 
 State 56
@@ -1992,112 +1975,26 @@ State 60
     LOGICAL_OR_OP        shift, and go to state 98
     INCLUSIVE_RANGE_OP   shift, and go to state 99
     EXCLUSIVE_RANGE_OP   shift, and go to state 100
-    CLOSE_ROUND_BRACKET  shift, and go to state 136
+    CLOSE_ROUND_BRACKET  shift, and go to state 135
     OPEN_SQUARE_BRACKET  shift, and go to state 101
     DOT_SYMBOL           shift, and go to state 102
 
 
 State 61
 
-   18 expr: expr . ARITHMETIC_POW_OP expr
-   20     | expr . ARITHMETIC_MUL_OP expr
-   21     | expr . ARITHMETIC_DIV_OP expr
-   22     | expr . ARITHMETIC_MOD_OP expr
-   23     | expr . ARITHMETIC_PLUS_OP expr
-   24     | expr . ARITHMETIC_MINUS_OP expr
-   25     | expr . BIN_LEFT_SHIFT_OP expr
-   26     | expr . BIN_RIGHT_SHIFT_OP expr
-   27     | expr . BIN_AND_OP expr
-   28     | expr . BIN_OR_OP expr
-   29     | expr . BIN_XOR_OP expr
-   30     | expr . GREATER_OP expr
-   31     | expr . LESS_OP expr
-   32     | expr . GREATER_OR_EQL_OP expr
-   33     | expr . LESS_OR_EQL_OP expr
-   34     | expr . COMB_COMPRASION_OP expr
-   35     | expr . EQL_OP expr
-   36     | expr . CASE_EQL_OP expr
-   37     | expr . NOT_EQL_OP expr
-   38     | expr . LOGICAL_AND_OP expr
-   39     | expr . LOGICAL_OR_OP expr
-   40     | expr . INCLUSIVE_RANGE_OP expr
-   41     | expr . EXCLUSIVE_RANGE_OP expr
-   42     | expr . ASSIGN_OP expr
-   43     | expr . MOD_ASSIGN_OP expr
-   44     | expr . DIV_ASSIGN_OP expr
-   45     | expr . SUB_ASSIGN_OP expr
-   46     | expr . ADD_ASSIGN_OP expr
-   47     | expr . MUL_ASSIGN_OP expr
-   48     | expr . POW_ASSIGN_OP expr
-   49     | expr . UNTIL_KEYWORD expr
-   50     | expr . WHILE_KEYWORD expr
-   53     | expr . AND_KEYWORD expr
-   54     | expr . OR_KEYWORD expr
-   56     | expr . OPEN_SQUARE_BRACKET expr CLOSE_SQUARE_BRACKET
-   61     | expr . DOT_SYMBOL VAR_METHOD_NAME
-   62     | expr . DOT_SYMBOL VAR_METHOD_NAME OPEN_ROUND_BRACKET expr_list CLOSE_ROUND_BRACKET
-  123 expr_list_not_empty: expr .
+   71 new_lines: NEW_LINE_SYMBOL .
+   72          | NEW_LINE_SYMBOL . new_lines
 
-    AND_KEYWORD          shift, and go to state 67
-    OR_KEYWORD           shift, and go to state 68
-    UNTIL_KEYWORD        shift, and go to state 69
-    WHILE_KEYWORD        shift, and go to state 70
-    ARITHMETIC_PLUS_OP   shift, and go to state 71
-    ARITHMETIC_MINUS_OP  shift, and go to state 72
-    ARITHMETIC_MUL_OP    shift, and go to state 73
-    ARITHMETIC_DIV_OP    shift, and go to state 74
-    ARITHMETIC_MOD_OP    shift, and go to state 75
-    ARITHMETIC_POW_OP    shift, and go to state 76
-    EQL_OP               shift, and go to state 77
-    NOT_EQL_OP           shift, and go to state 78
-    GREATER_OP           shift, and go to state 79
-    LESS_OP              shift, and go to state 80
-    GREATER_OR_EQL_OP    shift, and go to state 81
-    LESS_OR_EQL_OP       shift, and go to state 82
-    COMB_COMPRASION_OP   shift, and go to state 83
-    CASE_EQL_OP          shift, and go to state 84
-    ASSIGN_OP            shift, and go to state 85
-    ADD_ASSIGN_OP        shift, and go to state 86
-    SUB_ASSIGN_OP        shift, and go to state 87
-    MUL_ASSIGN_OP        shift, and go to state 88
-    DIV_ASSIGN_OP        shift, and go to state 89
-    MOD_ASSIGN_OP        shift, and go to state 90
-    POW_ASSIGN_OP        shift, and go to state 91
-    BIN_AND_OP           shift, and go to state 92
-    BIN_OR_OP            shift, and go to state 93
-    BIN_XOR_OP           shift, and go to state 94
-    BIN_LEFT_SHIFT_OP    shift, and go to state 95
-    BIN_RIGHT_SHIFT_OP   shift, and go to state 96
-    LOGICAL_AND_OP       shift, and go to state 97
-    LOGICAL_OR_OP        shift, and go to state 98
-    INCLUSIVE_RANGE_OP   shift, and go to state 99
-    EXCLUSIVE_RANGE_OP   shift, and go to state 100
-    OPEN_SQUARE_BRACKET  shift, and go to state 101
-    DOT_SYMBOL           shift, and go to state 102
+    NEW_LINE_SYMBOL  shift, and go to state 61
 
-    $default  reduce using rule 123 (expr_list_not_empty)
+    $default  reduce using rule 71 (new_lines)
+
+    new_lines  go to state 136
 
 
 State 62
 
-   57 expr: OPEN_SQUARE_BRACKET expr_list . CLOSE_SQUARE_BRACKET
-
-    CLOSE_SQUARE_BRACKET  shift, and go to state 137
-
-
-State 63
-
-  122 expr_list: expr_list_not_empty .
-  124 expr_list_not_empty: expr_list_not_empty . COMMA_SYMBOL expr
-
-    COMMA_SYMBOL  shift, and go to state 138
-
-    $default  reduce using rule 122 (expr_list)
-
-
-State 64
-
-   58 expr: VAR_METHOD_NAME OPEN_ROUND_BRACKET . expr_list CLOSE_ROUND_BRACKET
+   57 expr: OPEN_SQUARE_BRACKET new_lines_op . expr_list CLOSE_SQUARE_BRACKET
 
     DEFINED_KEYWORD         shift, and go to state 4
     FALSE_KEYWORD           shift, and go to state 6
@@ -2119,9 +2016,28 @@ State 64
 
     $default  reduce using rule 121 (expr_list)
 
-    expr                 go to state 61
-    expr_list            go to state 139
-    expr_list_not_empty  go to state 63
+    expr                 go to state 137
+    expr_list            go to state 138
+    expr_list_not_empty  go to state 139
+
+
+State 63
+
+   70 new_lines_op: new_lines .
+
+    $default  reduce using rule 70 (new_lines_op)
+
+
+State 64
+
+   58 expr: VAR_METHOD_NAME OPEN_ROUND_BRACKET . new_lines_op expr_list CLOSE_ROUND_BRACKET
+
+    NEW_LINE_SYMBOL  shift, and go to state 61
+
+    $default  reduce using rule 69 (new_lines_op)
+
+    new_lines_op  go to state 140
+    new_lines     go to state 63
 
 
 State 65
@@ -2160,7 +2076,7 @@ State 67
     VAR_METHOD_NAME         shift, and go to state 24
     INSTANCE_VAR_NAME       shift, and go to state 25
 
-    expr  go to state 140
+    expr  go to state 141
 
 
 State 68
@@ -2185,7 +2101,7 @@ State 68
     VAR_METHOD_NAME         shift, and go to state 24
     INSTANCE_VAR_NAME       shift, and go to state 25
 
-    expr  go to state 141
+    expr  go to state 142
 
 
 State 69
@@ -2210,7 +2126,7 @@ State 69
     VAR_METHOD_NAME         shift, and go to state 24
     INSTANCE_VAR_NAME       shift, and go to state 25
 
-    expr  go to state 142
+    expr  go to state 143
 
 
 State 70
@@ -2235,7 +2151,7 @@ State 70
     VAR_METHOD_NAME         shift, and go to state 24
     INSTANCE_VAR_NAME       shift, and go to state 25
 
-    expr  go to state 143
+    expr  go to state 144
 
 
 State 71
@@ -2260,7 +2176,7 @@ State 71
     VAR_METHOD_NAME         shift, and go to state 24
     INSTANCE_VAR_NAME       shift, and go to state 25
 
-    expr  go to state 144
+    expr  go to state 145
 
 
 State 72
@@ -2285,7 +2201,7 @@ State 72
     VAR_METHOD_NAME         shift, and go to state 24
     INSTANCE_VAR_NAME       shift, and go to state 25
 
-    expr  go to state 145
+    expr  go to state 146
 
 
 State 73
@@ -2310,7 +2226,7 @@ State 73
     VAR_METHOD_NAME         shift, and go to state 24
     INSTANCE_VAR_NAME       shift, and go to state 25
 
-    expr  go to state 146
+    expr  go to state 147
 
 
 State 74
@@ -2335,7 +2251,7 @@ State 74
     VAR_METHOD_NAME         shift, and go to state 24
     INSTANCE_VAR_NAME       shift, and go to state 25
 
-    expr  go to state 147
+    expr  go to state 148
 
 
 State 75
@@ -2360,7 +2276,7 @@ State 75
     VAR_METHOD_NAME         shift, and go to state 24
     INSTANCE_VAR_NAME       shift, and go to state 25
 
-    expr  go to state 148
+    expr  go to state 149
 
 
 State 76
@@ -2385,7 +2301,7 @@ State 76
     VAR_METHOD_NAME         shift, and go to state 24
     INSTANCE_VAR_NAME       shift, and go to state 25
 
-    expr  go to state 149
+    expr  go to state 150
 
 
 State 77
@@ -2410,7 +2326,7 @@ State 77
     VAR_METHOD_NAME         shift, and go to state 24
     INSTANCE_VAR_NAME       shift, and go to state 25
 
-    expr  go to state 150
+    expr  go to state 151
 
 
 State 78
@@ -2435,7 +2351,7 @@ State 78
     VAR_METHOD_NAME         shift, and go to state 24
     INSTANCE_VAR_NAME       shift, and go to state 25
 
-    expr  go to state 151
+    expr  go to state 152
 
 
 State 79
@@ -2460,7 +2376,7 @@ State 79
     VAR_METHOD_NAME         shift, and go to state 24
     INSTANCE_VAR_NAME       shift, and go to state 25
 
-    expr  go to state 152
+    expr  go to state 153
 
 
 State 80
@@ -2485,7 +2401,7 @@ State 80
     VAR_METHOD_NAME         shift, and go to state 24
     INSTANCE_VAR_NAME       shift, and go to state 25
 
-    expr  go to state 153
+    expr  go to state 154
 
 
 State 81
@@ -2510,7 +2426,7 @@ State 81
     VAR_METHOD_NAME         shift, and go to state 24
     INSTANCE_VAR_NAME       shift, and go to state 25
 
-    expr  go to state 154
+    expr  go to state 155
 
 
 State 82
@@ -2535,7 +2451,7 @@ State 82
     VAR_METHOD_NAME         shift, and go to state 24
     INSTANCE_VAR_NAME       shift, and go to state 25
 
-    expr  go to state 155
+    expr  go to state 156
 
 
 State 83
@@ -2560,7 +2476,7 @@ State 83
     VAR_METHOD_NAME         shift, and go to state 24
     INSTANCE_VAR_NAME       shift, and go to state 25
 
-    expr  go to state 156
+    expr  go to state 157
 
 
 State 84
@@ -2585,7 +2501,7 @@ State 84
     VAR_METHOD_NAME         shift, and go to state 24
     INSTANCE_VAR_NAME       shift, and go to state 25
 
-    expr  go to state 157
+    expr  go to state 158
 
 
 State 85
@@ -2610,7 +2526,7 @@ State 85
     VAR_METHOD_NAME         shift, and go to state 24
     INSTANCE_VAR_NAME       shift, and go to state 25
 
-    expr  go to state 158
+    expr  go to state 159
 
 
 State 86
@@ -2635,7 +2551,7 @@ State 86
     VAR_METHOD_NAME         shift, and go to state 24
     INSTANCE_VAR_NAME       shift, and go to state 25
 
-    expr  go to state 159
+    expr  go to state 160
 
 
 State 87
@@ -2660,7 +2576,7 @@ State 87
     VAR_METHOD_NAME         shift, and go to state 24
     INSTANCE_VAR_NAME       shift, and go to state 25
 
-    expr  go to state 160
+    expr  go to state 161
 
 
 State 88
@@ -2685,7 +2601,7 @@ State 88
     VAR_METHOD_NAME         shift, and go to state 24
     INSTANCE_VAR_NAME       shift, and go to state 25
 
-    expr  go to state 161
+    expr  go to state 162
 
 
 State 89
@@ -2710,7 +2626,7 @@ State 89
     VAR_METHOD_NAME         shift, and go to state 24
     INSTANCE_VAR_NAME       shift, and go to state 25
 
-    expr  go to state 162
+    expr  go to state 163
 
 
 State 90
@@ -2735,7 +2651,7 @@ State 90
     VAR_METHOD_NAME         shift, and go to state 24
     INSTANCE_VAR_NAME       shift, and go to state 25
 
-    expr  go to state 163
+    expr  go to state 164
 
 
 State 91
@@ -2760,7 +2676,7 @@ State 91
     VAR_METHOD_NAME         shift, and go to state 24
     INSTANCE_VAR_NAME       shift, and go to state 25
 
-    expr  go to state 164
+    expr  go to state 165
 
 
 State 92
@@ -2785,7 +2701,7 @@ State 92
     VAR_METHOD_NAME         shift, and go to state 24
     INSTANCE_VAR_NAME       shift, and go to state 25
 
-    expr  go to state 165
+    expr  go to state 166
 
 
 State 93
@@ -2810,7 +2726,7 @@ State 93
     VAR_METHOD_NAME         shift, and go to state 24
     INSTANCE_VAR_NAME       shift, and go to state 25
 
-    expr  go to state 166
+    expr  go to state 167
 
 
 State 94
@@ -2835,7 +2751,7 @@ State 94
     VAR_METHOD_NAME         shift, and go to state 24
     INSTANCE_VAR_NAME       shift, and go to state 25
 
-    expr  go to state 167
+    expr  go to state 168
 
 
 State 95
@@ -2860,7 +2776,7 @@ State 95
     VAR_METHOD_NAME         shift, and go to state 24
     INSTANCE_VAR_NAME       shift, and go to state 25
 
-    expr  go to state 168
+    expr  go to state 169
 
 
 State 96
@@ -2885,7 +2801,7 @@ State 96
     VAR_METHOD_NAME         shift, and go to state 24
     INSTANCE_VAR_NAME       shift, and go to state 25
 
-    expr  go to state 169
+    expr  go to state 170
 
 
 State 97
@@ -2910,7 +2826,7 @@ State 97
     VAR_METHOD_NAME         shift, and go to state 24
     INSTANCE_VAR_NAME       shift, and go to state 25
 
-    expr  go to state 170
+    expr  go to state 171
 
 
 State 98
@@ -2935,7 +2851,7 @@ State 98
     VAR_METHOD_NAME         shift, and go to state 24
     INSTANCE_VAR_NAME       shift, and go to state 25
 
-    expr  go to state 171
+    expr  go to state 172
 
 
 State 99
@@ -2960,7 +2876,7 @@ State 99
     VAR_METHOD_NAME         shift, and go to state 24
     INSTANCE_VAR_NAME       shift, and go to state 25
 
-    expr  go to state 172
+    expr  go to state 173
 
 
 State 100
@@ -2985,7 +2901,7 @@ State 100
     VAR_METHOD_NAME         shift, and go to state 24
     INSTANCE_VAR_NAME       shift, and go to state 25
 
-    expr  go to state 173
+    expr  go to state 174
 
 
 State 101
@@ -3010,7 +2926,7 @@ State 101
     VAR_METHOD_NAME         shift, and go to state 24
     INSTANCE_VAR_NAME       shift, and go to state 25
 
-    expr  go to state 174
+    expr  go to state 175
 
 
 State 102
@@ -3018,7 +2934,7 @@ State 102
    61 expr: expr DOT_SYMBOL . VAR_METHOD_NAME
    62     | expr DOT_SYMBOL . VAR_METHOD_NAME OPEN_ROUND_BRACKET expr_list CLOSE_ROUND_BRACKET
 
-    VAR_METHOD_NAME  shift, and go to state 175
+    VAR_METHOD_NAME  shift, and go to state 176
 
 
 State 103
@@ -3045,7 +2961,7 @@ State 105
     $default  reduce using rule 73 (stmt_ends_op)
 
     stmt_ends     go to state 42
-    stmt_ends_op  go to state 176
+    stmt_ends_op  go to state 177
 
 
 State 106
@@ -3072,7 +2988,7 @@ State 106
     VAR_METHOD_NAME         shift, and go to state 24
     INSTANCE_VAR_NAME       shift, and go to state 25
 
-    expr  go to state 177
+    expr  go to state 178
 
 
 State 107
@@ -3095,11 +3011,11 @@ State 109
   103 if_stmt: if_start_stmt elsif_stmt_list . END_KEYWORD
   104        | if_start_stmt elsif_stmt_list . ELSE_KEYWORD stmt_ends_op stmt_list END_KEYWORD
 
-    ELSE_KEYWORD   shift, and go to state 178
+    ELSE_KEYWORD   shift, and go to state 179
     ELSIF_KEYWORD  shift, and go to state 106
-    END_KEYWORD    shift, and go to state 179
+    END_KEYWORD    shift, and go to state 180
 
-    elsif_stmt  go to state 180
+    elsif_stmt  go to state 181
 
 
 State 110
@@ -3183,7 +3099,7 @@ State 117
     $default  reduce using rule 91 (stmt_list)
 
     expr           go to state 30
-    stmt           go to state 181
+    stmt           go to state 182
     stmt_block     go to state 32
     if_start_stmt  go to state 33
     if_stmt        go to state 34
@@ -3196,14 +3112,14 @@ State 118
 
    92 stmt_block: BEGIN_KEYWORD stmt_ends_op stmt_list . END_KEYWORD
 
-    END_KEYWORD  shift, and go to state 182
+    END_KEYWORD  shift, and go to state 183
 
 
 State 119
 
   126 class_declaration: CLASS_KEYWORD CLASS_NAME LESS_OP . CLASS_NAME stmt_ends def_method_list_op END_KEYWORD stmt_ends
 
-    CLASS_NAME  shift, and go to state 183
+    CLASS_NAME  shift, and go to state 184
 
 
 State 120
@@ -3214,22 +3130,22 @@ State 120
 
     $default  reduce using rule 127 (def_method_list_op)
 
-    def_method_stmt     go to state 184
-    def_method_list_op  go to state 185
-    def_method_list     go to state 186
+    def_method_stmt     go to state 185
+    def_method_list_op  go to state 186
+    def_method_list     go to state 187
 
 
 State 121
 
   120 def_method_stmt: DEF_KEYWORD VAR_METHOD_NAME OPEN_ROUND_BRACKET . method_params_list CLOSE_ROUND_BRACKET stmt_ends_op stmt_list END_KEYWORD stmt_ends_op
 
-    VAR_METHOD_NAME  shift, and go to state 187
+    VAR_METHOD_NAME  shift, and go to state 188
 
     $default  reduce using rule 115 (method_params_list)
 
-    method_param                  go to state 188
-    method_params_list            go to state 189
-    method_params_list_not_empty  go to state 190
+    method_param                  go to state 189
+    method_params_list            go to state 190
+    method_params_list_not_empty  go to state 191
 
 
 State 122
@@ -3265,7 +3181,7 @@ State 122
     expr                 go to state 30
     stmt                 go to state 116
     stmt_list_not_empty  go to state 117
-    stmt_list            go to state 191
+    stmt_list            go to state 192
     stmt_block           go to state 32
     if_start_stmt        go to state 33
     if_stmt              go to state 34
@@ -3287,8 +3203,8 @@ State 123
     $default      reduce using rule 65 (stmt_ends)
 
     stmt_ends     go to state 114
-    new_lines_op  go to state 192
-    new_lines     go to state 127
+    new_lines_op  go to state 193
+    new_lines     go to state 63
 
 
 State 124
@@ -3305,7 +3221,7 @@ State 124
     $default      reduce using rule 66 (stmt_ends)
 
     stmt_ends  go to state 115
-    new_lines  go to state 193
+    new_lines  go to state 136
 
 
 State 125
@@ -3359,13 +3275,6 @@ State 126
 
 State 127
 
-   70 new_lines_op: new_lines .
-
-    $default  reduce using rule 70 (new_lines_op)
-
-
-State 128
-
   105 for_stmt: FOR_KEYWORD VAR_METHOD_NAME IN_KEYWORD . expr stmt_ends stmt_list END_KEYWORD
   107         | FOR_KEYWORD VAR_METHOD_NAME IN_KEYWORD . expr DO_KEYWORD stmt_ends_op stmt_list END_KEYWORD
 
@@ -3390,7 +3299,7 @@ State 128
     expr  go to state 196
 
 
-State 129
+State 128
 
   106 for_stmt: FOR_KEYWORD INSTANCE_VAR_NAME IN_KEYWORD . expr stmt_ends stmt_list END_KEYWORD
   108         | FOR_KEYWORD INSTANCE_VAR_NAME IN_KEYWORD . expr DO_KEYWORD stmt_ends_op stmt_list END_KEYWORD
@@ -3416,14 +3325,14 @@ State 129
     expr  go to state 197
 
 
-State 130
+State 129
 
    86 stmt: RETURN_KEYWORD expr stmt_ends .
 
     $default  reduce using rule 86 (stmt)
 
 
-State 131
+State 130
 
    63 expr: SELF_KEYWORD DOT_SYMBOL VAR_METHOD_NAME .
    64     | SELF_KEYWORD DOT_SYMBOL VAR_METHOD_NAME . OPEN_ROUND_BRACKET expr_list CLOSE_ROUND_BRACKET
@@ -3433,7 +3342,7 @@ State 131
     $default  reduce using rule 63 (expr)
 
 
-State 132
+State 131
 
   112 until_stmt: UNTIL_KEYWORD expr DO_KEYWORD . stmt_ends_op stmt_list END_KEYWORD
 
@@ -3446,7 +3355,7 @@ State 132
     stmt_ends_op  go to state 199
 
 
-State 133
+State 132
 
   111 until_stmt: UNTIL_KEYWORD expr stmt_ends . stmt_list END_KEYWORD
 
@@ -3488,7 +3397,7 @@ State 133
     until_stmt           go to state 37
 
 
-State 134
+State 133
 
   110 while_stmt: WHILE_KEYWORD expr DO_KEYWORD . stmt_ends_op stmt_list END_KEYWORD
 
@@ -3501,7 +3410,7 @@ State 134
     stmt_ends_op  go to state 201
 
 
-State 135
+State 134
 
   109 while_stmt: WHILE_KEYWORD expr stmt_ends . stmt_list END_KEYWORD
 
@@ -3543,23 +3452,125 @@ State 135
     until_stmt           go to state 37
 
 
-State 136
+State 135
 
    55 expr: OPEN_ROUND_BRACKET expr CLOSE_ROUND_BRACKET .
 
     $default  reduce using rule 55 (expr)
 
 
+State 136
+
+   72 new_lines: NEW_LINE_SYMBOL new_lines .
+
+    $default  reduce using rule 72 (new_lines)
+
+
 State 137
 
-   57 expr: OPEN_SQUARE_BRACKET expr_list CLOSE_SQUARE_BRACKET .
+   18 expr: expr . ARITHMETIC_POW_OP expr
+   20     | expr . ARITHMETIC_MUL_OP expr
+   21     | expr . ARITHMETIC_DIV_OP expr
+   22     | expr . ARITHMETIC_MOD_OP expr
+   23     | expr . ARITHMETIC_PLUS_OP expr
+   24     | expr . ARITHMETIC_MINUS_OP expr
+   25     | expr . BIN_LEFT_SHIFT_OP expr
+   26     | expr . BIN_RIGHT_SHIFT_OP expr
+   27     | expr . BIN_AND_OP expr
+   28     | expr . BIN_OR_OP expr
+   29     | expr . BIN_XOR_OP expr
+   30     | expr . GREATER_OP expr
+   31     | expr . LESS_OP expr
+   32     | expr . GREATER_OR_EQL_OP expr
+   33     | expr . LESS_OR_EQL_OP expr
+   34     | expr . COMB_COMPRASION_OP expr
+   35     | expr . EQL_OP expr
+   36     | expr . CASE_EQL_OP expr
+   37     | expr . NOT_EQL_OP expr
+   38     | expr . LOGICAL_AND_OP expr
+   39     | expr . LOGICAL_OR_OP expr
+   40     | expr . INCLUSIVE_RANGE_OP expr
+   41     | expr . EXCLUSIVE_RANGE_OP expr
+   42     | expr . ASSIGN_OP expr
+   43     | expr . MOD_ASSIGN_OP expr
+   44     | expr . DIV_ASSIGN_OP expr
+   45     | expr . SUB_ASSIGN_OP expr
+   46     | expr . ADD_ASSIGN_OP expr
+   47     | expr . MUL_ASSIGN_OP expr
+   48     | expr . POW_ASSIGN_OP expr
+   49     | expr . UNTIL_KEYWORD expr
+   50     | expr . WHILE_KEYWORD expr
+   53     | expr . AND_KEYWORD expr
+   54     | expr . OR_KEYWORD expr
+   56     | expr . OPEN_SQUARE_BRACKET expr CLOSE_SQUARE_BRACKET
+   61     | expr . DOT_SYMBOL VAR_METHOD_NAME
+   62     | expr . DOT_SYMBOL VAR_METHOD_NAME OPEN_ROUND_BRACKET expr_list CLOSE_ROUND_BRACKET
+  123 expr_list_not_empty: expr . new_lines_op
 
-    $default  reduce using rule 57 (expr)
+    AND_KEYWORD          shift, and go to state 67
+    OR_KEYWORD           shift, and go to state 68
+    UNTIL_KEYWORD        shift, and go to state 69
+    WHILE_KEYWORD        shift, and go to state 70
+    ARITHMETIC_PLUS_OP   shift, and go to state 71
+    ARITHMETIC_MINUS_OP  shift, and go to state 72
+    ARITHMETIC_MUL_OP    shift, and go to state 73
+    ARITHMETIC_DIV_OP    shift, and go to state 74
+    ARITHMETIC_MOD_OP    shift, and go to state 75
+    ARITHMETIC_POW_OP    shift, and go to state 76
+    EQL_OP               shift, and go to state 77
+    NOT_EQL_OP           shift, and go to state 78
+    GREATER_OP           shift, and go to state 79
+    LESS_OP              shift, and go to state 80
+    GREATER_OR_EQL_OP    shift, and go to state 81
+    LESS_OR_EQL_OP       shift, and go to state 82
+    COMB_COMPRASION_OP   shift, and go to state 83
+    CASE_EQL_OP          shift, and go to state 84
+    ASSIGN_OP            shift, and go to state 85
+    ADD_ASSIGN_OP        shift, and go to state 86
+    SUB_ASSIGN_OP        shift, and go to state 87
+    MUL_ASSIGN_OP        shift, and go to state 88
+    DIV_ASSIGN_OP        shift, and go to state 89
+    MOD_ASSIGN_OP        shift, and go to state 90
+    POW_ASSIGN_OP        shift, and go to state 91
+    BIN_AND_OP           shift, and go to state 92
+    BIN_OR_OP            shift, and go to state 93
+    BIN_XOR_OP           shift, and go to state 94
+    BIN_LEFT_SHIFT_OP    shift, and go to state 95
+    BIN_RIGHT_SHIFT_OP   shift, and go to state 96
+    LOGICAL_AND_OP       shift, and go to state 97
+    LOGICAL_OR_OP        shift, and go to state 98
+    INCLUSIVE_RANGE_OP   shift, and go to state 99
+    EXCLUSIVE_RANGE_OP   shift, and go to state 100
+    OPEN_SQUARE_BRACKET  shift, and go to state 101
+    DOT_SYMBOL           shift, and go to state 102
+    NEW_LINE_SYMBOL      shift, and go to state 61
+
+    $default  reduce using rule 69 (new_lines_op)
+
+    new_lines_op  go to state 203
+    new_lines     go to state 63
 
 
 State 138
 
-  124 expr_list_not_empty: expr_list_not_empty COMMA_SYMBOL . expr
+   57 expr: OPEN_SQUARE_BRACKET new_lines_op expr_list . CLOSE_SQUARE_BRACKET
+
+    CLOSE_SQUARE_BRACKET  shift, and go to state 204
+
+
+State 139
+
+  122 expr_list: expr_list_not_empty .
+  124 expr_list_not_empty: expr_list_not_empty . COMMA_SYMBOL new_lines_op expr new_lines_op
+
+    COMMA_SYMBOL  shift, and go to state 205
+
+    $default  reduce using rule 122 (expr_list)
+
+
+State 140
+
+   58 expr: VAR_METHOD_NAME OPEN_ROUND_BRACKET new_lines_op . expr_list CLOSE_ROUND_BRACKET
 
     DEFINED_KEYWORD         shift, and go to state 4
     FALSE_KEYWORD           shift, and go to state 6
@@ -3579,17 +3590,14 @@ State 138
     VAR_METHOD_NAME         shift, and go to state 24
     INSTANCE_VAR_NAME       shift, and go to state 25
 
-    expr  go to state 203
+    $default  reduce using rule 121 (expr_list)
+
+    expr                 go to state 137
+    expr_list            go to state 206
+    expr_list_not_empty  go to state 139
 
 
-State 139
-
-   58 expr: VAR_METHOD_NAME OPEN_ROUND_BRACKET expr_list . CLOSE_ROUND_BRACKET
-
-    CLOSE_ROUND_BRACKET  shift, and go to state 204
-
-
-State 140
+State 141
 
    18 expr: expr . ARITHMETIC_POW_OP expr
    20     | expr . ARITHMETIC_MUL_OP expr
@@ -3666,7 +3674,7 @@ State 140
     $default  reduce using rule 53 (expr)
 
 
-State 141
+State 142
 
    18 expr: expr . ARITHMETIC_POW_OP expr
    20     | expr . ARITHMETIC_MUL_OP expr
@@ -3743,7 +3751,7 @@ State 141
     $default  reduce using rule 54 (expr)
 
 
-State 142
+State 143
 
    18 expr: expr . ARITHMETIC_POW_OP expr
    20     | expr . ARITHMETIC_MUL_OP expr
@@ -3822,7 +3830,7 @@ State 142
     $default  reduce using rule 49 (expr)
 
 
-State 143
+State 144
 
    18 expr: expr . ARITHMETIC_POW_OP expr
    20     | expr . ARITHMETIC_MUL_OP expr
@@ -3901,7 +3909,7 @@ State 143
     $default  reduce using rule 50 (expr)
 
 
-State 144
+State 145
 
    18 expr: expr . ARITHMETIC_POW_OP expr
    20     | expr . ARITHMETIC_MUL_OP expr
@@ -3952,7 +3960,7 @@ State 144
     $default  reduce using rule 23 (expr)
 
 
-State 145
+State 146
 
    18 expr: expr . ARITHMETIC_POW_OP expr
    20     | expr . ARITHMETIC_MUL_OP expr
@@ -4003,7 +4011,7 @@ State 145
     $default  reduce using rule 24 (expr)
 
 
-State 146
+State 147
 
    18 expr: expr . ARITHMETIC_POW_OP expr
    20     | expr . ARITHMETIC_MUL_OP expr
@@ -4051,7 +4059,7 @@ State 146
     $default  reduce using rule 20 (expr)
 
 
-State 147
+State 148
 
    18 expr: expr . ARITHMETIC_POW_OP expr
    20     | expr . ARITHMETIC_MUL_OP expr
@@ -4099,7 +4107,7 @@ State 147
     $default  reduce using rule 21 (expr)
 
 
-State 148
+State 149
 
    18 expr: expr . ARITHMETIC_POW_OP expr
    20     | expr . ARITHMETIC_MUL_OP expr
@@ -4147,7 +4155,7 @@ State 148
     $default  reduce using rule 22 (expr)
 
 
-State 149
+State 150
 
    18 expr: expr . ARITHMETIC_POW_OP expr
    18     | expr ARITHMETIC_POW_OP expr .
@@ -4195,7 +4203,7 @@ State 149
     $default  reduce using rule 18 (expr)
 
 
-State 150
+State 151
 
    18 expr: expr . ARITHMETIC_POW_OP expr
    20     | expr . ARITHMETIC_MUL_OP expr
@@ -4262,7 +4270,7 @@ State 150
     $default  reduce using rule 35 (expr)
 
 
-State 151
+State 152
 
    18 expr: expr . ARITHMETIC_POW_OP expr
    20     | expr . ARITHMETIC_MUL_OP expr
@@ -4329,7 +4337,7 @@ State 151
     $default  reduce using rule 37 (expr)
 
 
-State 152
+State 153
 
    18 expr: expr . ARITHMETIC_POW_OP expr
    20     | expr . ARITHMETIC_MUL_OP expr
@@ -4387,7 +4395,7 @@ State 152
     $default  reduce using rule 30 (expr)
 
 
-State 153
+State 154
 
    18 expr: expr . ARITHMETIC_POW_OP expr
    20     | expr . ARITHMETIC_MUL_OP expr
@@ -4445,7 +4453,7 @@ State 153
     $default  reduce using rule 31 (expr)
 
 
-State 154
+State 155
 
    18 expr: expr . ARITHMETIC_POW_OP expr
    20     | expr . ARITHMETIC_MUL_OP expr
@@ -4503,7 +4511,7 @@ State 154
     $default  reduce using rule 32 (expr)
 
 
-State 155
+State 156
 
    18 expr: expr . ARITHMETIC_POW_OP expr
    20     | expr . ARITHMETIC_MUL_OP expr
@@ -4561,7 +4569,7 @@ State 155
     $default  reduce using rule 33 (expr)
 
 
-State 156
+State 157
 
    18 expr: expr . ARITHMETIC_POW_OP expr
    20     | expr . ARITHMETIC_MUL_OP expr
@@ -4628,7 +4636,7 @@ State 156
     $default  reduce using rule 34 (expr)
 
 
-State 157
+State 158
 
    18 expr: expr . ARITHMETIC_POW_OP expr
    20     | expr . ARITHMETIC_MUL_OP expr
@@ -4695,7 +4703,7 @@ State 157
     $default  reduce using rule 36 (expr)
 
 
-State 158
+State 159
 
    18 expr: expr . ARITHMETIC_POW_OP expr
    20     | expr . ARITHMETIC_MUL_OP expr
@@ -4772,7 +4780,7 @@ State 158
     $default  reduce using rule 42 (expr)
 
 
-State 159
+State 160
 
    18 expr: expr . ARITHMETIC_POW_OP expr
    20     | expr . ARITHMETIC_MUL_OP expr
@@ -4849,7 +4857,7 @@ State 159
     $default  reduce using rule 46 (expr)
 
 
-State 160
+State 161
 
    18 expr: expr . ARITHMETIC_POW_OP expr
    20     | expr . ARITHMETIC_MUL_OP expr
@@ -4926,7 +4934,7 @@ State 160
     $default  reduce using rule 45 (expr)
 
 
-State 161
+State 162
 
    18 expr: expr . ARITHMETIC_POW_OP expr
    20     | expr . ARITHMETIC_MUL_OP expr
@@ -5003,7 +5011,7 @@ State 161
     $default  reduce using rule 47 (expr)
 
 
-State 162
+State 163
 
    18 expr: expr . ARITHMETIC_POW_OP expr
    20     | expr . ARITHMETIC_MUL_OP expr
@@ -5080,7 +5088,7 @@ State 162
     $default  reduce using rule 44 (expr)
 
 
-State 163
+State 164
 
    18 expr: expr . ARITHMETIC_POW_OP expr
    20     | expr . ARITHMETIC_MUL_OP expr
@@ -5157,7 +5165,7 @@ State 163
     $default  reduce using rule 43 (expr)
 
 
-State 164
+State 165
 
    18 expr: expr . ARITHMETIC_POW_OP expr
    20     | expr . ARITHMETIC_MUL_OP expr
@@ -5234,7 +5242,7 @@ State 164
     $default  reduce using rule 48 (expr)
 
 
-State 165
+State 166
 
    18 expr: expr . ARITHMETIC_POW_OP expr
    20     | expr . ARITHMETIC_MUL_OP expr
@@ -5289,7 +5297,7 @@ State 165
     $default  reduce using rule 27 (expr)
 
 
-State 166
+State 167
 
    18 expr: expr . ARITHMETIC_POW_OP expr
    20     | expr . ARITHMETIC_MUL_OP expr
@@ -5345,7 +5353,7 @@ State 166
     $default  reduce using rule 28 (expr)
 
 
-State 167
+State 168
 
    18 expr: expr . ARITHMETIC_POW_OP expr
    20     | expr . ARITHMETIC_MUL_OP expr
@@ -5401,7 +5409,7 @@ State 167
     $default  reduce using rule 29 (expr)
 
 
-State 168
+State 169
 
    18 expr: expr . ARITHMETIC_POW_OP expr
    20     | expr . ARITHMETIC_MUL_OP expr
@@ -5454,7 +5462,7 @@ State 168
     $default  reduce using rule 25 (expr)
 
 
-State 169
+State 170
 
    18 expr: expr . ARITHMETIC_POW_OP expr
    20     | expr . ARITHMETIC_MUL_OP expr
@@ -5507,7 +5515,7 @@ State 169
     $default  reduce using rule 26 (expr)
 
 
-State 170
+State 171
 
    18 expr: expr . ARITHMETIC_POW_OP expr
    20     | expr . ARITHMETIC_MUL_OP expr
@@ -5573,7 +5581,7 @@ State 170
     $default  reduce using rule 38 (expr)
 
 
-State 171
+State 172
 
    18 expr: expr . ARITHMETIC_POW_OP expr
    20     | expr . ARITHMETIC_MUL_OP expr
@@ -5640,7 +5648,7 @@ State 171
     $default  reduce using rule 39 (expr)
 
 
-State 172
+State 173
 
    18 expr: expr . ARITHMETIC_POW_OP expr
    20     | expr . ARITHMETIC_MUL_OP expr
@@ -5711,7 +5719,7 @@ State 172
     $default  reduce using rule 40 (expr)
 
 
-State 173
+State 174
 
    18 expr: expr . ARITHMETIC_POW_OP expr
    20     | expr . ARITHMETIC_MUL_OP expr
@@ -5782,7 +5790,7 @@ State 173
     $default  reduce using rule 41 (expr)
 
 
-State 174
+State 175
 
    18 expr: expr . ARITHMETIC_POW_OP expr
    20     | expr . ARITHMETIC_MUL_OP expr
@@ -5858,21 +5866,21 @@ State 174
     INCLUSIVE_RANGE_OP    shift, and go to state 99
     EXCLUSIVE_RANGE_OP    shift, and go to state 100
     OPEN_SQUARE_BRACKET   shift, and go to state 101
-    CLOSE_SQUARE_BRACKET  shift, and go to state 205
+    CLOSE_SQUARE_BRACKET  shift, and go to state 207
     DOT_SYMBOL            shift, and go to state 102
 
 
-State 175
+State 176
 
    61 expr: expr DOT_SYMBOL VAR_METHOD_NAME .
    62     | expr DOT_SYMBOL VAR_METHOD_NAME . OPEN_ROUND_BRACKET expr_list CLOSE_ROUND_BRACKET
 
-    OPEN_ROUND_BRACKET  shift, and go to state 206
+    OPEN_ROUND_BRACKET  shift, and go to state 208
 
     $default  reduce using rule 61 (expr)
 
 
-State 176
+State 177
 
   102 if_stmt: if_start_stmt ELSE_KEYWORD stmt_ends_op . stmt_list END_KEYWORD
 
@@ -5905,7 +5913,7 @@ State 176
     expr                 go to state 30
     stmt                 go to state 116
     stmt_list_not_empty  go to state 117
-    stmt_list            go to state 207
+    stmt_list            go to state 209
     stmt_block           go to state 32
     if_start_stmt        go to state 33
     if_stmt              go to state 34
@@ -5914,7 +5922,7 @@ State 176
     until_stmt           go to state 37
 
 
-State 177
+State 178
 
    18 expr: expr . ARITHMETIC_POW_OP expr
    20     | expr . ARITHMETIC_MUL_OP expr
@@ -5993,17 +6001,17 @@ State 177
     EXCLUSIVE_RANGE_OP   shift, and go to state 100
     OPEN_SQUARE_BRACKET  shift, and go to state 101
     DOT_SYMBOL           shift, and go to state 102
-    SEMICOLON_SYMBOL     shift, and go to state 208
+    SEMICOLON_SYMBOL     shift, and go to state 210
     NEW_LINE_SYMBOL      shift, and go to state 124
 
     $default  reduce using rule 69 (new_lines_op)
 
-    stmt_ends     go to state 209
-    new_lines_op  go to state 210
-    new_lines     go to state 127
+    stmt_ends     go to state 211
+    new_lines_op  go to state 212
+    new_lines     go to state 63
 
 
-State 178
+State 179
 
   104 if_stmt: if_start_stmt elsif_stmt_list ELSE_KEYWORD . stmt_ends_op stmt_list END_KEYWORD
 
@@ -6013,62 +6021,62 @@ State 178
     $default  reduce using rule 73 (stmt_ends_op)
 
     stmt_ends     go to state 42
-    stmt_ends_op  go to state 211
+    stmt_ends_op  go to state 213
 
 
-State 179
+State 180
 
   103 if_stmt: if_start_stmt elsif_stmt_list END_KEYWORD .
 
     $default  reduce using rule 103 (if_stmt)
 
 
-State 180
+State 181
 
   100 elsif_stmt_list: elsif_stmt_list elsif_stmt .
 
     $default  reduce using rule 100 (elsif_stmt_list)
 
 
-State 181
+State 182
 
    89 stmt_list_not_empty: stmt_list_not_empty stmt .
 
     $default  reduce using rule 89 (stmt_list_not_empty)
 
 
-State 182
+State 183
 
    92 stmt_block: BEGIN_KEYWORD stmt_ends_op stmt_list END_KEYWORD .
 
     $default  reduce using rule 92 (stmt_block)
 
 
-State 183
+State 184
 
   126 class_declaration: CLASS_KEYWORD CLASS_NAME LESS_OP CLASS_NAME . stmt_ends def_method_list_op END_KEYWORD stmt_ends
 
     SEMICOLON_SYMBOL  shift, and go to state 40
     NEW_LINE_SYMBOL   shift, and go to state 41
 
-    stmt_ends  go to state 212
+    stmt_ends  go to state 214
 
 
-State 184
+State 185
 
   129 def_method_list: def_method_stmt .
 
     $default  reduce using rule 129 (def_method_list)
 
 
-State 185
+State 186
 
   125 class_declaration: CLASS_KEYWORD CLASS_NAME stmt_ends def_method_list_op . END_KEYWORD stmt_ends
 
-    END_KEYWORD  shift, and go to state 213
+    END_KEYWORD  shift, and go to state 215
 
 
-State 186
+State 187
 
   128 def_method_list_op: def_method_list .
   130 def_method_list: def_method_list . def_method_stmt
@@ -6077,62 +6085,55 @@ State 186
 
     $default  reduce using rule 128 (def_method_list_op)
 
-    def_method_stmt  go to state 214
+    def_method_stmt  go to state 216
 
 
-State 187
+State 188
 
   113 method_param: VAR_METHOD_NAME .
   114             | VAR_METHOD_NAME . ASSIGN_OP expr
 
-    ASSIGN_OP  shift, and go to state 215
+    ASSIGN_OP  shift, and go to state 217
 
     $default  reduce using rule 113 (method_param)
 
 
-State 188
+State 189
 
   117 method_params_list_not_empty: method_param .
 
     $default  reduce using rule 117 (method_params_list_not_empty)
 
 
-State 189
+State 190
 
   120 def_method_stmt: DEF_KEYWORD VAR_METHOD_NAME OPEN_ROUND_BRACKET method_params_list . CLOSE_ROUND_BRACKET stmt_ends_op stmt_list END_KEYWORD stmt_ends_op
 
-    CLOSE_ROUND_BRACKET  shift, and go to state 216
-
-
-State 190
-
-  116 method_params_list: method_params_list_not_empty .
-  118 method_params_list_not_empty: method_params_list_not_empty . COMMA_SYMBOL method_param
-
-    COMMA_SYMBOL  shift, and go to state 217
-
-    $default  reduce using rule 116 (method_params_list)
+    CLOSE_ROUND_BRACKET  shift, and go to state 218
 
 
 State 191
 
-  119 def_method_stmt: DEF_KEYWORD VAR_METHOD_NAME stmt_ends stmt_list . END_KEYWORD stmt_ends_op
+  116 method_params_list: method_params_list_not_empty .
+  118 method_params_list_not_empty: method_params_list_not_empty . COMMA_SYMBOL method_param
 
-    END_KEYWORD  shift, and go to state 218
+    COMMA_SYMBOL  shift, and go to state 219
+
+    $default  reduce using rule 116 (method_params_list)
 
 
 State 192
 
-   94 if_start_stmt: IF_KEYWORD expr SEMICOLON_SYMBOL new_lines_op . THEN_KEYWORD stmt_ends_op stmt_list
+  119 def_method_stmt: DEF_KEYWORD VAR_METHOD_NAME stmt_ends stmt_list . END_KEYWORD stmt_ends_op
 
-    THEN_KEYWORD  shift, and go to state 219
+    END_KEYWORD  shift, and go to state 220
 
 
 State 193
 
-   72 new_lines: NEW_LINE_SYMBOL new_lines .
+   94 if_start_stmt: IF_KEYWORD expr SEMICOLON_SYMBOL new_lines_op . THEN_KEYWORD stmt_ends_op stmt_list
 
-    $default  reduce using rule 72 (new_lines)
+    THEN_KEYWORD  shift, and go to state 221
 
 
 State 194
@@ -6152,7 +6153,7 @@ State 195
     $default  reduce using rule 73 (stmt_ends_op)
 
     stmt_ends     go to state 42
-    stmt_ends_op  go to state 220
+    stmt_ends_op  go to state 222
 
 
 State 196
@@ -6198,7 +6199,7 @@ State 196
   107         | FOR_KEYWORD VAR_METHOD_NAME IN_KEYWORD expr . DO_KEYWORD stmt_ends_op stmt_list END_KEYWORD
 
     AND_KEYWORD          shift, and go to state 67
-    DO_KEYWORD           shift, and go to state 221
+    DO_KEYWORD           shift, and go to state 223
     OR_KEYWORD           shift, and go to state 68
     UNTIL_KEYWORD        shift, and go to state 69
     WHILE_KEYWORD        shift, and go to state 70
@@ -6237,7 +6238,7 @@ State 196
     SEMICOLON_SYMBOL     shift, and go to state 40
     NEW_LINE_SYMBOL      shift, and go to state 41
 
-    stmt_ends  go to state 222
+    stmt_ends  go to state 224
 
 
 State 197
@@ -6283,7 +6284,7 @@ State 197
   108         | FOR_KEYWORD INSTANCE_VAR_NAME IN_KEYWORD expr . DO_KEYWORD stmt_ends_op stmt_list END_KEYWORD
 
     AND_KEYWORD          shift, and go to state 67
-    DO_KEYWORD           shift, and go to state 223
+    DO_KEYWORD           shift, and go to state 225
     OR_KEYWORD           shift, and go to state 68
     UNTIL_KEYWORD        shift, and go to state 69
     WHILE_KEYWORD        shift, and go to state 70
@@ -6322,7 +6323,7 @@ State 197
     SEMICOLON_SYMBOL     shift, and go to state 40
     NEW_LINE_SYMBOL      shift, and go to state 41
 
-    stmt_ends  go to state 224
+    stmt_ends  go to state 226
 
 
 State 198
@@ -6349,63 +6350,14 @@ State 198
 
     $default  reduce using rule 121 (expr_list)
 
-    expr                 go to state 61
-    expr_list            go to state 225
-    expr_list_not_empty  go to state 63
+    expr                 go to state 137
+    expr_list            go to state 227
+    expr_list_not_empty  go to state 139
 
 
 State 199
 
   112 until_stmt: UNTIL_KEYWORD expr DO_KEYWORD stmt_ends_op . stmt_list END_KEYWORD
-
-    BEGIN_KEYWORD           shift, and go to state 1
-    DEFINED_KEYWORD         shift, and go to state 4
-    IF_KEYWORD              shift, and go to state 5
-    FALSE_KEYWORD           shift, and go to state 6
-    FOR_KEYWORD             shift, and go to state 7
-    NIL_KEYWORD             shift, and go to state 8
-    NOT_KEYWORD             shift, and go to state 9
-    RETURN_KEYWORD          shift, and go to state 10
-    SELF_KEYWORD            shift, and go to state 11
-    TRUE_KEYWORD            shift, and go to state 12
-    UNTIL_KEYWORD           shift, and go to state 13
-    WHILE_KEYWORD           shift, and go to state 14
-    ARITHMETIC_PLUS_OP      shift, and go to state 15
-    ARITHMETIC_MINUS_OP     shift, and go to state 16
-    BIN_ONES_COMPLEMENT_OP  shift, and go to state 17
-    LOGICAL_NOT_OP          shift, and go to state 18
-    OPEN_ROUND_BRACKET      shift, and go to state 19
-    OPEN_SQUARE_BRACKET     shift, and go to state 20
-    STR                     shift, and go to state 21
-    INTEGER_NUMBER          shift, and go to state 22
-    FLOAT_NUMBER            shift, and go to state 23
-    VAR_METHOD_NAME         shift, and go to state 24
-    INSTANCE_VAR_NAME       shift, and go to state 25
-
-    $default  reduce using rule 90 (stmt_list)
-
-    expr                 go to state 30
-    stmt                 go to state 116
-    stmt_list_not_empty  go to state 117
-    stmt_list            go to state 226
-    stmt_block           go to state 32
-    if_start_stmt        go to state 33
-    if_stmt              go to state 34
-    for_stmt             go to state 35
-    while_stmt           go to state 36
-    until_stmt           go to state 37
-
-
-State 200
-
-  111 until_stmt: UNTIL_KEYWORD expr stmt_ends stmt_list . END_KEYWORD
-
-    END_KEYWORD  shift, and go to state 227
-
-
-State 201
-
-  110 while_stmt: WHILE_KEYWORD expr DO_KEYWORD stmt_ends_op . stmt_list END_KEYWORD
 
     BEGIN_KEYWORD           shift, and go to state 1
     DEFINED_KEYWORD         shift, and go to state 4
@@ -6445,109 +6397,103 @@ State 201
     until_stmt           go to state 37
 
 
-State 202
+State 200
 
-  109 while_stmt: WHILE_KEYWORD expr stmt_ends stmt_list . END_KEYWORD
+  111 until_stmt: UNTIL_KEYWORD expr stmt_ends stmt_list . END_KEYWORD
 
     END_KEYWORD  shift, and go to state 229
 
 
+State 201
+
+  110 while_stmt: WHILE_KEYWORD expr DO_KEYWORD stmt_ends_op . stmt_list END_KEYWORD
+
+    BEGIN_KEYWORD           shift, and go to state 1
+    DEFINED_KEYWORD         shift, and go to state 4
+    IF_KEYWORD              shift, and go to state 5
+    FALSE_KEYWORD           shift, and go to state 6
+    FOR_KEYWORD             shift, and go to state 7
+    NIL_KEYWORD             shift, and go to state 8
+    NOT_KEYWORD             shift, and go to state 9
+    RETURN_KEYWORD          shift, and go to state 10
+    SELF_KEYWORD            shift, and go to state 11
+    TRUE_KEYWORD            shift, and go to state 12
+    UNTIL_KEYWORD           shift, and go to state 13
+    WHILE_KEYWORD           shift, and go to state 14
+    ARITHMETIC_PLUS_OP      shift, and go to state 15
+    ARITHMETIC_MINUS_OP     shift, and go to state 16
+    BIN_ONES_COMPLEMENT_OP  shift, and go to state 17
+    LOGICAL_NOT_OP          shift, and go to state 18
+    OPEN_ROUND_BRACKET      shift, and go to state 19
+    OPEN_SQUARE_BRACKET     shift, and go to state 20
+    STR                     shift, and go to state 21
+    INTEGER_NUMBER          shift, and go to state 22
+    FLOAT_NUMBER            shift, and go to state 23
+    VAR_METHOD_NAME         shift, and go to state 24
+    INSTANCE_VAR_NAME       shift, and go to state 25
+
+    $default  reduce using rule 90 (stmt_list)
+
+    expr                 go to state 30
+    stmt                 go to state 116
+    stmt_list_not_empty  go to state 117
+    stmt_list            go to state 230
+    stmt_block           go to state 32
+    if_start_stmt        go to state 33
+    if_stmt              go to state 34
+    for_stmt             go to state 35
+    while_stmt           go to state 36
+    until_stmt           go to state 37
+
+
+State 202
+
+  109 while_stmt: WHILE_KEYWORD expr stmt_ends stmt_list . END_KEYWORD
+
+    END_KEYWORD  shift, and go to state 231
+
+
 State 203
 
-   18 expr: expr . ARITHMETIC_POW_OP expr
-   20     | expr . ARITHMETIC_MUL_OP expr
-   21     | expr . ARITHMETIC_DIV_OP expr
-   22     | expr . ARITHMETIC_MOD_OP expr
-   23     | expr . ARITHMETIC_PLUS_OP expr
-   24     | expr . ARITHMETIC_MINUS_OP expr
-   25     | expr . BIN_LEFT_SHIFT_OP expr
-   26     | expr . BIN_RIGHT_SHIFT_OP expr
-   27     | expr . BIN_AND_OP expr
-   28     | expr . BIN_OR_OP expr
-   29     | expr . BIN_XOR_OP expr
-   30     | expr . GREATER_OP expr
-   31     | expr . LESS_OP expr
-   32     | expr . GREATER_OR_EQL_OP expr
-   33     | expr . LESS_OR_EQL_OP expr
-   34     | expr . COMB_COMPRASION_OP expr
-   35     | expr . EQL_OP expr
-   36     | expr . CASE_EQL_OP expr
-   37     | expr . NOT_EQL_OP expr
-   38     | expr . LOGICAL_AND_OP expr
-   39     | expr . LOGICAL_OR_OP expr
-   40     | expr . INCLUSIVE_RANGE_OP expr
-   41     | expr . EXCLUSIVE_RANGE_OP expr
-   42     | expr . ASSIGN_OP expr
-   43     | expr . MOD_ASSIGN_OP expr
-   44     | expr . DIV_ASSIGN_OP expr
-   45     | expr . SUB_ASSIGN_OP expr
-   46     | expr . ADD_ASSIGN_OP expr
-   47     | expr . MUL_ASSIGN_OP expr
-   48     | expr . POW_ASSIGN_OP expr
-   49     | expr . UNTIL_KEYWORD expr
-   50     | expr . WHILE_KEYWORD expr
-   53     | expr . AND_KEYWORD expr
-   54     | expr . OR_KEYWORD expr
-   56     | expr . OPEN_SQUARE_BRACKET expr CLOSE_SQUARE_BRACKET
-   61     | expr . DOT_SYMBOL VAR_METHOD_NAME
-   62     | expr . DOT_SYMBOL VAR_METHOD_NAME OPEN_ROUND_BRACKET expr_list CLOSE_ROUND_BRACKET
-  124 expr_list_not_empty: expr_list_not_empty COMMA_SYMBOL expr .
+  123 expr_list_not_empty: expr new_lines_op .
 
-    AND_KEYWORD          shift, and go to state 67
-    OR_KEYWORD           shift, and go to state 68
-    UNTIL_KEYWORD        shift, and go to state 69
-    WHILE_KEYWORD        shift, and go to state 70
-    ARITHMETIC_PLUS_OP   shift, and go to state 71
-    ARITHMETIC_MINUS_OP  shift, and go to state 72
-    ARITHMETIC_MUL_OP    shift, and go to state 73
-    ARITHMETIC_DIV_OP    shift, and go to state 74
-    ARITHMETIC_MOD_OP    shift, and go to state 75
-    ARITHMETIC_POW_OP    shift, and go to state 76
-    EQL_OP               shift, and go to state 77
-    NOT_EQL_OP           shift, and go to state 78
-    GREATER_OP           shift, and go to state 79
-    LESS_OP              shift, and go to state 80
-    GREATER_OR_EQL_OP    shift, and go to state 81
-    LESS_OR_EQL_OP       shift, and go to state 82
-    COMB_COMPRASION_OP   shift, and go to state 83
-    CASE_EQL_OP          shift, and go to state 84
-    ASSIGN_OP            shift, and go to state 85
-    ADD_ASSIGN_OP        shift, and go to state 86
-    SUB_ASSIGN_OP        shift, and go to state 87
-    MUL_ASSIGN_OP        shift, and go to state 88
-    DIV_ASSIGN_OP        shift, and go to state 89
-    MOD_ASSIGN_OP        shift, and go to state 90
-    POW_ASSIGN_OP        shift, and go to state 91
-    BIN_AND_OP           shift, and go to state 92
-    BIN_OR_OP            shift, and go to state 93
-    BIN_XOR_OP           shift, and go to state 94
-    BIN_LEFT_SHIFT_OP    shift, and go to state 95
-    BIN_RIGHT_SHIFT_OP   shift, and go to state 96
-    LOGICAL_AND_OP       shift, and go to state 97
-    LOGICAL_OR_OP        shift, and go to state 98
-    INCLUSIVE_RANGE_OP   shift, and go to state 99
-    EXCLUSIVE_RANGE_OP   shift, and go to state 100
-    OPEN_SQUARE_BRACKET  shift, and go to state 101
-    DOT_SYMBOL           shift, and go to state 102
-
-    $default  reduce using rule 124 (expr_list_not_empty)
+    $default  reduce using rule 123 (expr_list_not_empty)
 
 
 State 204
 
-   58 expr: VAR_METHOD_NAME OPEN_ROUND_BRACKET expr_list CLOSE_ROUND_BRACKET .
+   57 expr: OPEN_SQUARE_BRACKET new_lines_op expr_list CLOSE_SQUARE_BRACKET .
 
-    $default  reduce using rule 58 (expr)
+    $default  reduce using rule 57 (expr)
 
 
 State 205
+
+  124 expr_list_not_empty: expr_list_not_empty COMMA_SYMBOL . new_lines_op expr new_lines_op
+
+    NEW_LINE_SYMBOL  shift, and go to state 61
+
+    $default  reduce using rule 69 (new_lines_op)
+
+    new_lines_op  go to state 232
+    new_lines     go to state 63
+
+
+State 206
+
+   58 expr: VAR_METHOD_NAME OPEN_ROUND_BRACKET new_lines_op expr_list . CLOSE_ROUND_BRACKET
+
+    CLOSE_ROUND_BRACKET  shift, and go to state 233
+
+
+State 207
 
    56 expr: expr OPEN_SQUARE_BRACKET expr CLOSE_SQUARE_BRACKET .
 
     $default  reduce using rule 56 (expr)
 
 
-State 206
+State 208
 
    62 expr: expr DOT_SYMBOL VAR_METHOD_NAME OPEN_ROUND_BRACKET . expr_list CLOSE_ROUND_BRACKET
 
@@ -6571,19 +6517,19 @@ State 206
 
     $default  reduce using rule 121 (expr_list)
 
-    expr                 go to state 61
-    expr_list            go to state 230
-    expr_list_not_empty  go to state 63
+    expr                 go to state 137
+    expr_list            go to state 234
+    expr_list_not_empty  go to state 139
 
 
-State 207
+State 209
 
   102 if_stmt: if_start_stmt ELSE_KEYWORD stmt_ends_op stmt_list . END_KEYWORD
 
-    END_KEYWORD  shift, and go to state 231
+    END_KEYWORD  shift, and go to state 235
 
 
-State 208
+State 210
 
    65 stmt_ends: SEMICOLON_SYMBOL .
    67          | SEMICOLON_SYMBOL . stmt_ends
@@ -6596,11 +6542,11 @@ State 208
     $default      reduce using rule 65 (stmt_ends)
 
     stmt_ends     go to state 114
-    new_lines_op  go to state 232
-    new_lines     go to state 127
+    new_lines_op  go to state 236
+    new_lines     go to state 63
 
 
-State 209
+State 211
 
    96 elsif_stmt: ELSIF_KEYWORD expr stmt_ends . stmt_list
 
@@ -6633,7 +6579,7 @@ State 209
     expr                 go to state 30
     stmt                 go to state 116
     stmt_list_not_empty  go to state 117
-    stmt_list            go to state 233
+    stmt_list            go to state 237
     stmt_block           go to state 32
     if_start_stmt        go to state 33
     if_stmt              go to state 34
@@ -6642,14 +6588,14 @@ State 209
     until_stmt           go to state 37
 
 
-State 210
+State 212
 
    97 elsif_stmt: ELSIF_KEYWORD expr new_lines_op . THEN_KEYWORD stmt_ends_op stmt_list
 
-    THEN_KEYWORD  shift, and go to state 234
+    THEN_KEYWORD  shift, and go to state 238
 
 
-State 211
+State 213
 
   104 if_stmt: if_start_stmt elsif_stmt_list ELSE_KEYWORD stmt_ends_op . stmt_list END_KEYWORD
 
@@ -6682,7 +6628,7 @@ State 211
     expr                 go to state 30
     stmt                 go to state 116
     stmt_list_not_empty  go to state 117
-    stmt_list            go to state 235
+    stmt_list            go to state 239
     stmt_block           go to state 32
     if_start_stmt        go to state 33
     if_stmt              go to state 34
@@ -6691,7 +6637,7 @@ State 211
     until_stmt           go to state 37
 
 
-State 212
+State 214
 
   126 class_declaration: CLASS_KEYWORD CLASS_NAME LESS_OP CLASS_NAME stmt_ends . def_method_list_op END_KEYWORD stmt_ends
 
@@ -6699,29 +6645,29 @@ State 212
 
     $default  reduce using rule 127 (def_method_list_op)
 
-    def_method_stmt     go to state 184
-    def_method_list_op  go to state 236
-    def_method_list     go to state 186
+    def_method_stmt     go to state 185
+    def_method_list_op  go to state 240
+    def_method_list     go to state 187
 
 
-State 213
+State 215
 
   125 class_declaration: CLASS_KEYWORD CLASS_NAME stmt_ends def_method_list_op END_KEYWORD . stmt_ends
 
     SEMICOLON_SYMBOL  shift, and go to state 40
     NEW_LINE_SYMBOL   shift, and go to state 41
 
-    stmt_ends  go to state 237
+    stmt_ends  go to state 241
 
 
-State 214
+State 216
 
   130 def_method_list: def_method_list def_method_stmt .
 
     $default  reduce using rule 130 (def_method_list)
 
 
-State 215
+State 217
 
   114 method_param: VAR_METHOD_NAME ASSIGN_OP . expr
 
@@ -6743,10 +6689,10 @@ State 215
     VAR_METHOD_NAME         shift, and go to state 24
     INSTANCE_VAR_NAME       shift, and go to state 25
 
-    expr  go to state 238
+    expr  go to state 242
 
 
-State 216
+State 218
 
   120 def_method_stmt: DEF_KEYWORD VAR_METHOD_NAME OPEN_ROUND_BRACKET method_params_list CLOSE_ROUND_BRACKET . stmt_ends_op stmt_list END_KEYWORD stmt_ends_op
 
@@ -6756,19 +6702,19 @@ State 216
     $default  reduce using rule 73 (stmt_ends_op)
 
     stmt_ends     go to state 42
-    stmt_ends_op  go to state 239
+    stmt_ends_op  go to state 243
 
 
-State 217
+State 219
 
   118 method_params_list_not_empty: method_params_list_not_empty COMMA_SYMBOL . method_param
 
-    VAR_METHOD_NAME  shift, and go to state 187
+    VAR_METHOD_NAME  shift, and go to state 188
 
-    method_param  go to state 240
+    method_param  go to state 244
 
 
-State 218
+State 220
 
   119 def_method_stmt: DEF_KEYWORD VAR_METHOD_NAME stmt_ends stmt_list END_KEYWORD . stmt_ends_op
 
@@ -6778,122 +6724,12 @@ State 218
     $default  reduce using rule 73 (stmt_ends_op)
 
     stmt_ends     go to state 42
-    stmt_ends_op  go to state 241
-
-
-State 219
-
-   94 if_start_stmt: IF_KEYWORD expr SEMICOLON_SYMBOL new_lines_op THEN_KEYWORD . stmt_ends_op stmt_list
-
-    SEMICOLON_SYMBOL  shift, and go to state 40
-    NEW_LINE_SYMBOL   shift, and go to state 41
-
-    $default  reduce using rule 73 (stmt_ends_op)
-
-    stmt_ends     go to state 42
-    stmt_ends_op  go to state 242
-
-
-State 220
-
-   95 if_start_stmt: IF_KEYWORD expr new_lines_op THEN_KEYWORD stmt_ends_op . stmt_list
-
-    BEGIN_KEYWORD           shift, and go to state 1
-    DEFINED_KEYWORD         shift, and go to state 4
-    IF_KEYWORD              shift, and go to state 5
-    FALSE_KEYWORD           shift, and go to state 6
-    FOR_KEYWORD             shift, and go to state 7
-    NIL_KEYWORD             shift, and go to state 8
-    NOT_KEYWORD             shift, and go to state 9
-    RETURN_KEYWORD          shift, and go to state 10
-    SELF_KEYWORD            shift, and go to state 11
-    TRUE_KEYWORD            shift, and go to state 12
-    UNTIL_KEYWORD           shift, and go to state 13
-    WHILE_KEYWORD           shift, and go to state 14
-    ARITHMETIC_PLUS_OP      shift, and go to state 15
-    ARITHMETIC_MINUS_OP     shift, and go to state 16
-    BIN_ONES_COMPLEMENT_OP  shift, and go to state 17
-    LOGICAL_NOT_OP          shift, and go to state 18
-    OPEN_ROUND_BRACKET      shift, and go to state 19
-    OPEN_SQUARE_BRACKET     shift, and go to state 20
-    STR                     shift, and go to state 21
-    INTEGER_NUMBER          shift, and go to state 22
-    FLOAT_NUMBER            shift, and go to state 23
-    VAR_METHOD_NAME         shift, and go to state 24
-    INSTANCE_VAR_NAME       shift, and go to state 25
-
-    $default  reduce using rule 90 (stmt_list)
-
-    expr                 go to state 30
-    stmt                 go to state 116
-    stmt_list_not_empty  go to state 117
-    stmt_list            go to state 243
-    stmt_block           go to state 32
-    if_start_stmt        go to state 33
-    if_stmt              go to state 34
-    for_stmt             go to state 35
-    while_stmt           go to state 36
-    until_stmt           go to state 37
+    stmt_ends_op  go to state 245
 
 
 State 221
 
-  107 for_stmt: FOR_KEYWORD VAR_METHOD_NAME IN_KEYWORD expr DO_KEYWORD . stmt_ends_op stmt_list END_KEYWORD
-
-    SEMICOLON_SYMBOL  shift, and go to state 40
-    NEW_LINE_SYMBOL   shift, and go to state 41
-
-    $default  reduce using rule 73 (stmt_ends_op)
-
-    stmt_ends     go to state 42
-    stmt_ends_op  go to state 244
-
-
-State 222
-
-  105 for_stmt: FOR_KEYWORD VAR_METHOD_NAME IN_KEYWORD expr stmt_ends . stmt_list END_KEYWORD
-
-    BEGIN_KEYWORD           shift, and go to state 1
-    DEFINED_KEYWORD         shift, and go to state 4
-    IF_KEYWORD              shift, and go to state 5
-    FALSE_KEYWORD           shift, and go to state 6
-    FOR_KEYWORD             shift, and go to state 7
-    NIL_KEYWORD             shift, and go to state 8
-    NOT_KEYWORD             shift, and go to state 9
-    RETURN_KEYWORD          shift, and go to state 10
-    SELF_KEYWORD            shift, and go to state 11
-    TRUE_KEYWORD            shift, and go to state 12
-    UNTIL_KEYWORD           shift, and go to state 13
-    WHILE_KEYWORD           shift, and go to state 14
-    ARITHMETIC_PLUS_OP      shift, and go to state 15
-    ARITHMETIC_MINUS_OP     shift, and go to state 16
-    BIN_ONES_COMPLEMENT_OP  shift, and go to state 17
-    LOGICAL_NOT_OP          shift, and go to state 18
-    OPEN_ROUND_BRACKET      shift, and go to state 19
-    OPEN_SQUARE_BRACKET     shift, and go to state 20
-    STR                     shift, and go to state 21
-    INTEGER_NUMBER          shift, and go to state 22
-    FLOAT_NUMBER            shift, and go to state 23
-    VAR_METHOD_NAME         shift, and go to state 24
-    INSTANCE_VAR_NAME       shift, and go to state 25
-
-    $default  reduce using rule 90 (stmt_list)
-
-    expr                 go to state 30
-    stmt                 go to state 116
-    stmt_list_not_empty  go to state 117
-    stmt_list            go to state 245
-    stmt_block           go to state 32
-    if_start_stmt        go to state 33
-    if_stmt              go to state 34
-    for_stmt             go to state 35
-    while_stmt           go to state 36
-    until_stmt           go to state 37
-
-
-State 223
-
-  108 for_stmt: FOR_KEYWORD INSTANCE_VAR_NAME IN_KEYWORD expr DO_KEYWORD . stmt_ends_op stmt_list END_KEYWORD
+   94 if_start_stmt: IF_KEYWORD expr SEMICOLON_SYMBOL new_lines_op THEN_KEYWORD . stmt_ends_op stmt_list
 
     SEMICOLON_SYMBOL  shift, and go to state 40
     NEW_LINE_SYMBOL   shift, and go to state 41
@@ -6904,9 +6740,9 @@ State 223
     stmt_ends_op  go to state 246
 
 
-State 224
+State 222
 
-  106 for_stmt: FOR_KEYWORD INSTANCE_VAR_NAME IN_KEYWORD expr stmt_ends . stmt_list END_KEYWORD
+   95 if_start_stmt: IF_KEYWORD expr new_lines_op THEN_KEYWORD stmt_ends_op . stmt_list
 
     BEGIN_KEYWORD           shift, and go to state 1
     DEFINED_KEYWORD         shift, and go to state 4
@@ -6946,70 +6782,212 @@ State 224
     until_stmt           go to state 37
 
 
+State 223
+
+  107 for_stmt: FOR_KEYWORD VAR_METHOD_NAME IN_KEYWORD expr DO_KEYWORD . stmt_ends_op stmt_list END_KEYWORD
+
+    SEMICOLON_SYMBOL  shift, and go to state 40
+    NEW_LINE_SYMBOL   shift, and go to state 41
+
+    $default  reduce using rule 73 (stmt_ends_op)
+
+    stmt_ends     go to state 42
+    stmt_ends_op  go to state 248
+
+
+State 224
+
+  105 for_stmt: FOR_KEYWORD VAR_METHOD_NAME IN_KEYWORD expr stmt_ends . stmt_list END_KEYWORD
+
+    BEGIN_KEYWORD           shift, and go to state 1
+    DEFINED_KEYWORD         shift, and go to state 4
+    IF_KEYWORD              shift, and go to state 5
+    FALSE_KEYWORD           shift, and go to state 6
+    FOR_KEYWORD             shift, and go to state 7
+    NIL_KEYWORD             shift, and go to state 8
+    NOT_KEYWORD             shift, and go to state 9
+    RETURN_KEYWORD          shift, and go to state 10
+    SELF_KEYWORD            shift, and go to state 11
+    TRUE_KEYWORD            shift, and go to state 12
+    UNTIL_KEYWORD           shift, and go to state 13
+    WHILE_KEYWORD           shift, and go to state 14
+    ARITHMETIC_PLUS_OP      shift, and go to state 15
+    ARITHMETIC_MINUS_OP     shift, and go to state 16
+    BIN_ONES_COMPLEMENT_OP  shift, and go to state 17
+    LOGICAL_NOT_OP          shift, and go to state 18
+    OPEN_ROUND_BRACKET      shift, and go to state 19
+    OPEN_SQUARE_BRACKET     shift, and go to state 20
+    STR                     shift, and go to state 21
+    INTEGER_NUMBER          shift, and go to state 22
+    FLOAT_NUMBER            shift, and go to state 23
+    VAR_METHOD_NAME         shift, and go to state 24
+    INSTANCE_VAR_NAME       shift, and go to state 25
+
+    $default  reduce using rule 90 (stmt_list)
+
+    expr                 go to state 30
+    stmt                 go to state 116
+    stmt_list_not_empty  go to state 117
+    stmt_list            go to state 249
+    stmt_block           go to state 32
+    if_start_stmt        go to state 33
+    if_stmt              go to state 34
+    for_stmt             go to state 35
+    while_stmt           go to state 36
+    until_stmt           go to state 37
+
+
 State 225
 
-   64 expr: SELF_KEYWORD DOT_SYMBOL VAR_METHOD_NAME OPEN_ROUND_BRACKET expr_list . CLOSE_ROUND_BRACKET
+  108 for_stmt: FOR_KEYWORD INSTANCE_VAR_NAME IN_KEYWORD expr DO_KEYWORD . stmt_ends_op stmt_list END_KEYWORD
 
-    CLOSE_ROUND_BRACKET  shift, and go to state 248
+    SEMICOLON_SYMBOL  shift, and go to state 40
+    NEW_LINE_SYMBOL   shift, and go to state 41
+
+    $default  reduce using rule 73 (stmt_ends_op)
+
+    stmt_ends     go to state 42
+    stmt_ends_op  go to state 250
 
 
 State 226
 
-  112 until_stmt: UNTIL_KEYWORD expr DO_KEYWORD stmt_ends_op stmt_list . END_KEYWORD
+  106 for_stmt: FOR_KEYWORD INSTANCE_VAR_NAME IN_KEYWORD expr stmt_ends . stmt_list END_KEYWORD
 
-    END_KEYWORD  shift, and go to state 249
+    BEGIN_KEYWORD           shift, and go to state 1
+    DEFINED_KEYWORD         shift, and go to state 4
+    IF_KEYWORD              shift, and go to state 5
+    FALSE_KEYWORD           shift, and go to state 6
+    FOR_KEYWORD             shift, and go to state 7
+    NIL_KEYWORD             shift, and go to state 8
+    NOT_KEYWORD             shift, and go to state 9
+    RETURN_KEYWORD          shift, and go to state 10
+    SELF_KEYWORD            shift, and go to state 11
+    TRUE_KEYWORD            shift, and go to state 12
+    UNTIL_KEYWORD           shift, and go to state 13
+    WHILE_KEYWORD           shift, and go to state 14
+    ARITHMETIC_PLUS_OP      shift, and go to state 15
+    ARITHMETIC_MINUS_OP     shift, and go to state 16
+    BIN_ONES_COMPLEMENT_OP  shift, and go to state 17
+    LOGICAL_NOT_OP          shift, and go to state 18
+    OPEN_ROUND_BRACKET      shift, and go to state 19
+    OPEN_SQUARE_BRACKET     shift, and go to state 20
+    STR                     shift, and go to state 21
+    INTEGER_NUMBER          shift, and go to state 22
+    FLOAT_NUMBER            shift, and go to state 23
+    VAR_METHOD_NAME         shift, and go to state 24
+    INSTANCE_VAR_NAME       shift, and go to state 25
+
+    $default  reduce using rule 90 (stmt_list)
+
+    expr                 go to state 30
+    stmt                 go to state 116
+    stmt_list_not_empty  go to state 117
+    stmt_list            go to state 251
+    stmt_block           go to state 32
+    if_start_stmt        go to state 33
+    if_stmt              go to state 34
+    for_stmt             go to state 35
+    while_stmt           go to state 36
+    until_stmt           go to state 37
 
 
 State 227
+
+   64 expr: SELF_KEYWORD DOT_SYMBOL VAR_METHOD_NAME OPEN_ROUND_BRACKET expr_list . CLOSE_ROUND_BRACKET
+
+    CLOSE_ROUND_BRACKET  shift, and go to state 252
+
+
+State 228
+
+  112 until_stmt: UNTIL_KEYWORD expr DO_KEYWORD stmt_ends_op stmt_list . END_KEYWORD
+
+    END_KEYWORD  shift, and go to state 253
+
+
+State 229
 
   111 until_stmt: UNTIL_KEYWORD expr stmt_ends stmt_list END_KEYWORD .
 
     $default  reduce using rule 111 (until_stmt)
 
 
-State 228
+State 230
 
   110 while_stmt: WHILE_KEYWORD expr DO_KEYWORD stmt_ends_op stmt_list . END_KEYWORD
 
-    END_KEYWORD  shift, and go to state 250
+    END_KEYWORD  shift, and go to state 254
 
 
-State 229
+State 231
 
   109 while_stmt: WHILE_KEYWORD expr stmt_ends stmt_list END_KEYWORD .
 
     $default  reduce using rule 109 (while_stmt)
 
 
-State 230
+State 232
+
+  124 expr_list_not_empty: expr_list_not_empty COMMA_SYMBOL new_lines_op . expr new_lines_op
+
+    DEFINED_KEYWORD         shift, and go to state 4
+    FALSE_KEYWORD           shift, and go to state 6
+    NIL_KEYWORD             shift, and go to state 8
+    NOT_KEYWORD             shift, and go to state 9
+    SELF_KEYWORD            shift, and go to state 11
+    TRUE_KEYWORD            shift, and go to state 12
+    ARITHMETIC_PLUS_OP      shift, and go to state 15
+    ARITHMETIC_MINUS_OP     shift, and go to state 16
+    BIN_ONES_COMPLEMENT_OP  shift, and go to state 17
+    LOGICAL_NOT_OP          shift, and go to state 18
+    OPEN_ROUND_BRACKET      shift, and go to state 19
+    OPEN_SQUARE_BRACKET     shift, and go to state 20
+    STR                     shift, and go to state 21
+    INTEGER_NUMBER          shift, and go to state 22
+    FLOAT_NUMBER            shift, and go to state 23
+    VAR_METHOD_NAME         shift, and go to state 24
+    INSTANCE_VAR_NAME       shift, and go to state 25
+
+    expr  go to state 255
+
+
+State 233
+
+   58 expr: VAR_METHOD_NAME OPEN_ROUND_BRACKET new_lines_op expr_list CLOSE_ROUND_BRACKET .
+
+    $default  reduce using rule 58 (expr)
+
+
+State 234
 
    62 expr: expr DOT_SYMBOL VAR_METHOD_NAME OPEN_ROUND_BRACKET expr_list . CLOSE_ROUND_BRACKET
 
-    CLOSE_ROUND_BRACKET  shift, and go to state 251
+    CLOSE_ROUND_BRACKET  shift, and go to state 256
 
 
-State 231
+State 235
 
   102 if_stmt: if_start_stmt ELSE_KEYWORD stmt_ends_op stmt_list END_KEYWORD .
 
     $default  reduce using rule 102 (if_stmt)
 
 
-State 232
+State 236
 
    98 elsif_stmt: ELSIF_KEYWORD expr SEMICOLON_SYMBOL new_lines_op . THEN_KEYWORD stmt_ends_op stmt_list
 
-    THEN_KEYWORD  shift, and go to state 252
+    THEN_KEYWORD  shift, and go to state 257
 
 
-State 233
+State 237
 
    96 elsif_stmt: ELSIF_KEYWORD expr stmt_ends stmt_list .
 
     $default  reduce using rule 96 (elsif_stmt)
 
 
-State 234
+State 238
 
    97 elsif_stmt: ELSIF_KEYWORD expr new_lines_op THEN_KEYWORD . stmt_ends_op stmt_list
 
@@ -7019,31 +6997,31 @@ State 234
     $default  reduce using rule 73 (stmt_ends_op)
 
     stmt_ends     go to state 42
-    stmt_ends_op  go to state 253
+    stmt_ends_op  go to state 258
 
 
-State 235
+State 239
 
   104 if_stmt: if_start_stmt elsif_stmt_list ELSE_KEYWORD stmt_ends_op stmt_list . END_KEYWORD
 
-    END_KEYWORD  shift, and go to state 254
+    END_KEYWORD  shift, and go to state 259
 
 
-State 236
+State 240
 
   126 class_declaration: CLASS_KEYWORD CLASS_NAME LESS_OP CLASS_NAME stmt_ends def_method_list_op . END_KEYWORD stmt_ends
 
-    END_KEYWORD  shift, and go to state 255
+    END_KEYWORD  shift, and go to state 260
 
 
-State 237
+State 241
 
   125 class_declaration: CLASS_KEYWORD CLASS_NAME stmt_ends def_method_list_op END_KEYWORD stmt_ends .
 
     $default  reduce using rule 125 (class_declaration)
 
 
-State 238
+State 242
 
    18 expr: expr . ARITHMETIC_POW_OP expr
    20     | expr . ARITHMETIC_MUL_OP expr
@@ -7124,7 +7102,7 @@ State 238
     $default  reduce using rule 114 (method_param)
 
 
-State 239
+State 243
 
   120 def_method_stmt: DEF_KEYWORD VAR_METHOD_NAME OPEN_ROUND_BRACKET method_params_list CLOSE_ROUND_BRACKET stmt_ends_op . stmt_list END_KEYWORD stmt_ends_op
 
@@ -7157,7 +7135,7 @@ State 239
     expr                 go to state 30
     stmt                 go to state 116
     stmt_list_not_empty  go to state 117
-    stmt_list            go to state 256
+    stmt_list            go to state 261
     stmt_block           go to state 32
     if_start_stmt        go to state 33
     if_stmt              go to state 34
@@ -7166,21 +7144,21 @@ State 239
     until_stmt           go to state 37
 
 
-State 240
+State 244
 
   118 method_params_list_not_empty: method_params_list_not_empty COMMA_SYMBOL method_param .
 
     $default  reduce using rule 118 (method_params_list_not_empty)
 
 
-State 241
+State 245
 
   119 def_method_stmt: DEF_KEYWORD VAR_METHOD_NAME stmt_ends stmt_list END_KEYWORD stmt_ends_op .
 
     $default  reduce using rule 119 (def_method_stmt)
 
 
-State 242
+State 246
 
    94 if_start_stmt: IF_KEYWORD expr SEMICOLON_SYMBOL new_lines_op THEN_KEYWORD stmt_ends_op . stmt_list
 
@@ -7213,105 +7191,7 @@ State 242
     expr                 go to state 30
     stmt                 go to state 116
     stmt_list_not_empty  go to state 117
-    stmt_list            go to state 257
-    stmt_block           go to state 32
-    if_start_stmt        go to state 33
-    if_stmt              go to state 34
-    for_stmt             go to state 35
-    while_stmt           go to state 36
-    until_stmt           go to state 37
-
-
-State 243
-
-   95 if_start_stmt: IF_KEYWORD expr new_lines_op THEN_KEYWORD stmt_ends_op stmt_list .
-
-    $default  reduce using rule 95 (if_start_stmt)
-
-
-State 244
-
-  107 for_stmt: FOR_KEYWORD VAR_METHOD_NAME IN_KEYWORD expr DO_KEYWORD stmt_ends_op . stmt_list END_KEYWORD
-
-    BEGIN_KEYWORD           shift, and go to state 1
-    DEFINED_KEYWORD         shift, and go to state 4
-    IF_KEYWORD              shift, and go to state 5
-    FALSE_KEYWORD           shift, and go to state 6
-    FOR_KEYWORD             shift, and go to state 7
-    NIL_KEYWORD             shift, and go to state 8
-    NOT_KEYWORD             shift, and go to state 9
-    RETURN_KEYWORD          shift, and go to state 10
-    SELF_KEYWORD            shift, and go to state 11
-    TRUE_KEYWORD            shift, and go to state 12
-    UNTIL_KEYWORD           shift, and go to state 13
-    WHILE_KEYWORD           shift, and go to state 14
-    ARITHMETIC_PLUS_OP      shift, and go to state 15
-    ARITHMETIC_MINUS_OP     shift, and go to state 16
-    BIN_ONES_COMPLEMENT_OP  shift, and go to state 17
-    LOGICAL_NOT_OP          shift, and go to state 18
-    OPEN_ROUND_BRACKET      shift, and go to state 19
-    OPEN_SQUARE_BRACKET     shift, and go to state 20
-    STR                     shift, and go to state 21
-    INTEGER_NUMBER          shift, and go to state 22
-    FLOAT_NUMBER            shift, and go to state 23
-    VAR_METHOD_NAME         shift, and go to state 24
-    INSTANCE_VAR_NAME       shift, and go to state 25
-
-    $default  reduce using rule 90 (stmt_list)
-
-    expr                 go to state 30
-    stmt                 go to state 116
-    stmt_list_not_empty  go to state 117
-    stmt_list            go to state 258
-    stmt_block           go to state 32
-    if_start_stmt        go to state 33
-    if_stmt              go to state 34
-    for_stmt             go to state 35
-    while_stmt           go to state 36
-    until_stmt           go to state 37
-
-
-State 245
-
-  105 for_stmt: FOR_KEYWORD VAR_METHOD_NAME IN_KEYWORD expr stmt_ends stmt_list . END_KEYWORD
-
-    END_KEYWORD  shift, and go to state 259
-
-
-State 246
-
-  108 for_stmt: FOR_KEYWORD INSTANCE_VAR_NAME IN_KEYWORD expr DO_KEYWORD stmt_ends_op . stmt_list END_KEYWORD
-
-    BEGIN_KEYWORD           shift, and go to state 1
-    DEFINED_KEYWORD         shift, and go to state 4
-    IF_KEYWORD              shift, and go to state 5
-    FALSE_KEYWORD           shift, and go to state 6
-    FOR_KEYWORD             shift, and go to state 7
-    NIL_KEYWORD             shift, and go to state 8
-    NOT_KEYWORD             shift, and go to state 9
-    RETURN_KEYWORD          shift, and go to state 10
-    SELF_KEYWORD            shift, and go to state 11
-    TRUE_KEYWORD            shift, and go to state 12
-    UNTIL_KEYWORD           shift, and go to state 13
-    WHILE_KEYWORD           shift, and go to state 14
-    ARITHMETIC_PLUS_OP      shift, and go to state 15
-    ARITHMETIC_MINUS_OP     shift, and go to state 16
-    BIN_ONES_COMPLEMENT_OP  shift, and go to state 17
-    LOGICAL_NOT_OP          shift, and go to state 18
-    OPEN_ROUND_BRACKET      shift, and go to state 19
-    OPEN_SQUARE_BRACKET     shift, and go to state 20
-    STR                     shift, and go to state 21
-    INTEGER_NUMBER          shift, and go to state 22
-    FLOAT_NUMBER            shift, and go to state 23
-    VAR_METHOD_NAME         shift, and go to state 24
-    INSTANCE_VAR_NAME       shift, and go to state 25
-
-    $default  reduce using rule 90 (stmt_list)
-
-    expr                 go to state 30
-    stmt                 go to state 116
-    stmt_list_not_empty  go to state 117
-    stmt_list            go to state 260
+    stmt_list            go to state 262
     stmt_block           go to state 32
     if_start_stmt        go to state 33
     if_stmt              go to state 34
@@ -7322,55 +7202,14 @@ State 246
 
 State 247
 
-  106 for_stmt: FOR_KEYWORD INSTANCE_VAR_NAME IN_KEYWORD expr stmt_ends stmt_list . END_KEYWORD
+   95 if_start_stmt: IF_KEYWORD expr new_lines_op THEN_KEYWORD stmt_ends_op stmt_list .
 
-    END_KEYWORD  shift, and go to state 261
+    $default  reduce using rule 95 (if_start_stmt)
 
 
 State 248
 
-   64 expr: SELF_KEYWORD DOT_SYMBOL VAR_METHOD_NAME OPEN_ROUND_BRACKET expr_list CLOSE_ROUND_BRACKET .
-
-    $default  reduce using rule 64 (expr)
-
-
-State 249
-
-  112 until_stmt: UNTIL_KEYWORD expr DO_KEYWORD stmt_ends_op stmt_list END_KEYWORD .
-
-    $default  reduce using rule 112 (until_stmt)
-
-
-State 250
-
-  110 while_stmt: WHILE_KEYWORD expr DO_KEYWORD stmt_ends_op stmt_list END_KEYWORD .
-
-    $default  reduce using rule 110 (while_stmt)
-
-
-State 251
-
-   62 expr: expr DOT_SYMBOL VAR_METHOD_NAME OPEN_ROUND_BRACKET expr_list CLOSE_ROUND_BRACKET .
-
-    $default  reduce using rule 62 (expr)
-
-
-State 252
-
-   98 elsif_stmt: ELSIF_KEYWORD expr SEMICOLON_SYMBOL new_lines_op THEN_KEYWORD . stmt_ends_op stmt_list
-
-    SEMICOLON_SYMBOL  shift, and go to state 40
-    NEW_LINE_SYMBOL   shift, and go to state 41
-
-    $default  reduce using rule 73 (stmt_ends_op)
-
-    stmt_ends     go to state 42
-    stmt_ends_op  go to state 262
-
-
-State 253
-
-   97 elsif_stmt: ELSIF_KEYWORD expr new_lines_op THEN_KEYWORD stmt_ends_op . stmt_list
+  107 for_stmt: FOR_KEYWORD VAR_METHOD_NAME IN_KEYWORD expr DO_KEYWORD stmt_ends_op . stmt_list END_KEYWORD
 
     BEGIN_KEYWORD           shift, and go to state 1
     DEFINED_KEYWORD         shift, and go to state 4
@@ -7410,66 +7249,297 @@ State 253
     until_stmt           go to state 37
 
 
+State 249
+
+  105 for_stmt: FOR_KEYWORD VAR_METHOD_NAME IN_KEYWORD expr stmt_ends stmt_list . END_KEYWORD
+
+    END_KEYWORD  shift, and go to state 264
+
+
+State 250
+
+  108 for_stmt: FOR_KEYWORD INSTANCE_VAR_NAME IN_KEYWORD expr DO_KEYWORD stmt_ends_op . stmt_list END_KEYWORD
+
+    BEGIN_KEYWORD           shift, and go to state 1
+    DEFINED_KEYWORD         shift, and go to state 4
+    IF_KEYWORD              shift, and go to state 5
+    FALSE_KEYWORD           shift, and go to state 6
+    FOR_KEYWORD             shift, and go to state 7
+    NIL_KEYWORD             shift, and go to state 8
+    NOT_KEYWORD             shift, and go to state 9
+    RETURN_KEYWORD          shift, and go to state 10
+    SELF_KEYWORD            shift, and go to state 11
+    TRUE_KEYWORD            shift, and go to state 12
+    UNTIL_KEYWORD           shift, and go to state 13
+    WHILE_KEYWORD           shift, and go to state 14
+    ARITHMETIC_PLUS_OP      shift, and go to state 15
+    ARITHMETIC_MINUS_OP     shift, and go to state 16
+    BIN_ONES_COMPLEMENT_OP  shift, and go to state 17
+    LOGICAL_NOT_OP          shift, and go to state 18
+    OPEN_ROUND_BRACKET      shift, and go to state 19
+    OPEN_SQUARE_BRACKET     shift, and go to state 20
+    STR                     shift, and go to state 21
+    INTEGER_NUMBER          shift, and go to state 22
+    FLOAT_NUMBER            shift, and go to state 23
+    VAR_METHOD_NAME         shift, and go to state 24
+    INSTANCE_VAR_NAME       shift, and go to state 25
+
+    $default  reduce using rule 90 (stmt_list)
+
+    expr                 go to state 30
+    stmt                 go to state 116
+    stmt_list_not_empty  go to state 117
+    stmt_list            go to state 265
+    stmt_block           go to state 32
+    if_start_stmt        go to state 33
+    if_stmt              go to state 34
+    for_stmt             go to state 35
+    while_stmt           go to state 36
+    until_stmt           go to state 37
+
+
+State 251
+
+  106 for_stmt: FOR_KEYWORD INSTANCE_VAR_NAME IN_KEYWORD expr stmt_ends stmt_list . END_KEYWORD
+
+    END_KEYWORD  shift, and go to state 266
+
+
+State 252
+
+   64 expr: SELF_KEYWORD DOT_SYMBOL VAR_METHOD_NAME OPEN_ROUND_BRACKET expr_list CLOSE_ROUND_BRACKET .
+
+    $default  reduce using rule 64 (expr)
+
+
+State 253
+
+  112 until_stmt: UNTIL_KEYWORD expr DO_KEYWORD stmt_ends_op stmt_list END_KEYWORD .
+
+    $default  reduce using rule 112 (until_stmt)
+
+
 State 254
+
+  110 while_stmt: WHILE_KEYWORD expr DO_KEYWORD stmt_ends_op stmt_list END_KEYWORD .
+
+    $default  reduce using rule 110 (while_stmt)
+
+
+State 255
+
+   18 expr: expr . ARITHMETIC_POW_OP expr
+   20     | expr . ARITHMETIC_MUL_OP expr
+   21     | expr . ARITHMETIC_DIV_OP expr
+   22     | expr . ARITHMETIC_MOD_OP expr
+   23     | expr . ARITHMETIC_PLUS_OP expr
+   24     | expr . ARITHMETIC_MINUS_OP expr
+   25     | expr . BIN_LEFT_SHIFT_OP expr
+   26     | expr . BIN_RIGHT_SHIFT_OP expr
+   27     | expr . BIN_AND_OP expr
+   28     | expr . BIN_OR_OP expr
+   29     | expr . BIN_XOR_OP expr
+   30     | expr . GREATER_OP expr
+   31     | expr . LESS_OP expr
+   32     | expr . GREATER_OR_EQL_OP expr
+   33     | expr . LESS_OR_EQL_OP expr
+   34     | expr . COMB_COMPRASION_OP expr
+   35     | expr . EQL_OP expr
+   36     | expr . CASE_EQL_OP expr
+   37     | expr . NOT_EQL_OP expr
+   38     | expr . LOGICAL_AND_OP expr
+   39     | expr . LOGICAL_OR_OP expr
+   40     | expr . INCLUSIVE_RANGE_OP expr
+   41     | expr . EXCLUSIVE_RANGE_OP expr
+   42     | expr . ASSIGN_OP expr
+   43     | expr . MOD_ASSIGN_OP expr
+   44     | expr . DIV_ASSIGN_OP expr
+   45     | expr . SUB_ASSIGN_OP expr
+   46     | expr . ADD_ASSIGN_OP expr
+   47     | expr . MUL_ASSIGN_OP expr
+   48     | expr . POW_ASSIGN_OP expr
+   49     | expr . UNTIL_KEYWORD expr
+   50     | expr . WHILE_KEYWORD expr
+   53     | expr . AND_KEYWORD expr
+   54     | expr . OR_KEYWORD expr
+   56     | expr . OPEN_SQUARE_BRACKET expr CLOSE_SQUARE_BRACKET
+   61     | expr . DOT_SYMBOL VAR_METHOD_NAME
+   62     | expr . DOT_SYMBOL VAR_METHOD_NAME OPEN_ROUND_BRACKET expr_list CLOSE_ROUND_BRACKET
+  124 expr_list_not_empty: expr_list_not_empty COMMA_SYMBOL new_lines_op expr . new_lines_op
+
+    AND_KEYWORD          shift, and go to state 67
+    OR_KEYWORD           shift, and go to state 68
+    UNTIL_KEYWORD        shift, and go to state 69
+    WHILE_KEYWORD        shift, and go to state 70
+    ARITHMETIC_PLUS_OP   shift, and go to state 71
+    ARITHMETIC_MINUS_OP  shift, and go to state 72
+    ARITHMETIC_MUL_OP    shift, and go to state 73
+    ARITHMETIC_DIV_OP    shift, and go to state 74
+    ARITHMETIC_MOD_OP    shift, and go to state 75
+    ARITHMETIC_POW_OP    shift, and go to state 76
+    EQL_OP               shift, and go to state 77
+    NOT_EQL_OP           shift, and go to state 78
+    GREATER_OP           shift, and go to state 79
+    LESS_OP              shift, and go to state 80
+    GREATER_OR_EQL_OP    shift, and go to state 81
+    LESS_OR_EQL_OP       shift, and go to state 82
+    COMB_COMPRASION_OP   shift, and go to state 83
+    CASE_EQL_OP          shift, and go to state 84
+    ASSIGN_OP            shift, and go to state 85
+    ADD_ASSIGN_OP        shift, and go to state 86
+    SUB_ASSIGN_OP        shift, and go to state 87
+    MUL_ASSIGN_OP        shift, and go to state 88
+    DIV_ASSIGN_OP        shift, and go to state 89
+    MOD_ASSIGN_OP        shift, and go to state 90
+    POW_ASSIGN_OP        shift, and go to state 91
+    BIN_AND_OP           shift, and go to state 92
+    BIN_OR_OP            shift, and go to state 93
+    BIN_XOR_OP           shift, and go to state 94
+    BIN_LEFT_SHIFT_OP    shift, and go to state 95
+    BIN_RIGHT_SHIFT_OP   shift, and go to state 96
+    LOGICAL_AND_OP       shift, and go to state 97
+    LOGICAL_OR_OP        shift, and go to state 98
+    INCLUSIVE_RANGE_OP   shift, and go to state 99
+    EXCLUSIVE_RANGE_OP   shift, and go to state 100
+    OPEN_SQUARE_BRACKET  shift, and go to state 101
+    DOT_SYMBOL           shift, and go to state 102
+    NEW_LINE_SYMBOL      shift, and go to state 61
+
+    $default  reduce using rule 69 (new_lines_op)
+
+    new_lines_op  go to state 267
+    new_lines     go to state 63
+
+
+State 256
+
+   62 expr: expr DOT_SYMBOL VAR_METHOD_NAME OPEN_ROUND_BRACKET expr_list CLOSE_ROUND_BRACKET .
+
+    $default  reduce using rule 62 (expr)
+
+
+State 257
+
+   98 elsif_stmt: ELSIF_KEYWORD expr SEMICOLON_SYMBOL new_lines_op THEN_KEYWORD . stmt_ends_op stmt_list
+
+    SEMICOLON_SYMBOL  shift, and go to state 40
+    NEW_LINE_SYMBOL   shift, and go to state 41
+
+    $default  reduce using rule 73 (stmt_ends_op)
+
+    stmt_ends     go to state 42
+    stmt_ends_op  go to state 268
+
+
+State 258
+
+   97 elsif_stmt: ELSIF_KEYWORD expr new_lines_op THEN_KEYWORD stmt_ends_op . stmt_list
+
+    BEGIN_KEYWORD           shift, and go to state 1
+    DEFINED_KEYWORD         shift, and go to state 4
+    IF_KEYWORD              shift, and go to state 5
+    FALSE_KEYWORD           shift, and go to state 6
+    FOR_KEYWORD             shift, and go to state 7
+    NIL_KEYWORD             shift, and go to state 8
+    NOT_KEYWORD             shift, and go to state 9
+    RETURN_KEYWORD          shift, and go to state 10
+    SELF_KEYWORD            shift, and go to state 11
+    TRUE_KEYWORD            shift, and go to state 12
+    UNTIL_KEYWORD           shift, and go to state 13
+    WHILE_KEYWORD           shift, and go to state 14
+    ARITHMETIC_PLUS_OP      shift, and go to state 15
+    ARITHMETIC_MINUS_OP     shift, and go to state 16
+    BIN_ONES_COMPLEMENT_OP  shift, and go to state 17
+    LOGICAL_NOT_OP          shift, and go to state 18
+    OPEN_ROUND_BRACKET      shift, and go to state 19
+    OPEN_SQUARE_BRACKET     shift, and go to state 20
+    STR                     shift, and go to state 21
+    INTEGER_NUMBER          shift, and go to state 22
+    FLOAT_NUMBER            shift, and go to state 23
+    VAR_METHOD_NAME         shift, and go to state 24
+    INSTANCE_VAR_NAME       shift, and go to state 25
+
+    $default  reduce using rule 90 (stmt_list)
+
+    expr                 go to state 30
+    stmt                 go to state 116
+    stmt_list_not_empty  go to state 117
+    stmt_list            go to state 269
+    stmt_block           go to state 32
+    if_start_stmt        go to state 33
+    if_stmt              go to state 34
+    for_stmt             go to state 35
+    while_stmt           go to state 36
+    until_stmt           go to state 37
+
+
+State 259
 
   104 if_stmt: if_start_stmt elsif_stmt_list ELSE_KEYWORD stmt_ends_op stmt_list END_KEYWORD .
 
     $default  reduce using rule 104 (if_stmt)
 
 
-State 255
+State 260
 
   126 class_declaration: CLASS_KEYWORD CLASS_NAME LESS_OP CLASS_NAME stmt_ends def_method_list_op END_KEYWORD . stmt_ends
 
     SEMICOLON_SYMBOL  shift, and go to state 40
     NEW_LINE_SYMBOL   shift, and go to state 41
 
-    stmt_ends  go to state 264
+    stmt_ends  go to state 270
 
 
-State 256
+State 261
 
   120 def_method_stmt: DEF_KEYWORD VAR_METHOD_NAME OPEN_ROUND_BRACKET method_params_list CLOSE_ROUND_BRACKET stmt_ends_op stmt_list . END_KEYWORD stmt_ends_op
 
-    END_KEYWORD  shift, and go to state 265
+    END_KEYWORD  shift, and go to state 271
 
 
-State 257
+State 262
 
    94 if_start_stmt: IF_KEYWORD expr SEMICOLON_SYMBOL new_lines_op THEN_KEYWORD stmt_ends_op stmt_list .
 
     $default  reduce using rule 94 (if_start_stmt)
 
 
-State 258
+State 263
 
   107 for_stmt: FOR_KEYWORD VAR_METHOD_NAME IN_KEYWORD expr DO_KEYWORD stmt_ends_op stmt_list . END_KEYWORD
 
-    END_KEYWORD  shift, and go to state 266
+    END_KEYWORD  shift, and go to state 272
 
 
-State 259
+State 264
 
   105 for_stmt: FOR_KEYWORD VAR_METHOD_NAME IN_KEYWORD expr stmt_ends stmt_list END_KEYWORD .
 
     $default  reduce using rule 105 (for_stmt)
 
 
-State 260
+State 265
 
   108 for_stmt: FOR_KEYWORD INSTANCE_VAR_NAME IN_KEYWORD expr DO_KEYWORD stmt_ends_op stmt_list . END_KEYWORD
 
-    END_KEYWORD  shift, and go to state 267
+    END_KEYWORD  shift, and go to state 273
 
 
-State 261
+State 266
 
   106 for_stmt: FOR_KEYWORD INSTANCE_VAR_NAME IN_KEYWORD expr stmt_ends stmt_list END_KEYWORD .
 
     $default  reduce using rule 106 (for_stmt)
 
 
-State 262
+State 267
+
+  124 expr_list_not_empty: expr_list_not_empty COMMA_SYMBOL new_lines_op expr new_lines_op .
+
+    $default  reduce using rule 124 (expr_list_not_empty)
+
+
+State 268
 
    98 elsif_stmt: ELSIF_KEYWORD expr SEMICOLON_SYMBOL new_lines_op THEN_KEYWORD stmt_ends_op . stmt_list
 
@@ -7502,7 +7572,7 @@ State 262
     expr                 go to state 30
     stmt                 go to state 116
     stmt_list_not_empty  go to state 117
-    stmt_list            go to state 268
+    stmt_list            go to state 274
     stmt_block           go to state 32
     if_start_stmt        go to state 33
     if_stmt              go to state 34
@@ -7511,21 +7581,21 @@ State 262
     until_stmt           go to state 37
 
 
-State 263
+State 269
 
    97 elsif_stmt: ELSIF_KEYWORD expr new_lines_op THEN_KEYWORD stmt_ends_op stmt_list .
 
     $default  reduce using rule 97 (elsif_stmt)
 
 
-State 264
+State 270
 
   126 class_declaration: CLASS_KEYWORD CLASS_NAME LESS_OP CLASS_NAME stmt_ends def_method_list_op END_KEYWORD stmt_ends .
 
     $default  reduce using rule 126 (class_declaration)
 
 
-State 265
+State 271
 
   120 def_method_stmt: DEF_KEYWORD VAR_METHOD_NAME OPEN_ROUND_BRACKET method_params_list CLOSE_ROUND_BRACKET stmt_ends_op stmt_list END_KEYWORD . stmt_ends_op
 
@@ -7535,31 +7605,31 @@ State 265
     $default  reduce using rule 73 (stmt_ends_op)
 
     stmt_ends     go to state 42
-    stmt_ends_op  go to state 269
+    stmt_ends_op  go to state 275
 
 
-State 266
+State 272
 
   107 for_stmt: FOR_KEYWORD VAR_METHOD_NAME IN_KEYWORD expr DO_KEYWORD stmt_ends_op stmt_list END_KEYWORD .
 
     $default  reduce using rule 107 (for_stmt)
 
 
-State 267
+State 273
 
   108 for_stmt: FOR_KEYWORD INSTANCE_VAR_NAME IN_KEYWORD expr DO_KEYWORD stmt_ends_op stmt_list END_KEYWORD .
 
     $default  reduce using rule 108 (for_stmt)
 
 
-State 268
+State 274
 
    98 elsif_stmt: ELSIF_KEYWORD expr SEMICOLON_SYMBOL new_lines_op THEN_KEYWORD stmt_ends_op stmt_list .
 
     $default  reduce using rule 98 (elsif_stmt)
 
 
-State 269
+State 275
 
   120 def_method_stmt: DEF_KEYWORD VAR_METHOD_NAME OPEN_ROUND_BRACKET method_params_list CLOSE_ROUND_BRACKET stmt_ends_op stmt_list END_KEYWORD stmt_ends_op .
 

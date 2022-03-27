@@ -11,7 +11,7 @@ enum expr_type {
 	pow_,
 	unary_minus,
 	mul,
-	div,
+	div_,
 	mod,
 	plus,
 	minus,
@@ -50,6 +50,7 @@ enum expr_type {
 	method_call,
 	array,
 	member_access,
+	member_access_and_assign,
 	field_call,
 	object_method_call,
 	self_field_call,
@@ -65,6 +66,18 @@ struct expr_struct {
 	struct expr_struct * left;
 	struct expr_struct * right;
 	struct expr_struct * next;
+	struct expr_struct* index;
+
+	// semantic
+	int id;
+	int value_id;
+	int local_var_num;
+	int class_id;
+	int array_list_class_id;
+	int array_list_constructor_mr;
+	int list_constructor_mr;
+	int boolean_init_mr;
+	int boolean_fr;
 };
 
 enum stmt_type {
@@ -92,7 +105,7 @@ struct class_declaration_struct {
 struct program_item_struct {
 	enum program_item_type type;
 	struct def_method_stmt_struct* def_method_f;
-	struct stmt_stuct * stmt_f;
+	struct stmt_struct * stmt_f;
 	struct class_declaration_struct* class_declaration_f;
 	struct program_item_struct* next;
 };
@@ -128,16 +141,25 @@ struct for_stmt_struct {
 	char * iterable_var;
 	struct expr_struct * condition;
 	struct stmt_list_struct* body;
+
+	// semantic
+	int iterable_var_local_num;
 };
 
 struct while_stmt_struct {
 	struct expr_struct * condition;
 	struct stmt_list_struct* body;
+
+	// semantic 
+	int bool_field_mr;
 };
 
 struct until_stmt_struct {
 	struct expr_struct* condition;
 	struct stmt_list_struct* body;
+
+	// semantic 
+	int bool_field_mr;
 };
 
 struct if_part_stmt_struct {
@@ -155,6 +177,9 @@ struct if_stmt_struct {
 	struct if_part_stmt_struct* if_branch;
 	struct elsif_stmt_list* elsif_branches;
 	struct stmt_list_struct* else_branch;
+
+	// semantic 
+	int bool_field_mr;
 };
 
 struct stmt_block_struct {
@@ -165,6 +190,9 @@ struct method_param_struct {
 	char * name;
 	struct expr_struct * default_value;
 	struct method_param_struct * next;
+
+	// semantic
+	int local_var_num;
 };
 
 struct def_method_stmt_struct {
@@ -172,6 +200,9 @@ struct def_method_stmt_struct {
 	struct method_param_list* params;
 	struct stmt_list_struct* body;
 	struct def_method_stmt_struct* next;
+
+	// semantic
+	int id;
 };
 
 struct def_method_stmt_list_struct {

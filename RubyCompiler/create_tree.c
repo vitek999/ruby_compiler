@@ -4,28 +4,42 @@ struct expr_struct* create_const_integer_expr(enum expr_type type, int val) {
     struct expr_struct* result = (struct expr_struct*)malloc(sizeof(struct expr_struct));
     result->type = type;
     result->int_val = val;
+    result->left = 0;
+    result->right = 0;
+    result->index = 0;
+    result->list = 0;
     return result;
 }
 
-struct expr_struct* create_const_float_expr(float val) {
+struct expr_struct* create_const_float_expr(double val) {
     struct expr_struct* result = (struct expr_struct*)malloc(sizeof(struct expr_struct));
+    result->list = 0;
     result->type = Float;
     result->float_val = val;
+    result->left = 0;
+    result->right = 0;
+    result->index = 0;
     return result;
 }
 
 struct expr_struct* create_const_string_expr(enum expr_type type, char* val) {
     struct expr_struct* result = (struct expr_struct*)malloc(sizeof(struct expr_struct));
+    result->list = 0;
     result->type = type;
     result->str_val = val;
+    result->left = 0;
+    result->right = 0;
+    result->index = 0;
     return result;
 }
 
 struct expr_struct* create_op_expr(enum expr_type type, struct expr_struct* left, struct expr_struct* right) {
     struct expr_struct* result = (struct expr_struct*)malloc(sizeof(struct expr_struct));
+    result->list = 0;
     result->type = type;
     result->left = left;
     result->right = right;
+    result->index = 0;
     return result;
 }
 
@@ -105,38 +119,53 @@ struct expr_struct* create_method_call_expr(char* method_name, struct expr_list_
     result->type = method_call;
     result->str_val = method_name;
     result->list = list;
+    result->left = 0;
+    result->right = 0;
+    result->index = 0;
     return result;
 }
 
 struct expr_struct* create_field_call_expr(struct expr_struct* left, char* right) {
     struct expr_struct* result = (struct expr_struct*)malloc(sizeof(struct expr_struct));
+    result->list = 0;
     result->type = field_call;
     result->str_val = right;
     result->left = left;
+    result->right = 0;
+    result->index = 0;
     return result;
 }
 
 struct expr_struct* create_object_method_call_expr(struct expr_struct* left, char* method_name, struct expr_list_struct* params) {
     struct expr_struct* result = (struct expr_struct*)malloc(sizeof(struct expr_struct));
+    result->list = 0;
     struct expr_struct* method_call = create_method_call_expr(method_name, params);
     result->type = object_method_call;
     result->left = left;
     result->right = method_call;
+    result->index = 0;
     return result;
 }
 
 struct expr_struct* create_self_field_call_expr(char* right) {
     struct expr_struct* result = (struct expr_struct*)malloc(sizeof(struct expr_struct));
     result->type = self_field_call;
+    result->list = 0;
     result->str_val = right;
+    result->left = 0;
+    result->right = 0;
+    result->index = 0;
     return result;
 }
 
 struct expr_struct* create_self_method_call_expr(char* method_name, struct expr_list_struct* params) {
     struct expr_struct* result = (struct expr_struct*)malloc(sizeof(struct expr_struct));
     struct expr_struct* method_call = create_method_call_expr(method_name, params);
+    result->list = 0;
     result->type = self_method_call;
     result->right = method_call;
+    result->left = 0;
+    result->index = 0;
     return result;
 }
 
@@ -226,6 +255,9 @@ struct expr_struct* create_array_struct(struct expr_list_struct* items) {
     struct expr_struct* result = (struct expr_struct*)malloc(sizeof(struct expr_struct));
     result->type = array;
     result->list = items;
+    result->left = 0;
+    result->right = 0;
+    result->index = 0;
     return result;
 }
 

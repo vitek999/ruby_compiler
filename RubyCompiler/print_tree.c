@@ -94,14 +94,14 @@ void PrintBranch(struct if_part_stmt_struct* branch, FILE* file) {
 }
 
 void PrintDefMethod(struct def_method_stmt_struct* method, FILE* file) {
-	fprintf(file, "Id%p [label=\"def_method\"]\n", method);
+	fprintf(file, "Id%p [label=\"def_method\\n mref = #%d\"]\n", method, method->id);
 	fprintf(file, "IdName%p [label=\"%s\"]\n", method, method->name);
 	fprintf(file, "Id%p->IdName%p [label = \"name\"]\n", method, method);
 	if (method->params != 0) {
 		fprintf(file, "Id%p [label=\"params\"]\n", method->params);
 		struct method_param_struct* current = method->params->first;
 		while (current != 0) {
-			fprintf(file, "Id%p [label=\"param\"]\n", current);
+			fprintf(file, "Id%p [label=\"param\\n localnum = #%d\"]\n", current, current->local_var_num);
 			fprintf(file, "Id%p->Id%p\n", method->params, current);
 			fprintf(file, "IdNameVal%p [label=\"%s\"]\n", current, current->name);
 			fprintf(file, "Id%p->IdNameVal%p [label=\"name\"]\n", current, current);
@@ -200,7 +200,7 @@ void PrintUntil(struct until_stmt_struct* until_s, FILE* file) {
 void PrintFor(struct for_stmt_struct* for_s, FILE* file) {
 	fprintf(file, "Id%p [label=\"for\"]\n", for_s);
 	fprintf(file, "IdItersName%p [label=\"%s\"]\n", for_s, for_s->iterable_var);
-	fprintf(file, "Id%p->IdItersName%p  [label=\"iterable var\"]\n", for_s, for_s);
+	fprintf(file, "Id%p->IdItersName%p  [label=\"iterable var\\n localnum = %d\"]\n", for_s, for_s, for_s->iterable_var_local_num);
 	PrintExpr(for_s->condition, file);
 	fprintf(file, "Id%p->Id%p  [label=\"condition\"]\n", for_s, for_s->condition);
 	fprintf(file, "IdBody%p [label=\"body\"]\n", for_s);
@@ -221,20 +221,20 @@ void PrintBlock(struct stmt_block_struct* block, FILE* file) {
 void PrintExpr(struct expr_struct* expr, FILE* file) {
 	switch (expr->type) {
 	case Integer:
-		fprintf(file, "Id%p [label=\"INT\"]\n", expr);
+		fprintf(file, "Id%p [label=\"INT\\n mref = #%d\\n val_id = #%d\"]\n", expr, expr->id, expr->value_id);
 		fprintf(file, "IdVal%p [label=\"%d\"]\n", expr, expr->int_val);
 		fprintf(file, "Id%p->IdVal%p\n", expr, expr);
 		break;
 	case Float:
-		fprintf(file, "Id%p [label=\"FLOAT\"]\n", expr);
+		fprintf(file, "Id%p [label=\"FLOAT\\n mref = #%d\\n val_id = #%d\"]\n", expr, expr->id, expr->value_id);
 		break;
 	case String:
-		fprintf(file, "Id%p [label=\"STRING\"]\n", expr);
+		fprintf(file, "Id%p [label=\"STRING\\n mref = #%d\\n val_id = #%d\"]\n", expr, expr->id, expr->value_id);
 		fprintf(file, "IdVal%p [label=\"%s\"]\n", expr, expr->str_val);
 		fprintf(file, "Id%p->IdVal%p\n", expr, expr);
 		break;
 	case Boolean:
-		fprintf(file, "Id%p [label=\"BOOLEAN\"]\n", expr);
+		fprintf(file, "Id%p [label=\"BOOLEAN\\n mref = #%d\\n val_id = #%d\"]\n", expr, expr->id, expr->value_id);
 		if (expr->int_val == 0) {
 			fprintf(file, "IdVal%p [label=\"false\"]\n", expr);
 		}
@@ -244,181 +244,181 @@ void PrintExpr(struct expr_struct* expr, FILE* file) {
 		fprintf(file, "Id%p->IdVal%p\n", expr, expr);
 		break;
 	case logical_not:
-		fprintf(file, "Id%p [label=\"!\"]\n", expr);
+		fprintf(file, "Id%p [label=\"!\\n mref = #%d\"]\n", expr, expr->id);
 		PrintExpr(expr->left, file);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->left);
 		break;
 	case bin_ones_complement:
-		fprintf(file, "Id%p [label=\"unary ~\"]\n", expr);
+		fprintf(file, "Id%p [label=\"unary ~\\n mref = #%d\"]\n", expr, expr->id);
 		PrintExpr(expr->left, file);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->left);
 		break;
 	case unary_plus:
-		fprintf(file, "Id%p [label=\"unary +\"]\n", expr);
+		fprintf(file, "Id%p [label=\"unary +\\n mref = #%d\"]\n", expr, expr->id);
 		PrintExpr(expr->left, file);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->left);
 		break;
 	case pow_:
-		fprintf(file, "Id%p [label=\"**\"]\n", expr);
+		fprintf(file, "Id%p [label=\"**\\n mref = #%d\"]\n", expr, expr->id);
 		PrintExpr(expr->left, file);
 		PrintExpr(expr->right, file);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->left);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->right);
 		break;
 	case unary_minus:
-		fprintf(file, "Id%p [label=\"unary -\"]\n", expr);
+		fprintf(file, "Id%p [label=\"unary -\\n mref = #%d\"]\n", expr, expr->id);
 		PrintExpr(expr->left, file);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->left);
 		break;
 	case mul:
-		fprintf(file, "Id%p [label=\"*\"]\n", expr);
+		fprintf(file, "Id%p [label=\"*\\n mref = #%d\"]\n", expr, expr->id);
 		PrintExpr(expr->left, file);
 		PrintExpr(expr->right, file);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->left);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->right);
 		break;
-	case div:
-		fprintf(file, "Id%p [label=\"/\"]\n", expr);
+	case div_:
+		fprintf(file, "Id%p [label=\"/\\n mref = #%d\"]\n", expr, expr->id);
 		PrintExpr(expr->left, file);
 		PrintExpr(expr->right, file);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->left);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->right);
 		break;
 	case mod:
-		fprintf(file, "Id%p [label=\"%%\"]\n", expr);
+		fprintf(file, "Id%p [label=\"%%\\n mref = #%d\"]\n", expr, expr->id);
 		PrintExpr(expr->left, file);
 		PrintExpr(expr->right, file);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->left);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->right);
 		break;
 	case plus:
-		fprintf(file, "Id%p [label=\"+\"]\n", expr);
+		fprintf(file, "Id%p [label=\"+\\n mref = #%d\"]\n", expr, expr->id);
 		PrintExpr(expr->left, file);
 		PrintExpr(expr->right, file);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->left);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->right);
 		break;
 	case minus:
-		fprintf(file, "Id%p [label=\"-\"]\n", expr);
+		fprintf(file, "Id%p [label=\"-\\n mref = #%d\"]\n", expr, expr->id);
 		PrintExpr(expr->left, file);
 		PrintExpr(expr->right, file);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->left);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->right);
 		break;
 	case bin_left_shift:
-		fprintf(file, "Id%p [label=\"<<\"]\n", expr);
+		fprintf(file, "Id%p [label=\"<<\\n mref = #%d\"]\n", expr, expr->id);
 		PrintExpr(expr->left, file);
 		PrintExpr(expr->right, file);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->left);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->right);
 		break;
 	case bin_right_shift:
-		fprintf(file, "Id%p [label=\">>\"]\n", expr);
+		fprintf(file, "Id%p [label=\">>\\n mref = #%d\"]\n", expr, expr->id);
 		PrintExpr(expr->left, file);
 		PrintExpr(expr->right, file);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->left);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->right);
 		break;
 	case bin_and_op:
-		fprintf(file, "Id%p [label=\"&\"]\n", expr);
+		fprintf(file, "Id%p [label=\"&\\n mref = #%d\"]\n", expr, expr->id);
 		PrintExpr(expr->left, file);
 		PrintExpr(expr->right, file);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->left);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->right);
 		break;
 	case bin_or_op:
-		fprintf(file, "Id%p [label=\"|\"]\n", expr);
+		fprintf(file, "Id%p [label=\"|\\n mref = #%d\"]\n", expr, expr->id);
 		PrintExpr(expr->left, file);
 		PrintExpr(expr->right, file);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->left);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->right);
 		break;
 	case bin_xor_op:
-		fprintf(file, "Id%p [label=\"^\"]\n", expr);
+		fprintf(file, "Id%p [label=\"^\\n mref = #%d\"]\n", expr, expr->id);
 		PrintExpr(expr->left, file);
 		PrintExpr(expr->right, file);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->left);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->right);
 		break;
 	case greater:
-		fprintf(file, "Id%p [label=\">\"]\n", expr);
+		fprintf(file, "Id%p [label=\">\\n mref = #%d\"]\n", expr, expr->id);
 		PrintExpr(expr->left, file);
 		PrintExpr(expr->right, file);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->left);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->right);
 		break;
 	case less:
-		fprintf(file, "Id%p [label=\"<\"]\n", expr);
+		fprintf(file, "Id%p [label=\"<\\n mref = #%d\"]\n", expr, expr->id);
 		PrintExpr(expr->left, file);
 		PrintExpr(expr->right, file);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->left);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->right);
 		break;
 	case greater_eql:
-		fprintf(file, "Id%p [label=\">=\"]\n", expr);
+		fprintf(file, "Id%p [label=\">=\\n mref = #%d\"]\n", expr, expr->id);
 		PrintExpr(expr->left, file);
 		PrintExpr(expr->right, file);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->left);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->right);
 		break;
 	case less_eql:
-		fprintf(file, "Id%p [label=\"<=\"]\n", expr);
+		fprintf(file, "Id%p [label=\"<=\\n mref = #%d\"]\n", expr, expr->id);
 		PrintExpr(expr->left, file);
 		PrintExpr(expr->right, file);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->left);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->right);
 		break;
 	case comb_comprassion:
-		fprintf(file, "Id%p [label=\"<=>\"]\n", expr);
+		fprintf(file, "Id%p [label=\"<=>\\n mref = #%d\"]\n", expr, expr->id);
 		PrintExpr(expr->left, file);
 		PrintExpr(expr->right, file);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->left);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->right);
 		break;
 	case equal:
-		fprintf(file, "Id%p [label=\"==\"]\n", expr);
+		fprintf(file, "Id%p [label=\"==\\n mref = #%d\"]\n", expr, expr->id);
 		PrintExpr(expr->left, file);
 		PrintExpr(expr->right, file);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->left);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->right);
 		break;
 	case case_equal:
-		fprintf(file, "Id%p [label=\"===\"]\n", expr);
+		fprintf(file, "Id%p [label=\"===\\n mref = #%d\"]\n", expr, expr->id);
 		PrintExpr(expr->left, file);
 		PrintExpr(expr->right, file);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->left);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->right);
 		break;
 	case not_equal:
-		fprintf(file, "Id%p [label=\"!=\"]\n", expr);
+		fprintf(file, "Id%p [label=\"!=\\n mref = #%d\"]\n", expr, expr->id);
 		PrintExpr(expr->left, file);
 		PrintExpr(expr->right, file);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->left);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->right);
 		break;
 	case logical_and:
-		fprintf(file, "Id%p [label=\"&&\"]\n", expr);
+		fprintf(file, "Id%p [label=\"&&\\n mref = #%d\"]\n", expr, expr->id);
 		PrintExpr(expr->left, file);
 		PrintExpr(expr->right, file);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->left);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->right);
 		break;
 	case logical_or:
-		fprintf(file, "Id%p [label=\"||\"]\n", expr);
+		fprintf(file, "Id%p [label=\"||\\n mref = #%d\"]\n", expr, expr->id);
 		PrintExpr(expr->left, file);
 		PrintExpr(expr->right, file);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->left);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->right);
 		break;
 	case inclusive_range:
-		fprintf(file, "Id%p [label=\"..\"]\n", expr);
+		fprintf(file, "Id%p [label=\"..\\n mref = #%d\"]\n", expr, expr->id);
 		PrintExpr(expr->left, file);
 		PrintExpr(expr->right, file);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->left);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->right);
 		break;
 	case exclusive_range:
-		fprintf(file, "Id%p [label=\"...\"]\n", expr);
+		fprintf(file, "Id%p [label=\"...\\n mref = #%d\"]\n", expr->id);
 		PrintExpr(expr->left, file);
 		PrintExpr(expr->right, file);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->left);
@@ -479,31 +479,31 @@ void PrintExpr(struct expr_struct* expr, FILE* file) {
 		fprintf(file, "Id%p->Id%p\n", expr, expr->left);
 		break;
 	case not_keyword:
-		fprintf(file, "Id%p [label=\"not\"]\n", expr);
+		fprintf(file, "Id%p [label=\"not\\n mref = #%d\"]\n", expr, expr->id);
 		PrintExpr(expr->left, file);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->left);
 		break;
 	case and_keyword:
-		fprintf(file, "Id%p [label=\"and\"]\n", expr);
+		fprintf(file, "Id%p [label=\"and\\n mref = #%d\"]\n", expr, expr->id);
 		PrintExpr(expr->left, file);
 		PrintExpr(expr->right, file);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->left);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->right);
 		break;
 	case or_keyword:
-		fprintf(file, "Id%p [label=\"or\"]\n", expr);
+		fprintf(file, "Id%p [label=\"or\\n mref = #%d\"]\n", expr, expr->id);
 		PrintExpr(expr->left, file);
 		PrintExpr(expr->right, file);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->left);
 		fprintf(file, "Id%p->Id%p\n", expr, expr->right);
 		break;
 	case var_or_method:
-		fprintf(file, "Id%p [label=\"var or method\"]\n", expr);
+		fprintf(file, "Id%p [label=\"var or method\\n localnum = %d\"]\n",expr, expr->local_var_num);
 		fprintf(file, "IdVal%p [label=\"%s\"]\n", expr, expr->str_val);
 		fprintf(file, "Id%p->IdVal%p\n", expr, expr);
 		break;
 	case instance_var:
-		fprintf(file, "Id%p [label=\"instance var\"]\n", expr);
+		fprintf(file, "Id%p [label=\"instance var\\n mref = #%d\"]\n", expr, expr->id);
 		fprintf(file, "IdVal%p [label=\"%s\"]\n", expr, expr->str_val);
 		fprintf(file, "Id%p->IdVal%p\n", expr, expr);
 		break;
@@ -522,7 +522,7 @@ void PrintExpr(struct expr_struct* expr, FILE* file) {
 		fprintf(file, "Id%p->Id%p\n", expr, expr->right);
 		break;
 	case method_call:
-		fprintf(file, "Id%p [label=\"method_call\"]\n", expr);
+		fprintf(file, "Id%p [label=\"method_call\\n mref = #%d\"]\n", expr, expr->id);
 		fprintf(file, "IdMethodNameVal%p [label=\"%s\"]\n", expr, expr->str_val);
 		fprintf(file, "Id%p->IdMethodNameVal%p [label=\"name\"]\n", expr, expr);
 		if (expr->list != 0) {
@@ -548,7 +548,7 @@ void PrintExpr(struct expr_struct* expr, FILE* file) {
 		}
 		break;
 	case member_access:
-		fprintf(file, "Id%p [label = \"member access\"]\n", expr);
+		fprintf(file, "Id%p [label = \"member access\\n mref = #%d\"]\n", expr, expr->id);
 		PrintExpr(expr->left, file);
 		PrintExpr(expr->right, file);
 		fprintf(file, "Id%p->Id%p [label = \"array\"]\n", expr, expr->left);
@@ -577,6 +577,15 @@ void PrintExpr(struct expr_struct* expr, FILE* file) {
 		fprintf(file, "Id%p [label=\"self.\"]\n", expr);
 		PrintExpr(expr->right, file);
 		fprintf(file, "Id%p->Id%p [label = \"method\"]\n", expr, expr->right);
+		break;
+	case member_access_and_assign:
+		fprintf(file, "Id%p [label=\"[]=\\nmref = #%d\"]\n", expr, expr->id);
+		PrintExpr(expr->left, file);
+		fprintf(file, "Id%p->Id%p [label = \"array\"]\n", expr, expr->left);
+		PrintExpr(expr->index, file);
+		fprintf(file, "Id%p->Id%p [label = \"index\"]\n", expr, expr->index);
+		PrintExpr(expr->right, file);
+		fprintf(file, "Id%p->Id%p [label = \"val\"]\n", expr, expr->right);
 		break;
 	default:
 		fprintf(file, "Id%p [label=\"expr\"]\n", expr);

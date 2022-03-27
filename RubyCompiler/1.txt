@@ -1,30 +1,150 @@
-class A < B
-    def printOddNumbers(arr)
-        @var = 3
-        a = 2 + 3 / 4 * 10 - (a[0])
-	    for i in 0..arr.size
-            if arr[i][j].field(1, 2)[0] % (2 + 1 % 3) != 0 then
-              print(arr[i])
-            else
-              print("*")
-            end
-	    end
+def sort (arr, size)
+  i = 0
+  j = 0
+  while i < size - 1
+    while j < size - 1
+
+      if arr[j+1] < arr[j]
+        tmp = arr[j + 1]
+        arr[j + 1] = arr[j]
+        arr[j] = tmp
+      end
+
+      j = j + 1 
     end
-    def some()
-        a = 2
-    end
+    i = i + 1
+    j = 0
+  end
 end
 
+a = [99, 73, 62, 38, 11, 7, 0, -5, -12]
 
-def free()
-    a = 2
-    if a == 0
-        s = 1
-    elsif a == 1
-        print(1)
-    elsif a == 2
-        b = 12
-    else 
-        c = 10
-    end
+sort(a, 9)
+
+println("sort:")
+println("")
+println(a)
+
+
+def paint(array, curX, curY, maxX, maxY)
+  if curX > maxX
+    return
+  elsif curX < 0
+    return
+  elsif curY > maxY
+    return
+  elsif curY < 0
+    return
+  end
+
+  if(array[curX][curY]==1)
+    return
+  end
+
+  array[curX][curY]=1
+  paint(array, curX-1, curY, maxX, maxY)
+  paint(array, curX, curY-1, maxX, maxY)
+  paint(array, curX+1, curY, maxX, maxY)
+  paint(array, curX, curY+1, maxX, maxY)
+  return
 end
+
+arr = [
+ [0,0,1,0,0,0,0,0,0,0],
+ [0,0,1,0,0,0,0,0,0,0],
+ [0,0,1,0,0,0,0,0,0,0],
+ [0,1,0,0,0,0,0,0,0,0],
+ [1,0,0,0,0,0,0,0,0,0],
+ [0,0,0,0,0,0,0,0,0,0],
+ [0,0,0,0,0,0,0,0,0,0],
+ [0,0,0,0,0,0,0,0,0,0],
+ [0,0,0,0,0,0,0,0,0,0],
+ [0,0,0,0,0,0,0,0,0,0]
+]
+
+println("")
+println("paint:")
+println("")
+
+i = 0
+while i < 9
+  println(arr[i])
+  i = i + 1
+end
+
+println("Painted:")
+paint(
+arr,
+ 3,
+ 3,
+ 9, 9)
+
+i = 0
+while i < 9
+  println(arr[i])
+  i = i + 1
+end
+
+def getFib(array, limit, curLen)
+  if(limit == curLen)
+    return array
+  else
+    if(curLen < 2)
+      array[curLen] = 1
+    else
+      array[curLen] = array[curLen - 1] + array[curLen - 2]
+    end
+  end
+
+  return getFib(array, limit, curLen + 1)
+end
+
+q = getFib([], 10, 0)
+
+println("")
+println("fib:")
+println("")
+
+println(q)
+
+
+a = [1, 2, 3, 4, 5, 6]
+def some(a, b) 
+
+  a[0] = 2
+  b = 2
+
+end
+
+c = 3
+some(a, c)
+println(a)
+println(c)
+
+
+an = true
+cd = false
+ddd = an && cd
+eee = an || cd
+println(ddd)
+println(eee)
+sdds = -c
+println(sdds)
+println(!an)
+println("Hello " + "world")
+
+
+def some1(a) 
+  println("cal")
+  return a
+end
+c = 3
+a = false && some1(true)
+println(a)
+def anothersome()
+  return vitya = "code"
+end
+println(yarik = anothersome())
+println(yarik)
+
+
